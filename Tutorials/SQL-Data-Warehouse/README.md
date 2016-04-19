@@ -2,19 +2,19 @@
 	pageTitle="Setting up predictive analytics pipelines using Azure SQL Data Warehouse | Microsoft Azure"
 	description="Setting up predictive analytics pipelines using Azure SQL Data Warehouse."
 	keywords="adf, azure data factory"
-	services="datafactory"
+	services="sql-data-warehouse,data-factory,event-hubs,machine-learning,service-bus,stream-analytics"
 	documentationCenter=""
 	authors="roalexan"
 	manager="paulettm"
 	editor=""/>
 
 <tags
-	ms.service="datafactory"
+	ms.service="sql-data-warehouse"
 	ms.workload="data-services"
 	ms.tgt_pltfrm="na"
 	ms.devlang="na"
 	ms.topic="article"
-	ms.date="04/14/2016"
+	ms.date="04/18/2016"
 	ms.author="roalexan" />
 
 # Setting up predictive analytics pipelines using Azure SQL Data Warehouse
@@ -25,11 +25,11 @@
 
 ## Use Case
 
-To demonstrate the power of Azure SQL Data Warehouse we will examine a sample use case that integrates SQL Data Warehouse with a number of Azure components, namely Event Hub, Stream Analytics, Machine Learning, and Power BI - as well as an on-prem SQL Server via a Data Management Gateway. At the end of this gallery we will include the steps to deploy this use case in your Azure subscription.
+To demonstrate the power of Azure SQL Data Warehouse we will examine a sample use case that integrates SQL Data Warehouse with Azure Machine Learning. Along the way you will also be exposed to a number of other Azure components, namely Event Hub, Stream Analytics, and Power BI - as well as an on-prem SQL Server via a Data Management Gateway. At the end of this gallery we will include the steps to deploy this use case in your Azure subscription.
 
-The use case is a rating system that allows users to rate an event (such as a conference talk) and visualize the results in real time (currently 5 second intervals). Ratings are also stored in a data warehouse and sent to machine learning for near real time predictions (currently 15 minute intervals). Lastly, historical ratings are bulk-loaded from an on-prem database.
+The use case is a rating system that allows users to rate an event (such as a conference talk) and visualize the results in real time (5 second intervals). Ratings are also stored in a data warehouse and sent to machine learning for near real time predictions (15 minute intervals). Lastly, historical ratings are bulk-loaded from an on-prem database.
 
-When everything is successfully deployed and running, the final result will be a PowerBI dashboard showing the ratings of each individual device in real time and the average rating for all four devices.
+When everything is successfully deployed and running, the final result will be a PowerBI dashboard showing the ratings of each individual device in real time and the average rating for all devices.
 
 Here is a screenshot of a sample dashboard.
 
@@ -37,12 +37,12 @@ Here is a screenshot of a sample dashboard.
 
 ## Requirements
 
-- Microsoft Azure subscription with login credentials
-- PowerBI subscription with login credentials
-- A local environment with
+- Microsoft <a href="https://azure.microsoft.com/en-us/">Azure</a> subscription with login credentials
+- <a href="https://powerbi.microsoft.com/">PowerBI</a> subscription with login credentials
+- An environment that will host your "on-prem" database (your laptop, a virtual machine) with
     - SQL Server
-    - Data Management Gateway
-    - A SQL client (Example: Microsoft SQL Server Management Studio)
+    - <a href="https://msdn.microsoft.com/en-us/library/dn879362.aspx">Data Management Gateway</a>
+- A local <a href="https://msdn.microsoft.com/en-us/mt429383">SQL Server Data Tools Preview in Visual Studio 2015</a>
 
 ## Architecture
 
@@ -82,38 +82,22 @@ This will create a new "blade" in the Azure portal.
 1. Check: **Pin to dashboard** # If you want it on your dashboard
 1. Click: **Create**
 
-### Create and populate on-prem SQL Server table
+### Create and populate on-prem SQL Server tables
 
-1. Connect to the on-prem SQL Server using a SQL client of your choice.
-1. Create the table by running the following SQL:
-        CREATE TABLE Ratings (
-            DateTime DATETIME2,
-            EventId INT,
-            Rating INT,
-            DeviceId INT,
-            Lat DECIMAL(8,5),
-            Lon DECIMAL(8,5)
-            CONSTRAINT PK_Ratings PRIMARY KEY CLUSTERED(DateTime, EventId)
-        )
-1. Download sample data: https://github.com/roalexan/SolutionArchitects/blob/master/sampledata.csv
-1. Load sample data. For example using the SQL Server Import and Export Wizard
+1. Connect to the on-prem SQL Server using a SQL client of your choice (such as SQL Server Management Studio)
+1. Download sample ratings: https://github.com/roalexan/SolutionArchitects/blob/master/historical-ratings.csv
+1. Download sample average ratings:
+https://github.com/roalexan/SolutionArchitects/blob/master/historical-averageratings.csv
+1. Load sample data. For example, by using the SQL Server Import and Export Wizard in the SQL Server Management Studio, it will both create the tables and load the data.
 
 ### Create Azure SQL Data Warehouse tables
 
-1. Connect to the Data Warehouse using a SQL client of your choice. For example:
-   1. Start: **Microsoft SQL Server Management Studio**
-   1. Click: **File** > **Connect Object Explorer...**
-   1. Select: Server type: **Database Engine**
-   1. Type: Server name: **personal-[*UNIQUE*].database.windows.net**
-   1. Select: Authentication: **SQL Server Authentication**
-   1. Type: Login: **personaluser**
-   1. Type: Password: **pass@word1**
-   1. Check: **Remember password** # Up to you
-   1. Click: **Connect**
-1. Create the tables. For example:
-	 1. Expand: **personal-[*UNIQUE*].database.windows.net** > Databases > **personalDB**
-	 1. Click: **New Query** # You may safely ignore the warning concerning QueryGovernorCostLimit if you see it
-	 1. Copy and Paste:
+Connect to the Data Warehouse using SQL Server Data Tools Preview in Visual Studio 2015 using the following settings:
+   - Server name: **personal-[*UNIQUE*].database.windows.net**
+   - Authentication: **SQL Server Authentication**
+   - Login: **personaluser**
+   - Password: **pass@word1**
+
             CREATE TABLE Ratings (
                DateTime DATETIME2,
                EventId INT,
@@ -127,47 +111,40 @@ This will create a new "blade" in the Azure portal.
                CLUSTERED COLUMNSTORE INDEX
 		    )
             CREATE TABLE AverageRatings (
+               DateTimeStart DATETIME2,
+               DateTimeStop DATETIME2,			   
 	           EventId INT,
 	           AverageRating FLOAT
             )
             WITH (
 	           CLUSTERED COLUMNSTORE INDEX
             )
-     1. Click: **Execute**
 
 ### Create the AML service
 
-1. Browse: http://gallery.azureml.net/Details/bd7a5b1bae0042b9964d37f7c57db714 # copy this experiment from the gallery
-1. Click: Open in Studio
+1. Browse: http://gallery.azureml.net/Details/aec6df682abf4a149bd7f2299cf2902f # copy this experiment from the gallery
+1. Click: **Open in Studio**
 1. Select: REGION: **[*REGION*]** # Up to you
 1. Select: WORKSPACE: **[*WORKSPACE*]** # Your workspace
-1. Click: OK
-1. Click: Reader
+1. Click: **OK** > **Reader**
 1. Type: Database server name: **personal-[*UNIQUE*].database.windows.net**
 1. Type: Server user account password: **pass@word1**
-1. Click: Writer
+1. Click: **Writer**
 1. Type: Database server name: **personal-[*UNIQUE*].database.windows.net**
 1. Type: Server user account password: **pass@word1**
-1. Click: RUN
-1. Click: DEPLOY WEB SERVICE # See the debugging section for steps on how to test the service
+1. Click: **RUN** > **DEPLOY WEB SERVICE** # See the debugging section for steps on how to test the service
 
 ### Edit and start the ASA job
 
 1. Browse: https://manage.windowsazure.com
-1. Click: STREAM ANALYTICS
-1. Click: **personalstreamanalytics[*unique*]**
-1. Click: **OUTPUTS**
-1. Click: **ADD OUTPUT**
+1. Click: **STREAM ANALYTICS** > **personalstreamanalytics[*unique*]** > **OUTPUTS** > **ADD OUTPUT**
 1. Select: **Power BI**
-1. Click: **Next**
-1. Click: **Authorize Now** # Login with your credentials
+1. Click: **Next** > **Authorize Now** # Login with your credentials
 1. Type: OUTPUT ALIAS: **OutputPowerBI**
 1. Type: DATASET NAME: **personalDB** # This dataset will be overwritten in PBI should it already exist
 1. Type: TABLE NAME: **personalDB**
 1. Select: WORKSPACE: **My Workspace** # Default
-1. Click: **Finish**
-1. Click: **Start**
-1. Click: **Finish** # You do not need to specify a custom time
+1. Click: **Finish** > **Start** > **Finish** # You do not need to specify a custom time
 
 ### Deploy the data generator as a Web Job
 
@@ -184,20 +161,16 @@ This will create a new "blade" in the Azure portal.
 1. Replace: ENDPOINT: With: CONNECTION STRING
 1. Zip: **datagenerator.zip**
 1. Browse: https://manage.windowsazure.com
-1. Click: NEW > COMPUTE > WEB APP > QUICK CREATE
+1. Click: **NEW** > **COMPUTE** > **WEB APP** > **QUICK CREATE**
 1. Type: **ratings[*UNIQUE*]**
 1. Select: APP SERVICE PLAN: From your subscription
-1. Click: CREATE WEB APP
-1. Click: WEB APPS
-1. Click: **ratings[*UNIQUE*]**
-1. Click: WEBJOBS
-1. Click: ADD A JOB
+1. Click: **CREATE WEB APP** > **WEB APPS** > **ratings[*UNIQUE*]** > **WEBJOBS** > **ADD A JOB**
 1. Type: NAME: **ratings[*UNIQUE*]**
 1. Browse: **datagenerator.zip**
 1. Select: HOW TO RUN: **Run continuously** # The default. It generates new ratings every 5 seconds.
-1. Click: Finish
+1. Click: **Finish**
 
-## Create the Data factories
+## Create the Data Factories
 
 At this point you are ready to connect everything together. You will create two data factories. The first data factory will orchestrate data to be read from the SQL Data Warehouse by Azure Machine Learning, at which point the average rating is computed and written back to the SQL Data Warehouse. The second data factory will orchestrate copying data from the on prem SQL Server to the SQL Data Warehouse.
 
@@ -226,11 +199,7 @@ This will create a new "blade" in the Azure portal.
 
 1. Create the ADF Data Management Gateway
     1. Browse: https://portal.azure.com
-		1. Click: **Data factories**
-		1. Click: **personal2ADF[*UNIQUE*]**
-		1. Click: **Author and deploy**
-		1. Click: **More commands**
-		1. Click: **New data gateway**
+		1. Click: **Data factories** > **personal2ADF[*UNIQUE*]** > **Author and deploy** > **More commands** > **New data gateway**
 		1. Type: Data gateway name: **datagateway-[*UNIQUE*]**
 		1. Click: **OK**
 		1. Copy: **NEW KEY**
@@ -241,6 +210,14 @@ This will create a new "blade" in the Azure portal.
 		1. Paste: **NEW KEY**
 		1. Click: **OK**
 
+## Start the on-prem pipelines
+
+1. Browse: https://portal.azure.com
+1. Click: **Data factories** > **personal2ADF[*UNIQUE*]** > **Author and deploy**
+1. Expand: **Pipelines**
+1. Select: **SQLDB-to-SQLDW-pipeline2**
+1. Edit: **"isPaused": true** : to **"isPaused": false**
+1. Click: **Deploy**
 
 ## Create the PBI dashboard
 
@@ -251,15 +228,13 @@ This will create a new "blade" in the Azure portal.
 1. Browse: https://powerbi.microsoft.com
 1. Click: **Sign in** # Login with your credentials
 1. Show: The navigation pane
-1. Click: **personalDB** # Under the Datasets folder
-1. Click: **Line chart** # Under Visualizations
-1. Drag: **datetime**: To: **Axis**
-1. Drag: **deviceid**: To: **Legend**
-1. Drag: **rating**: To: **Values**
+1. Click: **personalDB** # Under the Datasets folder > **Line chart** # Under Visualizations
+1. Drag: **DateTime**: To: **Axis**
+1. Drag: **DeviceId**: To: **Legend**
+1. Drag: **Rating**: To: **Values**
 1. Click: **Save**
 1. Type: Name: **personalDB**
-1. Click: **Save**
-1. Click: **Pin visual** # pin icon on upper-right
+1. Click: **Save** > **Pin visual** # pin icon on upper-right
 1. Select: **New dashboard**
 1. Type: Name: **personalDB**
 1. Click: **Pin**
@@ -271,29 +246,58 @@ This will create a new "blade" in the Azure portal.
 1. Browse: https://powerbi.microsoft.com
 1. Click: **Sign in** # Login with your credentials
 1. Show: The navigation pane
-1. Click: Get Data
-1. Click: Databases: Get
-1. Click: Azure SQL Data Warehouse
-1. Click: Connect
-1. Click: Server:**personal-[*UNIQUE*].database.windows.net**
-1. Click: Database: personalDB
-1. Click: Next
-1. Click: Username: **personaluser**
-1. Click: Password: **pass@word1**
-1. Click: Sign in
-1. Click: Datasets: personalDB
-1. Click: Visualizations: Card
-1. Expand: Fields: AverageRatings
-1. Check: AverageRating
-1. Click: Save
-1. Type: Name: personalDB2
-1. Click: Save
-1. Click: Reports: personalDB2
-1. Click: Pin icon
-1. Select: Existing dashboard
-1. Select: personalDB
-1. Click: Pin
-1. Select: Dashboards: personalDB
+1. Click: **Get Data** > Databases: **Get** > **Azure SQL Data Warehouse** > **Connect** > Server: **personal-[*UNIQUE*].database.windows.net** > Database: **personalDB** > **Next** > Username: **personaluser** > Password: **pass@word1** > **Sign in** > Datasets: **personalDB** > Visualizations: **Line Chart**
+1. Expand: Fields: **AverageRatings**
+1. Drag: **DateTimeStop**: To: **Axis**
+1. Drag: **AverageRating**: To: **Values**
+1. Drag: **EventId**: To: **Visual Level Filters**
+1. Expand: **EventId**
+1. Select: **Is**
+1. Type: **1**
+1. Click: **Apply filter**
+1. Click: **Save**
+1. Type: Name: **personalDB2**
+1. Click: **Save** > Reports: **personalDB2** > **Pin icon**
+1. Select: **Existing dashboard** > **personalDB**
+1. Click: **Pin**
+1. Select: Dashboards: **personalDB**
+1. Resize tiles
+
+### Using historical data
+
+#### Realtime visualization
+
+1. Edit: **personalDB2**
+1. Click: **New page**
+1. Click: **Line Chart**
+1. Expand: **Ratings**
+1. Drag: **DateTime**: To: **Axis**
+1. Drag: **DeviceId**: To: **Legend**
+1. Drag: **Rating**: To: **Values**
+1. Drag: **EventId**: To: **Visual Level Filters**
+1. Expand: **EventId**
+1. Select: **Is**
+1. Type: **2**
+1. Click: **Apply filter** > **Save**
+
+#### Predictive visualization
+
+1. Click: **Line Chart**
+1. Expand: Fields: **AverageRatings**
+1. Drag: **DateTimeStop**: To: **Axis**
+1. Drag: **AverageRating**: To: **Values**
+1. Drag: **EventId**: To: **Visual Level Filters**
+1. Expand: **EventId**
+1. Select: **Is**
+1. Type: **2**
+1. Click: **Apply filter** > **Save**
+
+#### Update dashboard
+
+1. Click: **Save**
+1. Select: **Existing dashboard** > **personalDB**
+1. Click: **Pin**
+1. Select: Dashboards: **personalDB**
 1. Resize tiles
 
 ## Summary
@@ -312,29 +316,22 @@ Congratulations! If you made it to this point, you should have a running sample 
 ### Verify AML web service is working
 
 1. Browse: https://studio.azureml.net
-1. Click: my experiments
-1. Click: WEB SERVICES
-1. Select: Ratings # Your web service
-1. Click: TEST # Verify that request/response works
-1. Click: DATABASE QUERY:
+1. Click: **my experiments** > **WEB SERVICES**
+1. Select: **Ratings** # Your web service
+1. Click: **TEST** # Verify that request/response works
+1. Click: **DATABASE QUERY**:
       SELECT
       CAST(Rating AS INT) AS Rating
       FROM Ratings
       WHERE EventId = 1
-1. Click: DATABASE SERVER NAME: **personal-[*UNIQUE*].database.windows.net**
-1. Click: DATABASE NAME: personalDB
-1. Click: SERVER USER ACCOUNT NAME: personaluser
-1. Click: SERVER USER ACCOUNT PASSWORD: pass@word1
-1. Click: OK
+1. Click: DATABASE SERVER NAME: **personal-[*UNIQUE*].database.windows.net** > DATABASE NAME: **personalDB** > SERVER USER ACCOUNT NAME: **personaluser** > SERVER USER ACCOUNT PASSWORD: **pass@word1** > **OK**
 
 ### Verify data generator is working
 
 #### From Portal
 
 1. Browse: https://manage.windowsazure.com
-1. Click: **personalstreamanalytics[*UNIQUE*]**
-1. Click: DASHBOARD
-1. Click: **Operation Logs**
+1. Click: **personalstreamanalytics[*UNIQUE*]** > **DASHBOARD** > **Operation Logs**
 1. Select: a recent log
 1. Click: DETAILS
 
@@ -342,8 +339,4 @@ Congratulations! If you made it to this point, you should have a running sample 
 
 1. Connect to the Data Warehouse using a SQL client of your choice
 1. Run SQL to view the latest entries. For example:
-   1. Expand: **personal-[*UNIQUE*].database.windows.net** > Databases > **personalDB**
-   1. Click: **New Query** # You may safely ignore the warning concerning QueryGovernorCostLimit if you see it
-   1. Copy and Paste:
 	      select * from Ratings order by DateTime desc;
-   1. Click: **Execute**
