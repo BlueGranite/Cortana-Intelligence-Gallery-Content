@@ -107,7 +107,11 @@
                 },
                 "datasetNames": {
 					"sqlServerDBInputDatasetName": "SqlServerDBInput",
-					"azureSqlServerDWOutputDatasetName": "AzureSqlServerDWOutput"
+					"sqlServerDBInputDatasetName2": "SqlServerDBInput2",
+					"sqlServerDBInputDatasetName3": "SqlServerDBInput3",
+					"azureSqlServerDWOutputDatasetName": "AzureSqlServerDWOutput",
+					"azureSqlServerDWOutputDatasetName2": "AzureSqlServerDWOutput2",
+					"azureSqlServerDWOutputDatasetName3": "AzureSqlServerDWOutput3"
                 }
             },
             "sqlSettings": {
@@ -267,8 +271,8 @@
 								"linkedServiceName": "[variables('settings')['datafactorySettings']['linkedServiceNames'].azureMLLinkedServiceName]"
 							}
 						],
-						"start": "2016-03-25T15:00:00Z",
-						"end": "2016-03-25T16:00:00Z",
+						"start": "2016-04-16T00:00:00Z",
+						"end": "9999-09-09T00:00:00Z",
 						"isPaused": false,
 						"pipelineMode": "Scheduled"
                     }
@@ -317,7 +321,7 @@
                         "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName)]",
                         "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/linkedServices/', variables('settings')['datafactorySettings2']['linkedServiceNames'].sqlServerLinkedServiceName)]"
                     ],
-                    "name": "[variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName]",
+                    "name": "[variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName2]",
                     "properties": {
                         "published": false,
                         "type": "SqlServerTable",
@@ -326,8 +330,30 @@
                             "tableName": "Ratings"
                         },
                         "availability": {
-                            "frequency": "Minute",
-                            "interval": 15
+                            "frequency": "Day",
+                            "interval": 1
+                        },
+						"external": true
+                    }
+                },
+                {
+					"apiVersion": "[variables('settings')['apiVersion'].dataFactoryApiVersion]",
+					"type": "datasets",
+                    "dependsOn": [
+                        "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName)]",
+                        "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/linkedServices/', variables('settings')['datafactorySettings2']['linkedServiceNames'].sqlServerLinkedServiceName)]"
+                    ],
+                    "name": "[variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName3]",
+                    "properties": {
+                        "published": false,
+                        "type": "SqlServerTable",
+                        "linkedServiceName": "[variables('settings')['datafactorySettings2']['linkedServiceNames'].sqlServerLinkedServiceName]",
+                        "typeProperties": {
+                            "tableName": "AverageRatings"
+                        },
+                        "availability": {
+                            "frequency": "Day",
+                            "interval": 1
                         },
 						"external": true
                     }
@@ -339,7 +365,7 @@
                         "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName)]",
                         "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/linkedServices/', variables('settings')['datafactorySettings2']['linkedServiceNames'].azureSqlServerLinkedServiceName)]"
                     ],
-                    "name": "[variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName]",
+                    "name": "[variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName2]",
                     "properties": {
                         "published": false,
                         "type": "AzureSqlDWTable",
@@ -348,20 +374,43 @@
                             "tableName": "Ratings"
                         },
                         "availability": {
-                            "frequency": "Minute",
-                            "interval": 15
+                            "frequency": "Day",
+                            "interval": 1
+                        }
+                    }
+                },
+                {
+					"apiVersion": "[variables('settings')['apiVersion'].dataFactoryApiVersion]",
+					"type": "datasets",
+                    "dependsOn": [
+                        "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName)]",
+                        "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/linkedServices/', variables('settings')['datafactorySettings2']['linkedServiceNames'].azureSqlServerLinkedServiceName)]"
+                    ],
+                    "name": "[variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName3]",
+                    "properties": {
+                        "published": false,
+                        "type": "AzureSqlDWTable",
+                        "linkedServiceName": "[variables('settings')['datafactorySettings2']['linkedServiceNames'].azureSqlServerLinkedServiceName]",
+                        "typeProperties": {
+                            "tableName": "AverageRatings"
+                        },
+                        "availability": {
+                            "frequency": "Day",
+                            "interval": 1
                         }
                     }
                 },
                 {
                     "apiVersion": "[variables('settings')['apiVersion'].dataFactoryApiVersion]",
-                    "name": "SQLDB-to-SQLDW-pipeline",
+                    "name": "SQLDB-to-SQLDW-pipeline2",
                     "dependsOn": [
                         "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName)]",
                         "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/linkedServices/', variables('settings')['datafactorySettings2']['linkedServiceNames'].sqlServerLinkedServiceName)]",
                         "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/linkedServices/', variables('settings')['datafactorySettings2']['linkedServiceNames'].azureSqlServerLinkedServiceName)]",
-                        "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/datasets/', variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName)]",
-						"[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/datasets/', variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName)]"
+                        "[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/datasets/', variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName2)]",
+						"[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/datasets/', variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName3)]",
+						"[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/datasets/', variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName2)]",
+						"[concat('Microsoft.DataFactory/dataFactories/', variables('settings')['datafactorySettings2'].dataFactoryName, '/datasets/', variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName3)]"
                     ],
                     "type": "datapipelines",
                     "properties": {
@@ -382,12 +431,12 @@
 								},
 								"inputs": [
 									{
-										"name": "[variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName]"
+										"name": "[variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName2]"
 									}
 								],
 								"outputs": [
 									{
-										"name": "[variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName]"
+										"name": "[variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName2]"
 									}
 								],
 								"policy": {
@@ -397,15 +446,50 @@
 									"style": "StartOfInterval"
 								},
 								"scheduler": {
-									"frequency": "Minute",
-									"interval": 15
+									"frequency": "Day",
+									"interval": 1
 								},
-								"name": "Activity-OnPremSQLToAzureSQL"
+								"name": "Activity-OnPremSQLToAzureSQLDW-HistoricalRatings"
+							},
+                            {
+								"type": "Copy",
+								"typeProperties": {
+									"source": {
+										"type": "SqlSource",
+										"sqlReaderQuery": "select * from AverageRatings"
+									},
+									"sink": {
+										"type": "SqlSink",
+										"writeBatchSize": 1000,
+										"writeBatchTimeout": "00:30:00"
+									}
+								},
+								"inputs": [
+									{
+										"name": "[variables('settings')['datafactorySettings2']['datasetNames'].sqlServerDBInputDatasetName3]"
+									}
+								],
+								"outputs": [
+									{
+										"name": "[variables('settings')['datafactorySettings2']['datasetNames'].azureSqlServerDWOutputDatasetName3]"
+									}
+								],
+								"policy": {
+									"timeout": "01:00:00",
+									"concurrency": 1,
+									"executionPriorityOrder": "NewestFirst",
+									"style": "StartOfInterval"
+								},
+								"scheduler": {
+									"frequency": "Day",
+									"interval": 1
+								},
+								"name": "Activity-OnPremSQLToAzureSQLDW-HistoricalAverageRatings"
 							}
 						],
-						"start": "2015-11-05T05:00:00Z",
-						"end": "2015-11-05T06:00:00Z",
-						"isPaused": false,
+						"start": "2016-04-05T00:00:00Z",
+						"end": "2016-04-05T23:59:59Z",
+						"isPaused": true,
 						"pipelineMode": "Scheduled"
 					}
 				}
