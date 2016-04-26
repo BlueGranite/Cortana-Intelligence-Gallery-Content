@@ -40,9 +40,9 @@ Here is a screenshot of a sample dashboard.
 - Microsoft <a href="https://azure.microsoft.com/en-us/">Azure</a> subscription with login credentials
 - <a href="https://powerbi.microsoft.com/">PowerBI</a> subscription with login credentials
 - An environment that will host your "on-prem" database (your laptop, a virtual machine) with
-    - SQL Server
+    - SQL Server with a database and login credentials
     - <a href="https://msdn.microsoft.com/en-us/library/dn879362.aspx">Data Management Gateway</a>
-- A local <a href="https://msdn.microsoft.com/en-us/mt429383">SQL Server Data Tools Preview in Visual Studio 2015</a>
+- A local installation of <a href="https://azure.microsoft.com/en-us/documentation/articles/sql-data-warehouse-install-visual-studio/">Visual Studio with SQL Server Data Tools (SSDT)</a>
 
 ## Architecture
 
@@ -58,94 +58,125 @@ Bulk-loading is done by creating the schema in an on-prem SQL Server and populat
 
 ## Deploy
 
+Below are the steps to deploy the use case into your Azure subscription. Note that to condense the steps somewhat, **>** is used between repeated actions. For example:
+
+1. Click: **Button A**
+1. Click: **Button B**
+
+is written as
+
+1. Click: **Button A** > **Button B**  
+
 ### Service Bus, Event Hub, Stream Analytics Job, SQL Server, and SQL Data Warehouse
 
 To get started, click the below button.
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Froalexan%2FSolutionArchitects%2Fmaster%2Fazuredeploypart1.json" target="_blank">
-    <img src="http://azuredeploy.net/deploybutton.png"/>
-</a>
+<a target="_blank" id="deploy-to-azure" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Froalexan%2FSolutionArchitects%2Fmaster%2Fazuredeploypart1.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 This will create a new "blade" in the Azure portal.
 
 ![arm1-image](./media/arm1.png)
 
 1. Parameters
-   1. Type: UNIQUE (string): **[*UNIQUE*]** # Select a globally unique string
-   1. Select: LOCATION: **[*LOCATION*]** # The region where everything will be deployed
+   1. Type: UNIQUE (string): **[*UNIQUE*]** (Note: select a globally unique string)
+   1. Select: LOCATION: **[*LOCATION*]** (The region where everything will be deployed)
    1. Click: **OK**
-1. Select: Subscription: **[*SUBSCRIPTION*]** # Azure subscription you want to use
+1. Select: Subscription: **[*SUBSCRIPTION*]** (Azure subscription you want to use)
 1. Resource group
    1. Select: **New**
-   1. Type: New resource group name: **[*UNIQUE*]** # Same as above
-1. Select: Resource group location: **[*LOCATION*]** # Same as above
+   1. Type: New resource group name: **[*UNIQUE*]** (Same as above)
+1. Select: Resource group location: **[*LOCATION*]** (Same as above)
 1. Click: **Review legal terms** > **Create**
-1. Check: **Pin to dashboard** # If you want it on your dashboard
+1. Check: **Pin to dashboard** (If you want it on your dashboard)
 1. Click: **Create**
 
 ### Create and populate on-prem SQL Server tables
 
-1. Connect to the on-prem SQL Server using a SQL client of your choice (such as SQL Server Management Studio)
-1. Download sample ratings: https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/SQL-Data-Warehouse/historical-ratings.csv
-1. Download sample average ratings:
-https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/SQL-Data-Warehouse/historical-averageratings.csv
-1. Load sample data. For example, by using the SQL Server Import and Export Wizard in the SQL Server Management Studio, it will both create the tables and load the data.
+Now you need to create two tables in your on-prem SQL Server and populate them with sample data. You can do this by using <a href="https://msdn.microsoft.com/en-us/library/mt238290.aspx">SQL Server Management Studio (SSMS)</a> or SQL Server Data Tools if you already have it (you will use it in the next section when you create the corresponding SQL Data Warehouse tables). Here are the steps using SQL Server Management Studio:
+
+1. Log into your on-prem environment
+1. Download sample data files:
+   1.      https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/SQL-Data-Warehouse/Ratings.csv
+   1. https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/SQL-Data-Warehouse/AverageRatings.csv
+1. Open SQL Server Management Studio
+1. Click: File > **Connect Object Explorer...**
+   1. Select: Server type: **Database Engine**
+   1. Select: Your server name, authentication type, and credentials
+   1. Click: **Connect**
+1. Right Click: Your database > **TASKS** > **Import Data...**
+1. Click: **Next**
+1. Select: Data source: **Flat File Source**
+1. Click: File name: Browse: **Ratings.csv**
+1. Click: **Next** > **Next**
+1. Select: **SQL Server Native Client 11.0**
+1. Select: Your server name, authentication type, credentials, and database name
+1. Click: **Next** > **Next** > **Finish** > **Finish** > **Close**
+1. Repeat steps 5 - 12 for **AverageRatings.csv**
 
 ### Create Azure SQL Data Warehouse tables
 
-Connect to the Data Warehouse using SQL Server Data Tools Preview in Visual Studio 2015 using the following settings:
-   - Server name: **personal-[*UNIQUE*].database.windows.net**
-   - Authentication: **SQL Server Authentication**
-   - Login: **personaluser**
-   - Password: **pass@word1**
+Next you need to create the matching tables in the SQL Data Warehouse. You can do this by following these steps:
 
-            CREATE TABLE Ratings (
-               DateTime DATETIME2,
-               EventId INT,
-               Rating INT,
-               DeviceId INT,
-               Lat DECIMAL(8,5),
-               Lon DECIMAL(8,5)
-            )
-            WITH (
-               DISTRIBUTION = HASH(DateTime),
-               CLUSTERED COLUMNSTORE INDEX
-		    )
-            CREATE TABLE AverageRatings (
-               DateTimeStart DATETIME2,
-               DateTimeStop DATETIME2,			   
-	           EventId INT,
-	           AverageRating FLOAT
-            )
-            WITH (
-	           CLUSTERED COLUMNSTORE INDEX
-            )
+1. Start Visual Studio. Note that you must have installed the SQL Server Data Tools.
+1. Select: View: **SQL Server Object Explorer**
+1. Right click: **SQL Server**
+1. Click: **Add SQL Server...**
+1. Type: Server Name: **personal-[*UNIQUE*].database.windows.net**
+1. Select: Authentication: **Sql Server Authentication**
+1. Type: User name: **personaluser**
+1. Type: Password: **pass@word1**
+1. Select: Database Name: **personalDB**
+1. Click: **Connect**
+1. Right click: **personal-[*UNIQUE*].database.windows.net**
+1. Select: **New Query...**
+1. Copy and paste:
+
+         CREATE TABLE Ratings (
+             DateTime DATETIME2,
+             EventId INT,
+             Rating INT,
+             DeviceId INT,
+             Lat DECIMAL(8,5),
+             Lon DECIMAL(8,5)
+         )
+         WITH (
+             DISTRIBUTION = HASH(DateTime)
+         )
+
+         CREATE TABLE AverageRatings (
+             DateTimeStart DATETIME2,
+             DateTimeStop DATETIME2,			   
+             EventId INT,
+             AverageRating FLOAT
+         )
+
+1. Click: **Execute**
 
 ### Create the AML service
 
 1. Browse: http://gallery.azureml.net/Details/aec6df682abf4a149bd7f2299cf2902f # copy this experiment from the gallery
 1. Click: **Open in Studio**
-1. Select: REGION: **[*REGION*]** # Up to you
-1. Select: WORKSPACE: **[*WORKSPACE*]** # Your workspace
+1. Select: REGION: **[*REGION*]** (Up to you)
+1. Select: WORKSPACE: **[*WORKSPACE*]** (Your workspace)
 1. Click: **OK** > **Reader**
 1. Type: Database server name: **personal-[*UNIQUE*].database.windows.net**
 1. Type: Server user account password: **pass@word1**
 1. Click: **Writer**
 1. Type: Database server name: **personal-[*UNIQUE*].database.windows.net**
 1. Type: Server user account password: **pass@word1**
-1. Click: **RUN** > **DEPLOY WEB SERVICE** # See the debugging section for steps on how to test the service
+1. Click: **RUN** > **DEPLOY WEB SERVICE** (See the debugging section for steps on how to test the service)
 
 ### Edit and start the ASA job
 
 1. Browse: https://manage.windowsazure.com
 1. Click: **STREAM ANALYTICS** > **personalstreamanalytics[*unique*]** > **OUTPUTS** > **ADD OUTPUT**
 1. Select: **Power BI**
-1. Click: **Next** > **Authorize Now** # Login with your credentials
+1. Click: **Next** > **Authorize Now** (Login with your credentials)
 1. Type: OUTPUT ALIAS: **OutputPowerBI**
-1. Type: DATASET NAME: **personalDB** # This dataset will be overwritten in PBI should it already exist
+1. Type: DATASET NAME: **personalDB** (This dataset will be overwritten in PBI should it already exist)
 1. Type: TABLE NAME: **personalDB**
-1. Select: WORKSPACE: **My Workspace** # Default
-1. Click: **Finish** > **Start** > **Finish** # You do not need to specify a custom time
+1. Select: WORKSPACE: **My Workspace** (Default)
+1. Click: **Finish** > **Start** > **Finish** (You do not need to specify a custom time)
 
 ### Deploy the data generator as a Web Job
 
@@ -154,7 +185,7 @@ Connect to the Data Warehouse using SQL Server Data Tools Preview in Visual Stud
 1. Edit: **Rage.exe.config**
 1. Replace: EVENTHUBNAME: With: **personaleventhub[*UNIQUE*]**
 1. Get CONNECTION STRING
-    1. Browse: https://manage.windowsazure.com # Get the endpoint
+    1. Browse: https://manage.windowsazure.com (Get the endpoint)
     1. Click: SERVICE BUS
     1. Select: **personalservicebus[*UNIQUE*]**
     1. Click: CONNECTION INFORMATION
@@ -168,7 +199,7 @@ Connect to the Data Warehouse using SQL Server Data Tools Preview in Visual Stud
 1. Click: **CREATE WEB APP** > **WEB APPS** > **ratings[*UNIQUE*]** > **WEBJOBS** > **ADD A JOB**
 1. Type: NAME: **ratings[*UNIQUE*]**
 1. Browse: **datagenerator.zip**
-1. Select: HOW TO RUN: **Run continuously** # The default. It generates new ratings every 5 seconds.
+1. Select: HOW TO RUN: **Run continuously** (The default. It generates new ratings every 5 seconds)
 1. Click: **Finish**
 
 ## Create the Data Factories
@@ -186,15 +217,15 @@ This will create a new "blade" in the Azure portal.
 ![arm1-image](./media/arm2.png)
 
 1. Parameters
-   1. Type: UNIQUE (string): **[*UNIQUE*]** # Use the one previously entered
-   1. Select: LOCATION: **[*LOCATION*]** # Use the one previously selected
+   1. Type: UNIQUE (string): **[*UNIQUE*]** (Use the one previously entered)
+   1. Select: LOCATION: **[*LOCATION*]** (Use the one previously selected)
    1. URL
    1. API KEY
    1. Click: **OK**
-1. Select: Subscription: **[*SUBSCRIPTION*]** # Use the one previously selected
-1. Select: Resource group: **[*UNIQUE*]** # Use the one previously selected
+1. Select: Subscription: **[*SUBSCRIPTION*]** (Use the one previously selected)
+1. Select: Resource group: **[*UNIQUE*]** (Use the one previously selected)
 1. Click: **Review legal terms** > **Create**
-1. Check: **Pin to dashboard** # If you want it on your dashboard
+1. Check: **Pin to dashboard** (If you want it on your dashboard)
 1. Click: **Create**
 
 ## Create and Register the Data Management Gateway registration key
@@ -208,7 +239,7 @@ This will create a new "blade" in the Azure portal.
 1. Update the Data Management Gateway with the ADF registration key
     1. Start: Microsoft Data Management Gateway Configuration manager
 		1. Click: **Change Key**
-		1. Check: Show gateway key # To verify the key is correct
+		1. Check: Show gateway key (To verify the key is correct)
 		1. Paste: **NEW KEY**
 		1. Click: **OK**
 
@@ -228,15 +259,15 @@ This will create a new "blade" in the Azure portal.
 ![dashboard-usecase-realtime](./media/dashboard-usecase-realtime.png)
 
 1. Browse: https://powerbi.microsoft.com
-1. Click: **Sign in** # Login with your credentials
+1. Click: **Sign in** (Login with your credentials)
 1. Show: The navigation pane
-1. Click: **personalDB** # Under the Datasets folder > **Line chart** # Under Visualizations
+1. Click: **personalDB** (Under the Datasets folder > **Line chart** # Under Visualizations)
 1. Drag: **DateTime**: To: **Axis**
 1. Drag: **DeviceId**: To: **Legend**
 1. Drag: **Rating**: To: **Values**
 1. Click: **Save**
 1. Type: Name: **personalDB**
-1. Click: **Save** > **Pin visual** # pin icon on upper-right
+1. Click: **Save** > **Pin visual** (pin icon on upper-right)
 1. Select: **New dashboard**
 1. Type: Name: **personalDB**
 1. Click: **Pin**
@@ -246,7 +277,7 @@ This will create a new "blade" in the Azure portal.
 ![dashboard-usecase-predictive](./media/dashboard-usecase-predictive.png)
 
 1. Browse: https://powerbi.microsoft.com
-1. Click: **Sign in** # Login with your credentials
+1. Click: **Sign in** (Login with your credentials)
 1. Show: The navigation pane
 1. Click: **Get Data** > Databases: **Get** > **Azure SQL Data Warehouse** > **Connect** > Server: **personal-[*UNIQUE*].database.windows.net** > Database: **personalDB** > **Next** > Username: **personaluser** > Password: **pass@word1** > **Sign in** > Datasets: **personalDB** > Visualizations: **Line Chart**
 1. Expand: Fields: **AverageRatings**
@@ -267,7 +298,9 @@ This will create a new "blade" in the Azure portal.
 
 ### Using historical data
 
-#### Realtime visualization
+The real time and especially the predictive visualizations will take a long while to fill in, so below are the steps for these visualizations for a sample past event where all the data is already there.
+
+#### Real time visualization
 
 1. Edit: **personalDB2**
 1. Click: **New page**
@@ -319,8 +352,8 @@ Congratulations! If you made it to this point, you should have a running sample 
 
 1. Browse: https://studio.azureml.net
 1. Click: **my experiments** > **WEB SERVICES**
-1. Select: **Ratings** # Your web service
-1. Click: **TEST** # Verify that request/response works
+1. Select: **Ratings** (Your web service)
+1. Click: **TEST** (Verify that request/response works)
 1. Click: **DATABASE QUERY**:
       SELECT
       CAST(Rating AS INT) AS Rating
