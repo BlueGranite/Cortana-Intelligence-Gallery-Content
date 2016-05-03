@@ -1600,7 +1600,6 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![svg](output_173_0.svg)
 
 
 Notice how the x-axis is properly formatted as a date without any manual input from us. Both the summary and the plot above would not have been possible if `pickup_datetime` was still a character column.
@@ -1636,7 +1635,6 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![svg](output_179_0.svg)
 
 
 We can see that most longitude values fall in the expected range, but there's a second peak around 0. There are also some other values outside of the expected range, but we can't see them in the histogram. We just know there are there because of the wide range (in the x-axis) of the histogram. 
@@ -1692,7 +1690,6 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![svg](output_187_0.svg)
 
 
 
@@ -2682,7 +2679,6 @@ ggplot(nyc_df) +
 ```
 
 
-![svg](output_298_0.svg)
 
 
 We now go back to the data to find the neighborhood information based on the pickup and dropoff coordinates. We store pickup longitude and latitude in a separate `data.frame`, replacing NAs with zeroes (the function we're about to use doesn't work with NAs). We then use the `coordinates` function to point to the columns that correspond to the geographical coordinates. Finally, we use the `over` function to find the region (in this case the neighborhood) that the coordinates in the data fall into, and we append the neighborhood name as a new column to the `nyc_taxi` dataset.
@@ -3297,7 +3293,6 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![svg](output_358_0.svg)
 
 
 The histogram confirms what we suspected: tipping is affected by the method of payment. However, it is unlikely to believe that people who pay cash simply don't tip. A more believable scenario is that cash customers tip too, but their tip does not get recorded into the system as tip. In the next exercise, we try our hand at simulating tipping behavior for cash customers.
@@ -3464,7 +3459,6 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![svg](output_382_0.svg)
 
 
 ### Exercise 5.5
@@ -3519,7 +3513,6 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![svg](output_389_0.svg)
 
 
 ---
@@ -3957,7 +3950,6 @@ plot(p)
 
 
 
-![svg](output_438_1.svg)
 
 
 Describe what the plot is telling us: what is the bottleneck in getting quantiles?
