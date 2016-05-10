@@ -4,10 +4,10 @@
 *R for SAS Users* is designed to help experienced SAS users learn to process, query, transform and summarize data with R. This course takes a use-case-based approach to walk through the knowledge discovery and data mining process using R. This course has no prerequisites.  While we do not cover Microsoft R Server (MRS) during this course, a secondary goal of the course is to prepare users for MRS and its set of tools and capabilities for scalable big data-processing and analytics.  This course covers all the requirements to prepare users for MRS training, although we recommend spacing out this course and the *MRS for SAS Users* course to give participants time to absorb the material.
 
 After completing this course, participants will be able to use R in order to:
-1.	Read and process flat files (CSV) using R
-2.	Clean and prepare data for analysis
-3.	Create new features
-4.	Visualize, explore, and summarize data
+1.  Read and process flat files (CSV) using R
+2.  Clean and prepare data for analysis
+3.  Create new features
+4.  Visualize, explore, and summarize data
 
 While we occasionally draw certain parallels between SAS and R, this course does not teach a user to do a line-by-line (or chunk-by-chunk) conversion of SAS code to R code.  Instead, by covering a thorough use-case, we attempt to show how to use R and what best practices to follow.  At the end of the course, users should have a solid understanding of how to use R to process and analyze data, and compare and contrast R and SAS in how they deal with data.  But there is no doubt that migration legacy code from SAS to R is a challenging task.
 
@@ -102,6 +102,39 @@ library(profr) # profiling tool
 library(microbenchmark) # benchmarking tool
 ```
 
+    
+    Attaching package: 'dplyr'
+    
+    The following objects are masked from 'package:stats':
+    
+        filter, lag
+    
+    The following objects are masked from 'package:base':
+    
+        intersect, setdiff, setequal, union
+    
+    
+    Attaching package: 'lubridate'
+    
+    The following object is masked from 'package:base':
+    
+        date
+    
+    
+    Attaching package: 'seriation'
+    
+    The following object is masked from 'package:lattice':
+    
+        panel.lines
+    
+    rgeos version: 0.3-19, (SVN revision 524)
+     GEOS runtime version: 3.5.0-CAPI-1.9.0 r4084 
+     Linking to sp version: 1.2-2 
+     Polygon checking: TRUE 
+    
+    Checking rgeos availability: TRUE
+    
+
 In the next chapter, we deal with our first challenge: loading the data into R.
 
 ## Section 1: Loading data into R
@@ -146,69 +179,38 @@ Sys.time() - st
 
 
 
-    Time difference of 28.6 secs
+    Time difference of 28.7 secs
 
 
 
 
 ```R
-class(nyc_taxi)
+print(class(nyc_taxi))
 ```
 
-
-
-
-"data.frame"
-
-
-
-
-```R
-head(nyc_taxi)
-```
-
-
-
-
-<table>
-<thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>RateCodeID</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
-<tbody>
-	<tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
-	<tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
-	<tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
-	<tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
-	<tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
-</tbody>
-</table>
-
-
-
+    [1] "data.frame"
+    
 
 It is important to know that `nyc_taxi` is no longer linked to the original CSV file: The CSV file resides somewhere on disk, but `nyc_taxi` is a **copy** of the CSV file sitting in memory.  Any modifications we make to this file will not be written to the CSV file, or any file on disk, unless we explicitly do so.  Let's begin by comparing the size of the original CSV file with the size of its copy in the R session.
 
 
 ```R
-as.numeric(object.size(nyc_taxi)) / 2^20 # size of object in memory (we divide by 2^20 to convert from bytes to megabytes)
+obj_size_mb <- as.integer(object.size(nyc_taxi)) / 2^20 # size of object in memory (we divide by 2^20 to convert from bytes to megabytes)
+print(obj_size_mb)
 ```
 
-
-
-
-208.594909667969
-
-
+    [1] 209
+    
 
 
 ```R
-file.size(data_path) / 2^20 # size of the original file
+file_size_mb <- file.size(data_path) / 2^20 # size of the original file
+print(file_testsize_mb)
 ```
 
 
-
-
-132.55038356781
-
+    Error in print(file_testsize_mb): object 'file_testsize_mb' not found
+    
 
 
 As we can see, the object in the memory takes up more space (in memory) than the CSV file does on disk.  Since the amount of available memory on a computer is much smaller than available disk space, for a long time the need to load data in its entirety in the memory imposed a serious limitation on using R with large datasets.  Over the years, machines have been endowed with more CPU power and more memory, but data sizes have grown even more, so fundamentally the problem is still there.  As we become better R programmers, we can learn ways to more efficiently load and process the data, but writing efficient R code is not always easy or even desirable if the resulting code looks hard to read and understand.
@@ -244,12 +246,12 @@ head(nyc_taxi) # show me the first few rows
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>RateCodeID</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
-	<tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
-	<tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
-	<tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
-	<tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
+  <tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
+  <tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
+  <tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
+  <tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
+  <tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
 </tbody>
 </table>
 
@@ -258,7 +260,7 @@ head(nyc_taxi) # show me the first few rows
 
 
 ```R
-head(nyc_taxi, n = 20) # show me the first 20 rows
+head(nyc_taxi, n = 10) # show me the first 10 rows
 ```
 
 
@@ -267,26 +269,16 @@ head(nyc_taxi, n = 20) # show me the first 20 rows
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>RateCodeID</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
-	<tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
-	<tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
-	<tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
-	<tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
-	<tr><th scope=row>7</th><td>1</td><td>2015-01-23 16:51:38</td><td>2015-01-23 16:57:37</td><td>3</td><td>0.4</td><td>-74</td><td>40.8</td><td>1</td><td>Y</td><td>-74</td><td>40.8</td><td>1</td><td>5.5</td><td>1</td><td>0.5</td><td>1.45</td><td>0</td><td>0.3</td><td>8.75</td><td>0.000579</td></tr>
-	<tr><th scope=row>8</th><td>2</td><td>2015-01-13 00:09:40</td><td>2015-01-13 00:31:38</td><td>1</td><td>9.3</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-73.9</td><td>40.8</td><td>1</td><td>28.5</td><td>0.5</td><td>0.5</td><td>5.8</td><td>0</td><td>0.3</td><td>35.6</td><td>0.00697</td></tr>
-	<tr><th scope=row>9</th><td>2</td><td>2015-01-03 09:19:52</td><td>2015-01-03 09:36:32</td><td>1</td><td>5.49</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>18</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>18.8</td><td>0.00917</td></tr>
-	<tr><th scope=row>10</th><td>2</td><td>2015-01-23 00:31:02</td><td>2015-01-23 00:43:11</td><td>5</td><td>3.57</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>13</td><td>0.5</td><td>0.5</td><td>1</td><td>0</td><td>0.3</td><td>15.3</td><td>0.00823</td></tr>
-	<tr><th scope=row>11</th><td>1</td><td>2015-01-26 13:33:52</td><td>2015-01-26 13:38:01</td><td>1</td><td>0.2</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>4.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>5.3</td><td>0.00255</td></tr>
-	<tr><th scope=row>12</th><td>1</td><td>2015-01-10 23:05:15</td><td>2015-01-10 23:22:07</td><td>1</td><td>2.3</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>12.5</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>13.8</td><td>0.00347</td></tr>
-	<tr><th scope=row>13</th><td>1</td><td>2015-01-15 10:56:47</td><td>2015-01-15 11:23:18</td><td>1</td><td>5.4</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>22</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>22.8</td><td>0.00769</td></tr>
-	<tr><th scope=row>14</th><td>1</td><td>2015-01-26 14:07:52</td><td>2015-01-26 14:29:29</td><td>1</td><td>3</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>15</td><td>0</td><td>0.5</td><td>3.15</td><td>0</td><td>0.3</td><td>18.9</td><td>0.00292</td></tr>
-	<tr><th scope=row>15</th><td>2</td><td>2015-01-07 19:01:08</td><td>2015-01-07 19:04:37</td><td>1</td><td>0.36</td><td>0</td><td>0</td><td>1</td><td>N</td><td>0</td><td>0</td><td>2</td><td>4</td><td>1</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>5.8</td><td>0.000025</td></tr>
-	<tr><th scope=row>16</th><td>2</td><td>2015-01-05 22:32:05</td><td>2015-01-05 22:40:23</td><td>5</td><td>3.69</td><td>-73.8</td><td>40.6</td><td>1</td><td>N</td><td>-73.8</td><td>40.7</td><td>2</td><td>13</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>14.3</td><td>0.00873</td></tr>
-	<tr><th scope=row>17</th><td>2</td><td>2015-01-30 09:08:20</td><td>2015-01-30 09:47:34</td><td>1</td><td>5.83</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>27</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>27.8</td><td>0.0000218</td></tr>
-	<tr><th scope=row>18</th><td>2</td><td>2015-01-30 09:08:20</td><td>2015-01-30 09:40:12</td><td>3</td><td>4.79</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>22.5</td><td>0</td><td>0.5</td><td>2</td><td>0</td><td>0.3</td><td>25.3</td><td>0.00511</td></tr>
-	<tr><th scope=row>19</th><td>2</td><td>2015-01-27 18:36:07</td><td>2015-01-27 18:50:33</td><td>1</td><td>3.88</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-73.9</td><td>40.8</td><td>2</td><td>14</td><td>1</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>15.8</td><td>0.00539</td></tr>
-	<tr><th scope=row>20</th><td>1</td><td>2015-01-07 21:41:46</td><td>2015-01-07 21:45:04</td><td>1</td><td>0.7</td><td>-74</td><td>40.7</td><td>1</td><td>Y</td><td>-74</td><td>40.7</td><td>2</td><td>5</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00971</td></tr>
+  <tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
+  <tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
+  <tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
+  <tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
+  <tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
+  <tr><th scope=row>7</th><td>1</td><td>2015-01-23 16:51:38</td><td>2015-01-23 16:57:37</td><td>3</td><td>0.4</td><td>-74</td><td>40.8</td><td>1</td><td>Y</td><td>-74</td><td>40.8</td><td>1</td><td>5.5</td><td>1</td><td>0.5</td><td>1.45</td><td>0</td><td>0.3</td><td>8.75</td><td>0.000579</td></tr>
+  <tr><th scope=row>8</th><td>2</td><td>2015-01-13 00:09:40</td><td>2015-01-13 00:31:38</td><td>1</td><td>9.3</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-73.9</td><td>40.8</td><td>1</td><td>28.5</td><td>0.5</td><td>0.5</td><td>5.8</td><td>0</td><td>0.3</td><td>35.6</td><td>0.00697</td></tr>
+  <tr><th scope=row>9</th><td>2</td><td>2015-01-03 09:19:52</td><td>2015-01-03 09:36:32</td><td>1</td><td>5.49</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>18</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>18.8</td><td>0.00917</td></tr>
+  <tr><th scope=row>10</th><td>2</td><td>2015-01-23 00:31:02</td><td>2015-01-23 00:43:11</td><td>5</td><td>3.57</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>13</td><td>0.5</td><td>0.5</td><td>1</td><td>0</td><td>0.3</td><td>15.3</td><td>0.00823</td></tr>
 </tbody>
 </table>
 
@@ -304,12 +296,12 @@ tail(nyc_taxi) # show me the last few rows
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>RateCodeID</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>770649</th><td>1</td><td>2015-06-30 23:52:40</td><td>2015-06-30 23:54:10</td><td>1</td><td>0</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3</td><td>0.5</td><td>0.5</td><td>1</td><td>0</td><td>0.3</td><td>5.3</td><td>0.00269</td></tr>
-	<tr><th scope=row>770650</th><td>1</td><td>2015-06-30 23:55:43</td><td>2015-07-01 00:05:06</td><td>1</td><td>1.5</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>8.5</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>9.8</td><td>0.00993</td></tr>
-	<tr><th scope=row>770651</th><td>1</td><td>2015-06-30 21:53:31</td><td>2015-06-30 22:00:22</td><td>1</td><td>1.2</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>6.5</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>7.8</td><td>0.00682</td></tr>
-	<tr><th scope=row>770652</th><td>1</td><td>2015-06-30 21:53:41</td><td>2015-06-30 22:07:53</td><td>1</td><td>2.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>11</td><td>0.5</td><td>0.5</td><td>2.46</td><td>0</td><td>0.3</td><td>14.8</td><td>0.000238</td></tr>
-	<tr><th scope=row>770653</th><td>2</td><td>2015-06-30 21:54:17</td><td>2015-06-30 22:09:42</td><td>1</td><td>2.79</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>12.5</td><td>0.5</td><td>0.5</td><td>2.76</td><td>0</td><td>0.3</td><td>16.6</td><td>0.00436</td></tr>
-	<tr><th scope=row>770654</th><td>1</td><td>2015-06-30 21:53:58</td><td>2015-06-30 21:58:30</td><td>1</td><td>1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.8</td><td>0.0083</td></tr>
+  <tr><th scope=row>770649</th><td>1</td><td>2015-06-30 23:52:40</td><td>2015-06-30 23:54:10</td><td>1</td><td>0</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3</td><td>0.5</td><td>0.5</td><td>1</td><td>0</td><td>0.3</td><td>5.3</td><td>0.00269</td></tr>
+  <tr><th scope=row>770650</th><td>1</td><td>2015-06-30 23:55:43</td><td>2015-07-01 00:05:06</td><td>1</td><td>1.5</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>8.5</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>9.8</td><td>0.00993</td></tr>
+  <tr><th scope=row>770651</th><td>1</td><td>2015-06-30 21:53:31</td><td>2015-06-30 22:00:22</td><td>1</td><td>1.2</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>6.5</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>7.8</td><td>0.00682</td></tr>
+  <tr><th scope=row>770652</th><td>1</td><td>2015-06-30 21:53:41</td><td>2015-06-30 22:07:53</td><td>1</td><td>2.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>11</td><td>0.5</td><td>0.5</td><td>2.46</td><td>0</td><td>0.3</td><td>14.8</td><td>0.000238</td></tr>
+  <tr><th scope=row>770653</th><td>2</td><td>2015-06-30 21:54:17</td><td>2015-06-30 22:09:42</td><td>1</td><td>2.79</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>12.5</td><td>0.5</td><td>0.5</td><td>2.76</td><td>0</td><td>0.3</td><td>16.6</td><td>0.00436</td></tr>
+  <tr><th scope=row>770654</th><td>1</td><td>2015-06-30 21:53:58</td><td>2015-06-30 21:58:30</td><td>1</td><td>1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0.5</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.8</td><td>0.0083</td></tr>
 </tbody>
 </table>
 
@@ -318,101 +310,36 @@ tail(nyc_taxi) # show me the last few rows
 
 
 ```R
-class(nyc_taxi) # shows the type of the data: `data.frame`
+basic_info <- list(
+    class = class(nyc_taxi), # shows the type of the data: `data.frame`
+    type = typeof(nyc_taxi), # shows that a `data.frame` is fundamentally a `list` object
+    nrow = nrow(nyc_taxi), # number of rows
+    ncol = ncol(nyc_taxi), # number of columns
+    colnames = names(nyc_taxi))
+
+print(basic_info)
 ```
 
-
-
-
-"data.frame"
-
-
-
-
-```R
-typeof(nyc_taxi) # shows that a `data.frame` is fundamentally a `list` object
-```
-
-
-
-
-"list"
-
-
-
-
-```R
-dim(nyc_taxi) # dimensions (works on multidimensional arrays too)
-```
-
-
-
-
-<ol class=list-inline>
-	<li>770654</li>
-	<li>20</li>
-</ol>
-
-
-
-
-
-```R
-nrow(nyc_taxi) # number of rows
-```
-
-
-
-
-770654
-
-
-
-
-```R
-ncol(nyc_taxi) # number of columns
-```
-
-
-
-
-20
-
-
-
-
-```R
-names(nyc_taxi) # column names
-```
-
-
-
-
-<ol class=list-inline>
-	<li>"VendorID"</li>
-	<li>"tpep_pickup_datetime"</li>
-	<li>"tpep_dropoff_datetime"</li>
-	<li>"passenger_count"</li>
-	<li>"trip_distance"</li>
-	<li>"pickup_longitude"</li>
-	<li>"pickup_latitude"</li>
-	<li>"RateCodeID"</li>
-	<li>"store_and_fwd_flag"</li>
-	<li>"dropoff_longitude"</li>
-	<li>"dropoff_latitude"</li>
-	<li>"payment_type"</li>
-	<li>"fare_amount"</li>
-	<li>"extra"</li>
-	<li>"mta_tax"</li>
-	<li>"tip_amount"</li>
-	<li>"tolls_amount"</li>
-	<li>"improvement_surcharge"</li>
-	<li>"total_amount"</li>
-	<li>"u"</li>
-</ol>
-
-
-
+    $class
+    [1] "data.frame"
+    
+    $type
+    [1] "list"
+    
+    $nrow
+    [1] 770654
+    
+    $ncol
+    [1] 20
+    
+    $colnames
+     [1] "VendorID"              "tpep_pickup_datetime"  "tpep_dropoff_datetime" "passenger_count"      
+     [5] "trip_distance"         "pickup_longitude"      "pickup_latitude"       "RateCodeID"           
+     [9] "store_and_fwd_flag"    "dropoff_longitude"     "dropoff_latitude"      "payment_type"         
+    [13] "fare_amount"           "extra"                 "mta_tax"               "tip_amount"           
+    [17] "tolls_amount"          "improvement_surcharge" "total_amount"          "u"                    
+    
+    
 
 
 ```R
@@ -426,7 +353,7 @@ We use `str` to look at column types in the data: the most common column types a
 str(nyc_taxi)
 ```
 
-    'data.frame':	770654 obs. of  20 variables:
+    'data.frame': 770654 obs. of  20 variables:
      $ VendorID             : int  1 2 2 2 2 1 1 2 2 2 ...
      $ tpep_pickup_datetime : chr  "2015-01-15 09:47:05" "2015-01-08 16:24:00" "2015-01-28 21:50:16" "2015-01-28 21:50:18" ...
      $ tpep_dropoff_datetime: chr  "2015-01-15 09:48:54" "2015-01-08 16:36:47" "2015-01-28 22:09:25" "2015-01-28 22:17:41" ...
@@ -465,7 +392,7 @@ We will encounter examples for each case.
 
 
 ```R
-nyc_taxi[1:10, 1:4] # rows 1 through 10, columns 1 through 4
+nyc_taxi[1:5, 1:4] # rows 1 through 5, columns 1 through 4
 ```
 
 
@@ -474,16 +401,11 @@ nyc_taxi[1:10, 1:4] # rows 1 through 10, columns 1 through 4
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td></tr>
-	<tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td></tr>
-	<tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td></tr>
-	<tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td></tr>
-	<tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td></tr>
-	<tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td></tr>
-	<tr><th scope=row>7</th><td>1</td><td>2015-01-23 16:51:38</td><td>2015-01-23 16:57:37</td><td>3</td></tr>
-	<tr><th scope=row>8</th><td>2</td><td>2015-01-13 00:09:40</td><td>2015-01-13 00:31:38</td><td>1</td></tr>
-	<tr><th scope=row>9</th><td>2</td><td>2015-01-03 09:19:52</td><td>2015-01-03 09:36:32</td><td>1</td></tr>
-	<tr><th scope=row>10</th><td>2</td><td>2015-01-23 00:31:02</td><td>2015-01-23 00:43:11</td><td>5</td></tr>
+  <tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td></tr>
+  <tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td></tr>
+  <tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td></tr>
+  <tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td></tr>
+  <tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td></tr>
 </tbody>
 </table>
 
@@ -492,7 +414,7 @@ nyc_taxi[1:10, 1:4] # rows 1 through 10, columns 1 through 4
 
 
 ```R
-nyc_taxi[1:10, -(1:4)] # rows 1 through 10, except columns 1 through 4
+nyc_taxi[1:5, -(1:4)] # rows 1 through 5, except columns 1 through 4
 ```
 
 
@@ -501,16 +423,11 @@ nyc_taxi[1:10, -(1:4)] # rows 1 through 10, except columns 1 through 4
 <table>
 <thead><tr><th></th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>2</th><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
-	<tr><th scope=row>3</th><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
-	<tr><th scope=row>4</th><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
-	<tr><th scope=row>5</th><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
-	<tr><th scope=row>6</th><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
-	<tr><th scope=row>7</th><td>0.4</td><td>-74</td><td>40.8</td><td>1</td><td>Y</td><td>-74</td><td>40.8</td><td>1</td><td>5.5</td><td>1</td><td>0.5</td><td>1.45</td><td>0</td><td>0.3</td><td>8.75</td><td>0.000579</td></tr>
-	<tr><th scope=row>8</th><td>9.3</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-73.9</td><td>40.8</td><td>1</td><td>28.5</td><td>0.5</td><td>0.5</td><td>5.8</td><td>0</td><td>0.3</td><td>35.6</td><td>0.00697</td></tr>
-	<tr><th scope=row>9</th><td>5.49</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>18</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>18.8</td><td>0.00917</td></tr>
-	<tr><th scope=row>10</th><td>3.57</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>13</td><td>0.5</td><td>0.5</td><td>1</td><td>0</td><td>0.3</td><td>15.3</td><td>0.00823</td></tr>
+  <tr><th scope=row>1</th><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>2</th><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
+  <tr><th scope=row>3</th><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
+  <tr><th scope=row>4</th><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
+  <tr><th scope=row>5</th><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
 </tbody>
 </table>
 
@@ -519,7 +436,7 @@ nyc_taxi[1:10, -(1:4)] # rows 1 through 10, except columns 1 through 4
 
 
 ```R
-nyc_taxi[1:10, ] # all the columns, first 10 rows
+nyc_taxi[1:5, ] # all the columns, first 10 rows
 ```
 
 
@@ -528,16 +445,11 @@ nyc_taxi[1:10, ] # all the columns, first 10 rows
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
-	<tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
-	<tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
-	<tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
-	<tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
-	<tr><th scope=row>7</th><td>1</td><td>2015-01-23 16:51:38</td><td>2015-01-23 16:57:37</td><td>3</td><td>0.4</td><td>-74</td><td>40.8</td><td>1</td><td>Y</td><td>-74</td><td>40.8</td><td>1</td><td>5.5</td><td>1</td><td>0.5</td><td>1.45</td><td>0</td><td>0.3</td><td>8.75</td><td>0.000579</td></tr>
-	<tr><th scope=row>8</th><td>2</td><td>2015-01-13 00:09:40</td><td>2015-01-13 00:31:38</td><td>1</td><td>9.3</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-73.9</td><td>40.8</td><td>1</td><td>28.5</td><td>0.5</td><td>0.5</td><td>5.8</td><td>0</td><td>0.3</td><td>35.6</td><td>0.00697</td></tr>
-	<tr><th scope=row>9</th><td>2</td><td>2015-01-03 09:19:52</td><td>2015-01-03 09:36:32</td><td>1</td><td>5.49</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>18</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>18.8</td><td>0.00917</td></tr>
-	<tr><th scope=row>10</th><td>2</td><td>2015-01-23 00:31:02</td><td>2015-01-23 00:43:11</td><td>5</td><td>3.57</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>13</td><td>0.5</td><td>0.5</td><td>1</td><td>0</td><td>0.3</td><td>15.3</td><td>0.00823</td></tr>
+  <tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
+  <tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
+  <tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
+  <tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
 </tbody>
 </table>
 
@@ -562,10 +474,10 @@ nyc_taxi[c(2, 3, 8, 66), c("fare_amount", "mta_tax", "tip_amount", "tolls_amount
 <table>
 <thead><tr><th></th><th scope=col>fare_amount</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>2</th><td>10</td><td>0.5</td><td>2.2</td><td>0</td></tr>
-	<tr><th scope=row>3</th><td>18</td><td>0.5</td><td>3.86</td><td>0</td></tr>
-	<tr><th scope=row>8</th><td>28.5</td><td>0.5</td><td>5.8</td><td>0</td></tr>
-	<tr><th scope=row>66</th><td>8.5</td><td>0.5</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>2</th><td>10</td><td>0.5</td><td>2.2</td><td>0</td></tr>
+  <tr><th scope=row>3</th><td>18</td><td>0.5</td><td>3.86</td><td>0</td></tr>
+  <tr><th scope=row>8</th><td>28.5</td><td>0.5</td><td>5.8</td><td>0</td></tr>
+  <tr><th scope=row>66</th><td>8.5</td><td>0.5</td><td>0</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -585,11 +497,11 @@ seq(1, 10, by = 2)
 
 
 <ol class=list-inline>
-	<li>1</li>
-	<li>3</li>
-	<li>5</li>
-	<li>7</li>
-	<li>9</li>
+  <li>1</li>
+  <li>3</li>
+  <li>5</li>
+  <li>7</li>
+  <li>9</li>
 </ol>
 
 
@@ -608,10 +520,10 @@ rep(1, 4)
 
 
 <ol class=list-inline>
-	<li>1</li>
-	<li>1</li>
-	<li>1</li>
-	<li>1</li>
+  <li>1</li>
+  <li>1</li>
+  <li>1</li>
+  <li>1</li>
 </ol>
 
 
@@ -628,14 +540,14 @@ rep(1:2, 4)
 
 
 <ol class=list-inline>
-	<li>1</li>
-	<li>2</li>
-	<li>1</li>
-	<li>2</li>
-	<li>1</li>
-	<li>2</li>
-	<li>1</li>
-	<li>2</li>
+  <li>1</li>
+  <li>2</li>
+  <li>1</li>
+  <li>2</li>
+  <li>1</li>
+  <li>2</li>
+  <li>1</li>
+  <li>2</li>
 </ol>
 
 
@@ -652,13 +564,13 @@ rep(c(3, 6), c(2, 5))
 
 
 <ol class=list-inline>
-	<li>3</li>
-	<li>3</li>
-	<li>6</li>
-	<li>6</li>
-	<li>6</li>
-	<li>6</li>
-	<li>6</li>
+  <li>3</li>
+  <li>3</li>
+  <li>6</li>
+  <li>6</li>
+  <li>6</li>
+  <li>6</li>
+  <li>6</li>
 </ol>
 
 
@@ -681,12 +593,12 @@ head(nyc_taxi[seq(1, nrow(nyc_taxi), 2500), ]) # solution to (A)
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>2501</th><td>2</td><td>2015-01-05 19:44:42</td><td>2015-01-05 20:01:18</td><td>1</td><td>5.65</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>18.5</td><td>1</td><td>0.5</td><td>3.9</td><td>0</td><td>0.3</td><td>24.2</td><td>0.00647</td></tr>
-	<tr><th scope=row>5001</th><td>2</td><td>2015-01-07 11:52:35</td><td>2015-01-07 12:06:31</td><td>4</td><td>1.87</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10.5</td><td>0</td><td>0.5</td><td>1.5</td><td>0</td><td>0.3</td><td>12.8</td><td>0.00619</td></tr>
-	<tr><th scope=row>7501</th><td>2</td><td>2015-01-10 14:59:48</td><td>2015-01-10 15:22:25</td><td>2</td><td>3.08</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>16</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>16.8</td><td>0.009</td></tr>
-	<tr><th scope=row>10001</th><td>2</td><td>2015-01-05 12:21:14</td><td>2015-01-05 12:27:52</td><td>6</td><td>1.4</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>7</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>7.8</td><td>0.00459</td></tr>
-	<tr><th scope=row>12501</th><td>2</td><td>2015-01-18 12:46:13</td><td>2015-01-18 12:54:51</td><td>1</td><td>1.09</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>7</td><td>0</td><td>0.5</td><td>1.4</td><td>0</td><td>0.3</td><td>9.2</td><td>0.00993</td></tr>
+  <tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>2501</th><td>2</td><td>2015-01-05 19:44:42</td><td>2015-01-05 20:01:18</td><td>1</td><td>5.65</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>18.5</td><td>1</td><td>0.5</td><td>3.9</td><td>0</td><td>0.3</td><td>24.2</td><td>0.00647</td></tr>
+  <tr><th scope=row>5001</th><td>2</td><td>2015-01-07 11:52:35</td><td>2015-01-07 12:06:31</td><td>4</td><td>1.87</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10.5</td><td>0</td><td>0.5</td><td>1.5</td><td>0</td><td>0.3</td><td>12.8</td><td>0.00619</td></tr>
+  <tr><th scope=row>7501</th><td>2</td><td>2015-01-10 14:59:48</td><td>2015-01-10 15:22:25</td><td>2</td><td>3.08</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>2</td><td>16</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>16.8</td><td>0.009</td></tr>
+  <tr><th scope=row>10001</th><td>2</td><td>2015-01-05 12:21:14</td><td>2015-01-05 12:27:52</td><td>6</td><td>1.4</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>7</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>7.8</td><td>0.00459</td></tr>
+  <tr><th scope=row>12501</th><td>2</td><td>2015-01-18 12:46:13</td><td>2015-01-18 12:54:51</td><td>1</td><td>1.09</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>7</td><td>0</td><td>0.5</td><td>1.4</td><td>0</td><td>0.3</td><td>9.2</td><td>0.00993</td></tr>
 </tbody>
 </table>
 
@@ -704,11 +616,11 @@ nyc_taxi[rep(1, 5), ] # solution to (B)
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>1.1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>1.2</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>1.3</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>1.4</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>1.1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>1.2</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>1.3</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>1.4</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
 </tbody>
 </table>
 
@@ -726,12 +638,12 @@ head(nyc_taxi[rep(1:10, 5), ]) # solution to (C)
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
-	<tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
-	<tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
-	<tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
-	<tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
-	<tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
+  <tr><th scope=row>1</th><td>1</td><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>0.00725</td></tr>
+  <tr><th scope=row>2</th><td>2</td><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>0.000566</td></tr>
+  <tr><th scope=row>3</th><td>2</td><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>0.00895</td></tr>
+  <tr><th scope=row>4</th><td>2</td><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>0.00328</td></tr>
+  <tr><th scope=row>5</th><td>2</td><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>N</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>0.00905</td></tr>
+  <tr><th scope=row>6</th><td>1</td><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>N</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>0.00726</td></tr>
 </tbody>
 </table>
 
@@ -754,16 +666,16 @@ nyc_taxi[1:10, "fare_amount"]
 
 
 <ol class=list-inline>
-	<li>3.5</li>
-	<li>10</li>
-	<li>18</li>
-	<li>24</li>
-	<li>64</li>
-	<li>5.5</li>
-	<li>5.5</li>
-	<li>28.5</li>
-	<li>18</li>
-	<li>13</li>
+  <li>3.5</li>
+  <li>10</li>
+  <li>18</li>
+  <li>24</li>
+  <li>64</li>
+  <li>5.5</li>
+  <li>5.5</li>
+  <li>28.5</li>
+  <li>18</li>
+  <li>13</li>
 </ol>
 
 
@@ -778,16 +690,16 @@ nyc_taxi$fare_amount[1:10]
 
 
 <ol class=list-inline>
-	<li>3.5</li>
-	<li>10</li>
-	<li>18</li>
-	<li>24</li>
-	<li>64</li>
-	<li>5.5</li>
-	<li>5.5</li>
-	<li>28.5</li>
-	<li>18</li>
-	<li>13</li>
+  <li>3.5</li>
+  <li>10</li>
+  <li>18</li>
+  <li>24</li>
+  <li>64</li>
+  <li>5.5</li>
+  <li>5.5</li>
+  <li>28.5</li>
+  <li>18</li>
+  <li>13</li>
 </ol>
 
 
@@ -808,12 +720,12 @@ head(nyc_taxi[nyc_taxi$fare_amount > 350, ]) # return the rows of the data where
 <table>
 <thead><tr><th></th><th scope=col>VendorID</th><th scope=col>tpep_pickup_datetime</th><th scope=col>tpep_dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>store_and_fwd_flag</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>u</th></tr></thead>
 <tbody>
-	<tr><th scope=row>22883</th><td>2</td><td>2015-01-11 13:27:32</td><td>2015-01-11 13:28:18</td><td>1</td><td>0</td><td>-73.9</td><td>40.7</td><td>5</td><td>N</td><td>-73.9</td><td>40.7</td><td>2</td><td>475</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0.3</td><td>475</td><td>0.00311</td></tr>
-	<tr><th scope=row>81529</th><td>2</td><td>2015-01-07 08:52:00</td><td>2015-01-07 08:52:00</td><td>1</td><td>0</td><td>0</td><td>0</td><td>5</td><td>N</td><td>0</td><td>0</td><td>1</td><td>588</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>588</td><td>0.00107</td></tr>
-	<tr><th scope=row>85923</th><td>2</td><td>2015-01-03 22:23:37</td><td>2015-01-04 00:23:11</td><td>1</td><td>104</td><td>-74</td><td>40.7</td><td>5</td><td>N</td><td>-75.2</td><td>40</td><td>2</td><td>400</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>401</td><td>0.00939</td></tr>
-	<tr><th scope=row>144102</th><td>2</td><td>2015-02-11 19:23:00</td><td>2015-02-11 19:23:00</td><td>1</td><td>0</td><td>0</td><td>0</td><td>5</td><td>N</td><td>0</td><td>0</td><td>1</td><td>401</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>401</td><td>0.00997</td></tr>
-	<tr><th scope=row>150917</th><td>2</td><td>2015-02-11 16:32:00</td><td>2015-02-11 16:32:00</td><td>1</td><td>0</td><td>0</td><td>0</td><td>5</td><td>N</td><td>0</td><td>0</td><td>1</td><td>699</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>699</td><td>0.00604</td></tr>
-	<tr><th scope=row>173934</th><td>2</td><td>2015-02-04 12:10:00</td><td>2015-02-04 12:10:00</td><td>1</td><td>0</td><td>0</td><td>0</td><td>5</td><td>N</td><td>0</td><td>0</td><td>1</td><td>465</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>465</td><td>0.0049</td></tr>
+  <tr><th scope=row>22883</th><td>2</td><td>2015-01-11 13:27:32</td><td>2015-01-11 13:28:18</td><td>1</td><td>0</td><td>-73.9</td><td>40.7</td><td>5</td><td>N</td><td>-73.9</td><td>40.7</td><td>2</td><td>475</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0.3</td><td>475</td><td>0.00311</td></tr>
+  <tr><th scope=row>81529</th><td>2</td><td>2015-01-07 08:52:00</td><td>2015-01-07 08:52:00</td><td>1</td><td>0</td><td>0</td><td>0</td><td>5</td><td>N</td><td>0</td><td>0</td><td>1</td><td>588</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>588</td><td>0.00107</td></tr>
+  <tr><th scope=row>85923</th><td>2</td><td>2015-01-03 22:23:37</td><td>2015-01-04 00:23:11</td><td>1</td><td>104</td><td>-74</td><td>40.7</td><td>5</td><td>N</td><td>-75.2</td><td>40</td><td>2</td><td>400</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>401</td><td>0.00939</td></tr>
+  <tr><th scope=row>144102</th><td>2</td><td>2015-02-11 19:23:00</td><td>2015-02-11 19:23:00</td><td>1</td><td>0</td><td>0</td><td>0</td><td>5</td><td>N</td><td>0</td><td>0</td><td>1</td><td>401</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>401</td><td>0.00997</td></tr>
+  <tr><th scope=row>150917</th><td>2</td><td>2015-02-11 16:32:00</td><td>2015-02-11 16:32:00</td><td>1</td><td>0</td><td>0</td><td>0</td><td>5</td><td>N</td><td>0</td><td>0</td><td>1</td><td>699</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>699</td><td>0.00604</td></tr>
+  <tr><th scope=row>173934</th><td>2</td><td>2015-02-04 12:10:00</td><td>2015-02-04 12:10:00</td><td>1</td><td>0</td><td>0</td><td>0</td><td>5</td><td>N</td><td>0</td><td>0</td><td>1</td><td>465</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>465</td><td>0.0049</td></tr>
 </tbody>
 </table>
 
@@ -834,16 +746,16 @@ nyc_taxi[nyc_taxi$fare_amount > 350 & nyc_taxi$tip_amount < 10, amount_vars]
 <table>
 <thead><tr><th></th><th scope=col>fare_amount</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>total_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>22883</th><td>475</td><td>0</td><td>0</td><td>475</td></tr>
-	<tr><th scope=row>81529</th><td>588</td><td>0</td><td>0</td><td>588</td></tr>
-	<tr><th scope=row>85923</th><td>400</td><td>0</td><td>0</td><td>401</td></tr>
-	<tr><th scope=row>144102</th><td>401</td><td>0</td><td>0</td><td>401</td></tr>
-	<tr><th scope=row>150917</th><td>699</td><td>0</td><td>0</td><td>699</td></tr>
-	<tr><th scope=row>173934</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
-	<tr><th scope=row>196580</th><td>1000</td><td>0</td><td>0</td><td>1900</td></tr>
-	<tr><th scope=row>334574</th><td>673</td><td>0</td><td>0</td><td>673</td></tr>
-	<tr><th scope=row>481726</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
-	<tr><th scope=row>762572</th><td>460</td><td>0</td><td>0</td><td>460</td></tr>
+  <tr><th scope=row>22883</th><td>475</td><td>0</td><td>0</td><td>475</td></tr>
+  <tr><th scope=row>81529</th><td>588</td><td>0</td><td>0</td><td>588</td></tr>
+  <tr><th scope=row>85923</th><td>400</td><td>0</td><td>0</td><td>401</td></tr>
+  <tr><th scope=row>144102</th><td>401</td><td>0</td><td>0</td><td>401</td></tr>
+  <tr><th scope=row>150917</th><td>699</td><td>0</td><td>0</td><td>699</td></tr>
+  <tr><th scope=row>173934</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
+  <tr><th scope=row>196580</th><td>1000</td><td>0</td><td>0</td><td>1900</td></tr>
+  <tr><th scope=row>334574</th><td>673</td><td>0</td><td>0</td><td>673</td></tr>
+  <tr><th scope=row>481726</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
+  <tr><th scope=row>762572</th><td>460</td><td>0</td><td>0</td><td>460</td></tr>
 </tbody>
 </table>
 
@@ -895,16 +807,16 @@ with(nyc_taxi, nyc_taxi[fare_amount > 350 & tip_amount < 10, amount_vars])
 <table>
 <thead><tr><th></th><th scope=col>fare_amount</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>total_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>22883</th><td>475</td><td>0</td><td>0</td><td>475</td></tr>
-	<tr><th scope=row>81529</th><td>588</td><td>0</td><td>0</td><td>588</td></tr>
-	<tr><th scope=row>85923</th><td>400</td><td>0</td><td>0</td><td>401</td></tr>
-	<tr><th scope=row>144102</th><td>401</td><td>0</td><td>0</td><td>401</td></tr>
-	<tr><th scope=row>150917</th><td>699</td><td>0</td><td>0</td><td>699</td></tr>
-	<tr><th scope=row>173934</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
-	<tr><th scope=row>196580</th><td>1000</td><td>0</td><td>0</td><td>1900</td></tr>
-	<tr><th scope=row>334574</th><td>673</td><td>0</td><td>0</td><td>673</td></tr>
-	<tr><th scope=row>481726</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
-	<tr><th scope=row>762572</th><td>460</td><td>0</td><td>0</td><td>460</td></tr>
+  <tr><th scope=row>22883</th><td>475</td><td>0</td><td>0</td><td>475</td></tr>
+  <tr><th scope=row>81529</th><td>588</td><td>0</td><td>0</td><td>588</td></tr>
+  <tr><th scope=row>85923</th><td>400</td><td>0</td><td>0</td><td>401</td></tr>
+  <tr><th scope=row>144102</th><td>401</td><td>0</td><td>0</td><td>401</td></tr>
+  <tr><th scope=row>150917</th><td>699</td><td>0</td><td>0</td><td>699</td></tr>
+  <tr><th scope=row>173934</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
+  <tr><th scope=row>196580</th><td>1000</td><td>0</td><td>0</td><td>1900</td></tr>
+  <tr><th scope=row>334574</th><td>673</td><td>0</td><td>0</td><td>673</td></tr>
+  <tr><th scope=row>481726</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
+  <tr><th scope=row>762572</th><td>460</td><td>0</td><td>0</td><td>460</td></tr>
 </tbody>
 </table>
 
@@ -929,16 +841,16 @@ subset(nyc_taxi, fare_amount > 350 & tip_amount < 10, select = amount_vars)
 <table>
 <thead><tr><th></th><th scope=col>fare_amount</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>total_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>22883</th><td>475</td><td>0</td><td>0</td><td>475</td></tr>
-	<tr><th scope=row>81529</th><td>588</td><td>0</td><td>0</td><td>588</td></tr>
-	<tr><th scope=row>85923</th><td>400</td><td>0</td><td>0</td><td>401</td></tr>
-	<tr><th scope=row>144102</th><td>401</td><td>0</td><td>0</td><td>401</td></tr>
-	<tr><th scope=row>150917</th><td>699</td><td>0</td><td>0</td><td>699</td></tr>
-	<tr><th scope=row>173934</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
-	<tr><th scope=row>196580</th><td>1000</td><td>0</td><td>0</td><td>1900</td></tr>
-	<tr><th scope=row>334574</th><td>673</td><td>0</td><td>0</td><td>673</td></tr>
-	<tr><th scope=row>481726</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
-	<tr><th scope=row>762572</th><td>460</td><td>0</td><td>0</td><td>460</td></tr>
+  <tr><th scope=row>22883</th><td>475</td><td>0</td><td>0</td><td>475</td></tr>
+  <tr><th scope=row>81529</th><td>588</td><td>0</td><td>0</td><td>588</td></tr>
+  <tr><th scope=row>85923</th><td>400</td><td>0</td><td>0</td><td>401</td></tr>
+  <tr><th scope=row>144102</th><td>401</td><td>0</td><td>0</td><td>401</td></tr>
+  <tr><th scope=row>150917</th><td>699</td><td>0</td><td>0</td><td>699</td></tr>
+  <tr><th scope=row>173934</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
+  <tr><th scope=row>196580</th><td>1000</td><td>0</td><td>0</td><td>1900</td></tr>
+  <tr><th scope=row>334574</th><td>673</td><td>0</td><td>0</td><td>673</td></tr>
+  <tr><th scope=row>481726</th><td>465</td><td>0</td><td>0</td><td>465</td></tr>
+  <tr><th scope=row>762572</th><td>460</td><td>0</td><td>0</td><td>460</td></tr>
 </tbody>
 </table>
 
@@ -958,8 +870,8 @@ dim(nyc_small)
 
 
 <ol class=list-inline>
-	<li>10</li>
-	<li>4</li>
+  <li>10</li>
+  <li>4</li>
 </ol>
 
 
@@ -978,12 +890,12 @@ head(nyc_small)
 <table>
 <thead><tr><th></th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>22883</th><td>475</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>81529</th><td>588</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>85923</th><td>400</td><td>0</td><td>0.5</td><td>0</td></tr>
-	<tr><th scope=row>144102</th><td>401</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>150917</th><td>699</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>173934</th><td>465</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>22883</th><td>475</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>81529</th><td>588</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>85923</th><td>400</td><td>0</td><td>0.5</td><td>0</td></tr>
+  <tr><th scope=row>144102</th><td>401</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>150917</th><td>699</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>173934</th><td>465</td><td>0</td><td>0</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -999,16 +911,16 @@ rownames(nyc_small) # here's a hint
 
 
 <ol class=list-inline>
-	<li>"22883"</li>
-	<li>"81529"</li>
-	<li>"85923"</li>
-	<li>"144102"</li>
-	<li>"150917"</li>
-	<li>"173934"</li>
-	<li>"196580"</li>
-	<li>"334574"</li>
-	<li>"481726"</li>
-	<li>"762572"</li>
+  <li>"22883"</li>
+  <li>"81529"</li>
+  <li>"85923"</li>
+  <li>"144102"</li>
+  <li>"150917"</li>
+  <li>"173934"</li>
+  <li>"196580"</li>
+  <li>"334574"</li>
+  <li>"481726"</li>
+  <li>"762572"</li>
 </ol>
 
 
@@ -1028,12 +940,12 @@ head(nyc_small) # row names are reset
 <table>
 <thead><tr><th></th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>475</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>2</th><td>588</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>3</th><td>400</td><td>0</td><td>0.5</td><td>0</td></tr>
-	<tr><th scope=row>4</th><td>401</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>5</th><td>699</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>6</th><td>465</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>1</th><td>475</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>2</th><td>588</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>3</th><td>400</td><td>0</td><td>0.5</td><td>0</td></tr>
+  <tr><th scope=row>4</th><td>401</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>5</th><td>699</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>6</th><td>465</td><td>0</td><td>0</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -1055,11 +967,11 @@ subset(nyc_small, fare_amount > 100 & 1:2 > 1)
 <table>
 <thead><tr><th></th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>2</th><td>588</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>4</th><td>401</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>6</th><td>465</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>8</th><td>673</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>10</th><td>460</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>2</th><td>588</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>4</th><td>401</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>6</th><td>465</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>8</th><td>673</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>10</th><td>460</td><td>0</td><td>0</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -1082,11 +994,11 @@ subset(nyc_small, fare_amount > 100)
 <table>
 <thead><tr><th></th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>2</th><td>588</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>4</th><td>401</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>6</th><td>465</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>8</th><td>673</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>10</th><td>460</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>2</th><td>588</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>4</th><td>401</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>6</th><td>465</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>8</th><td>673</td><td>0</td><td>0</td><td>0</td></tr>
+  <tr><th scope=row>10</th><td>460</td><td>0</td><td>0</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -1108,11 +1020,11 @@ sample(1:10, 5)
 
 
 <ol class=list-inline>
-	<li>4</li>
-	<li>10</li>
-	<li>5</li>
-	<li>1</li>
-	<li>8</li>
+  <li>8</li>
+  <li>3</li>
+  <li>9</li>
+  <li>10</li>
+  <li>4</li>
 </ol>
 
 
@@ -1251,7 +1163,7 @@ print(sapply(nyc_taxi, num.distinct)) # apply it to each variable in the data
          dropoff_latitude          payment_type           fare_amount                 extra               mta_tax 
                     53989                     4                   635                    15                     5 
                tip_amount          tolls_amount improvement_surcharge          total_amount                     u 
-                     1972                   275                     3                  5384                770574 
+                     1972                   275                     3                  5384                770600 
     
 
 Any secondary argument to the summary function can be passed along to `sapply`. This feature makes `sapply` (and other similar functions) very powerful. For example, the `mean` function has an argument called `na.rm` for removing missing values. By default, `na.rm` is set to `FALSE` and unless `na.rm = TRUE` the function will return `NA` if there is any missing value in the data.
@@ -1299,9 +1211,9 @@ unique(c(.3, .4 - .1, .5 - .2, .6 - .3, .7 - .4)) # what happened?
 
 
 <ol class=list-inline>
-	<li>0.3</li>
-	<li>0.3</li>
-	<li>0.3</li>
+  <li>0.3</li>
+  <li>0.3</li>
+  <li>0.3</li>
 </ol>
 
 
@@ -1424,13 +1336,13 @@ summary(nyc_taxi)
      Mean   : 40     Mean   : 1                       Mean   : -72.7    Mean   :40.1     Mean   :1.38   Mean   :  13  
      3rd Qu.: 41     3rd Qu.: 1                       3rd Qu.: -74.0    3rd Qu.:40.8     3rd Qu.:2.00   3rd Qu.:  14  
      Max.   :405     Max.   :99                       Max.   : 151.2    Max.   :60.4     Max.   :4.00   Max.   :1000  
-         extra        mta_tax         tip_amount   tolls_amount   improvement_surcharge  total_amount        u       
-     Min.   :-17   Min.   :-1.700   Min.   :-10   Min.   :-11.8   Min.   :-0.300        Min.   :-142   Min.   :0.00  
-     1st Qu.:  0   1st Qu.: 0.500   1st Qu.:  0   1st Qu.:  0.0   1st Qu.: 0.300        1st Qu.:   8   1st Qu.:0.25  
-     Median :  0   Median : 0.500   Median :  1   Median :  0.0   Median : 0.300        Median :  12   Median :0.50  
-     Mean   :  0   Mean   : 0.498   Mean   :  2   Mean   :  0.3   Mean   : 0.297        Mean   :  16   Mean   :0.50  
-     3rd Qu.:  0   3rd Qu.: 0.500   3rd Qu.:  2   3rd Qu.:  0.0   3rd Qu.: 0.300        3rd Qu.:  18   3rd Qu.:0.75  
-     Max.   :900   Max.   : 0.500   Max.   :433   Max.   :120.0   Max.   : 0.300        Max.   :1900   Max.   :1.00  
+         extra        mta_tax         tip_amount   tolls_amount   improvement_surcharge  total_amount        u        
+     Min.   :-17   Min.   :-1.700   Min.   :-10   Min.   :-11.8   Min.   :-0.300        Min.   :-142   Min.   :0.000  
+     1st Qu.:  0   1st Qu.: 0.500   1st Qu.:  0   1st Qu.:  0.0   1st Qu.: 0.300        1st Qu.:   8   1st Qu.:0.250  
+     Median :  0   Median : 0.500   Median :  1   Median :  0.0   Median : 0.300        Median :  12   Median :0.500  
+     Mean   :  0   Mean   : 0.498   Mean   :  2   Mean   :  0.3   Mean   : 0.297        Mean   :  16   Mean   :0.500  
+     3rd Qu.:  0   3rd Qu.: 0.500   3rd Qu.:  2   3rd Qu.:  0.0   3rd Qu.: 0.300        3rd Qu.:  18   3rd Qu.:0.749  
+     Max.   :900   Max.   : 0.500   Max.   :433   Max.   :120.0   Max.   : 0.300        Max.   :1900   Max.   :1.000  
 
 
 
@@ -1600,7 +1512,7 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![png](./images/output_173_0.png)
+![png](./images/output_167_0.png)
 
 
 Notice how the x-axis is properly formatted as a date without any manual input from us. Both the summary and the plot above would not have been possible if `pickup_datetime` was still a character column.
@@ -1636,7 +1548,7 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![png](./images/output_179_0.png)
+![png](./images/output_173_0.png)
 
 
 We can see that most longitude values fall in the expected range, but there's a second peak around 0. There are also some other values outside of the expected range, but we can't see them in the histogram. We just know there are there because of the wide range (in the x-axis) of the histogram. 
@@ -1692,7 +1604,7 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![png](./images/output_187_0.png)
+![png](./images/output_181_0.png)
 
 
 
@@ -1773,12 +1685,12 @@ is.na(c(2, 4, NA, -1, 5, NA))
 
 
 <ol class=list-inline>
-	<li>FALSE</li>
-	<li>FALSE</li>
-	<li>TRUE</li>
-	<li>FALSE</li>
-	<li>FALSE</li>
-	<li>TRUE</li>
+  <li>FALSE</li>
+  <li>FALSE</li>
+  <li>TRUE</li>
+  <li>FALSE</li>
+  <li>FALSE</li>
+  <li>TRUE</li>
 </ol>
 
 
@@ -1897,12 +1809,12 @@ head(rbg_chr)
 
 
 <ol class=list-inline>
-	<li>"red"</li>
-	<li>"blue"</li>
-	<li>"red"</li>
-	<li>"red"</li>
-	<li>"blue"</li>
-	<li>"red"</li>
+  <li>"green"</li>
+  <li>"blue"</li>
+  <li>"green"</li>
+  <li>"blue"</li>
+  <li>"green"</li>
+  <li>"blue"</li>
 </ol>
 
 
@@ -1917,12 +1829,12 @@ head(rbg_fac)
 
 
 <ol class=list-inline>
-	<li>red</li>
-	<li>blue</li>
-	<li>red</li>
-	<li>red</li>
-	<li>blue</li>
-	<li>red</li>
+  <li>green</li>
+  <li>blue</li>
+  <li>green</li>
+  <li>blue</li>
+  <li>green</li>
+  <li>blue</li>
 </ol>
 
 
@@ -1955,7 +1867,7 @@ table(rbg_chr); table(rbg_fac)
 
     rbg_chr
      blue green   red 
-      659   635   706 
+      670   683   647 
 
 
 
@@ -1964,7 +1876,7 @@ table(rbg_chr); table(rbg_fac)
 
     rbg_fac
      blue green  pink   red 
-      659   635     0   706 
+      670   683     0   647 
 
 
 
@@ -1987,10 +1899,10 @@ levels(rbg_fac)
 
 
 <ol class=list-inline>
-	<li>"blue"</li>
-	<li>"green"</li>
-	<li>"pink"</li>
-	<li>"red"</li>
+  <li>"blue"</li>
+  <li>"green"</li>
+  <li>"pink"</li>
+  <li>"red"</li>
 </ol>
 
 
@@ -2008,12 +1920,12 @@ head(rbg_fac)
 
 
 <ol class=list-inline>
-	<li>Red</li>
-	<li>Blue</li>
-	<li>NA</li>
-	<li>Red</li>
-	<li>Blue</li>
-	<li>Red</li>
+  <li>Green</li>
+  <li>Blue</li>
+  <li>NA</li>
+  <li>Blue</li>
+  <li>Green</li>
+  <li>Blue</li>
 </ol>
 
 
@@ -2032,7 +1944,7 @@ table(rbg_fac) # even though the data has no 'Yellow' entries, it's an acceptabl
 
     rbg_fac
       Blue  Green   Pink    Red Yellow 
-       659    635      0    705      0 
+       670    682      0    647      0 
 
 
 
@@ -2049,7 +1961,7 @@ table(rbg_fac) # now the data has one 'Yellow' entry
 
     rbg_fac
       Blue  Green   Pink    Red Yellow 
-       659    635      0    705      1 
+       670    682      0    647      1 
 
 
 
@@ -2065,7 +1977,7 @@ table(rbg_chr) # what we see in the orignal `character` column
 
     rbg_chr
       blue  green    red yellow 
-       659    635    705      1 
+       670    682    647      1 
 
 
 
@@ -2082,7 +1994,7 @@ table(rbg_fac)
 
     rbg_fac
       blue  green    red yellow 
-       659    635    705      1 
+       670    682    647      1 
 
 
 
@@ -2102,7 +2014,7 @@ table(rbg_fac) # notice how 'yellow' has disappeared
 
     rbg_fac
       red green  blue 
-      705   635   659 
+      647   682   670 
 
 
 
@@ -2116,7 +2028,7 @@ table(rbg_fac, useNA = "ifany") # 'yellow' was turned into an NA
 
     rbg_fac
       red green  blue  <NA> 
-      705   635   659     1 
+      647   682   670     1 
 
 
 
@@ -2133,12 +2045,12 @@ head(rbg_fac) # we don't see quotes and we see the factor levels at the bottom
 
 
 <ol class=list-inline>
-	<li>"red"</li>
-	<li>"blue"</li>
-	<li>"yellow"</li>
-	<li>"red"</li>
-	<li>"blue"</li>
-	<li>"red"</li>
+  <li>"green"</li>
+  <li>"blue"</li>
+  <li>"yellow"</li>
+  <li>"blue"</li>
+  <li>"green"</li>
+  <li>"blue"</li>
 </ol>
 
 
@@ -2148,12 +2060,12 @@ head(rbg_fac) # we don't see quotes and we see the factor levels at the bottom
 
 
 <ol class=list-inline>
-	<li>red</li>
-	<li>blue</li>
-	<li>NA</li>
-	<li>red</li>
-	<li>blue</li>
-	<li>red</li>
+  <li>green</li>
+  <li>blue</li>
+  <li>NA</li>
+  <li>blue</li>
+  <li>green</li>
+  <li>blue</li>
 </ol>
 
 
@@ -2192,7 +2104,7 @@ table(rbg_fac) # we can see a count of 0 for 'pink', becuase it's one of the fac
 
     rbg_chr
       blue  green    red yellow 
-       659    635    705      1 
+       670    682    647      1 
 
 
 
@@ -2201,7 +2113,7 @@ table(rbg_fac) # we can see a count of 0 for 'pink', becuase it's one of the fac
 
     rbg_fac
       red green  blue 
-      705   635   659 
+      647   682   670 
 
 
 
@@ -2216,12 +2128,12 @@ head(rbg_fac) # we could not change the 3rd entry to 'yellow' because it's not o
 
 
 <ol class=list-inline>
-	<li>"red"</li>
-	<li>"blue"</li>
-	<li>"yellow"</li>
-	<li>"red"</li>
-	<li>"blue"</li>
-	<li>"red"</li>
+  <li>"green"</li>
+  <li>"blue"</li>
+  <li>"yellow"</li>
+  <li>"blue"</li>
+  <li>"green"</li>
+  <li>"blue"</li>
 </ol>
 
 
@@ -2231,12 +2143,12 @@ head(rbg_fac) # we could not change the 3rd entry to 'yellow' because it's not o
 
 
 <ol class=list-inline>
-	<li>red</li>
-	<li>blue</li>
-	<li>NA</li>
-	<li>red</li>
-	<li>blue</li>
-	<li>red</li>
+  <li>green</li>
+  <li>blue</li>
+  <li>NA</li>
+  <li>blue</li>
+  <li>green</li>
+  <li>blue</li>
 </ol>
 
 
@@ -2332,12 +2244,12 @@ head(nyc_taxi[ , c('rate_code_id', 'payment_type')]) # now proper labels are sho
 <table>
 <thead><tr><th></th><th scope=col>rate_code_id</th><th scope=col>payment_type</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>standard</td><td>card</td></tr>
-	<tr><th scope=row>2</th><td>standard</td><td>card</td></tr>
-	<tr><th scope=row>3</th><td>standard</td><td>card</td></tr>
-	<tr><th scope=row>4</th><td>standard</td><td>card</td></tr>
-	<tr><th scope=row>5</th><td>Newark</td><td>card</td></tr>
-	<tr><th scope=row>6</th><td>standard</td><td>cash</td></tr>
+  <tr><th scope=row>1</th><td>standard</td><td>card</td></tr>
+  <tr><th scope=row>2</th><td>standard</td><td>card</td></tr>
+  <tr><th scope=row>3</th><td>standard</td><td>card</td></tr>
+  <tr><th scope=row>4</th><td>standard</td><td>card</td></tr>
+  <tr><th scope=row>5</th><td>Newark</td><td>card</td></tr>
+  <tr><th scope=row>6</th><td>standard</td><td>cash</td></tr>
 </tbody>
 </table>
 
@@ -2417,7 +2329,7 @@ head(nyc_taxi)
 
 
 
-    Time difference of 16.4 secs
+    Time difference of 15.9 secs
 
 
 
@@ -2427,12 +2339,12 @@ head(nyc_taxi)
 <table>
 <thead><tr><th></th><th scope=col>pickup_datetime</th><th scope=col>dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td></tr>
-	<tr><th scope=row>2</th><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td></tr>
-	<tr><th scope=row>3</th><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td></tr>
-	<tr><th scope=row>4</th><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td></tr>
-	<tr><th scope=row>5</th><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td></tr>
-	<tr><th scope=row>6</th><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td></tr>
+  <tr><th scope=row>1</th><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>1</td><td>-74</td><td>40.8</td><td>1</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td></tr>
+  <tr><th scope=row>2</th><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>1</td><td>-74</td><td>40.8</td><td>1</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td></tr>
+  <tr><th scope=row>3</th><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>1</td><td>-74</td><td>40.8</td><td>1</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td></tr>
+  <tr><th scope=row>4</th><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>1</td><td>-74</td><td>40.7</td><td>1</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td></tr>
+  <tr><th scope=row>5</th><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>3</td><td>-74.2</td><td>40.7</td><td>1</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td></tr>
+  <tr><th scope=row>6</th><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>1</td><td>-74</td><td>40.8</td><td>2</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td></tr>
 </tbody>
 </table>
 
@@ -2534,12 +2446,12 @@ head(nyc_taxi)
 <table>
 <thead><tr><th></th><th scope=col>pickup_datetime</th><th scope=col>dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>fare_amount</th><th scope=col>extra</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td></tr>
-	<tr><th scope=row>2</th><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td></tr>
-	<tr><th scope=row>3</th><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td></tr>
-	<tr><th scope=row>4</th><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.7</td><td>card</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td></tr>
-	<tr><th scope=row>5</th><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>Newark</td><td>-74.2</td><td>40.7</td><td>card</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td></tr>
-	<tr><th scope=row>6</th><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>cash</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td></tr>
+  <tr><th scope=row>1</th><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td>3.5</td><td>0</td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td></tr>
+  <tr><th scope=row>2</th><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td>10</td><td>1</td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td></tr>
+  <tr><th scope=row>3</th><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td>18</td><td>0.5</td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td></tr>
+  <tr><th scope=row>4</th><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.7</td><td>card</td><td>24</td><td>0.5</td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td></tr>
+  <tr><th scope=row>5</th><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>Newark</td><td>-74.2</td><td>40.7</td><td>card</td><td>64</td><td>0.5</td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td></tr>
+  <tr><th scope=row>6</th><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>cash</td><td>5.5</td><td>0</td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td></tr>
 </tbody>
 </table>
 
@@ -2577,12 +2489,12 @@ head(nyc_taxi)
 <table>
 <thead><tr><th></th><th scope=col>pickup_datetime</th><th scope=col>dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>ellip.h</th><th scope=col>mta_tax</th><th scope=col>tip_amount</th><th scope=col>tolls_amount</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>pickup_hour</th><th scope=col>pickup_dow</th><th scope=col>dropoff_hour</th><th scope=col>dropoff_dow</th><th scope=col>trip_duration</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>5AM-9AM</td><td>Thu</td><td>5AM-9AM</td><td>Thu</td><td>109</td></tr>
-	<tr><th scope=row>2</th><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>12PM-4PM</td><td>Thu</td><td>12PM-4PM</td><td>Thu</td><td>767</td></tr>
-	<tr><th scope=row>3</th><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>6PM-10PM</td><td>Wed</td><td>6PM-10PM</td><td>Wed</td><td>1149</td></tr>
-	<tr><th scope=row>4</th><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.7</td><td>card</td><td><e2><8b><af></td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>6PM-10PM</td><td>Wed</td><td>6PM-10PM</td><td>Wed</td><td>1643</td></tr>
-	<tr><th scope=row>5</th><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>Newark</td><td>-74.2</td><td>40.7</td><td>card</td><td><e2><8b><af></td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>1AM-5AM</td><td>Thu</td><td>1AM-5AM</td><td>Thu</td><td>1463</td></tr>
-	<tr><th scope=row>6</th><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>cash</td><td><e2><8b><af></td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>9AM-12PM</td><td>Wed</td><td>9AM-12PM</td><td>Wed</td><td>354</td></tr>
+  <tr><th scope=row>1</th><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.5</td><td>1</td><td>0</td><td>0</td><td>5</td><td>5AM-9AM</td><td>Thu</td><td>5AM-9AM</td><td>Thu</td><td>109</td></tr>
+  <tr><th scope=row>2</th><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.5</td><td>2.2</td><td>0</td><td>0.3</td><td>14</td><td>12PM-4PM</td><td>Thu</td><td>12PM-4PM</td><td>Thu</td><td>767</td></tr>
+  <tr><th scope=row>3</th><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.5</td><td>3.86</td><td>0</td><td>0.3</td><td>23.2</td><td>6PM-10PM</td><td>Wed</td><td>6PM-10PM</td><td>Wed</td><td>1149</td></tr>
+  <tr><th scope=row>4</th><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.7</td><td>card</td><td><e2><8b><af></td><td>0.5</td><td>4.9</td><td>0</td><td>0.3</td><td>30.2</td><td>6PM-10PM</td><td>Wed</td><td>6PM-10PM</td><td>Wed</td><td>1643</td></tr>
+  <tr><th scope=row>5</th><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>Newark</td><td>-74.2</td><td>40.7</td><td>card</td><td><e2><8b><af></td><td>0</td><td>1</td><td>16</td><td>0.3</td><td>81.8</td><td>1AM-5AM</td><td>Thu</td><td>1AM-5AM</td><td>Thu</td><td>1463</td></tr>
+  <tr><th scope=row>6</th><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>cash</td><td><e2><8b><af></td><td>0.5</td><td>0</td><td>0</td><td>0.3</td><td>6.3</td><td>9AM-12PM</td><td>Wed</td><td>9AM-12PM</td><td>Wed</td><td>354</td></tr>
 </tbody>
 </table>
 
@@ -2609,7 +2521,7 @@ We can see what sort of information is available by peeking at `nyc_shapefile@da
 
 
 ```R
-head(nyc_shapefile@data, 20)
+head(nyc_shapefile@data, 10)
 ```
 
 
@@ -2618,26 +2530,16 @@ head(nyc_shapefile@data, 20)
 <table>
 <thead><tr><th></th><th scope=col>STATE</th><th scope=col>COUNTY</th><th scope=col>CITY</th><th scope=col>NAME</th><th scope=col>REGIONID</th></tr></thead>
 <tbody>
-	<tr><th scope=row>0</th><td>NY</td><td>Monroe</td><td>Rochester</td><td>Ellwanger-Barry</td><td>343894</td></tr>
-	<tr><th scope=row>1</th><td>NY</td><td>New York</td><td>New York City-Manhattan</td><td>West Village</td><td>270964</td></tr>
-	<tr><th scope=row>2</th><td>NY</td><td>Kings</td><td>New York City-Brooklyn</td><td>Bensonhurst</td><td>193285</td></tr>
-	<tr><th scope=row>3</th><td>NY</td><td>Erie</td><td>Buffalo</td><td>South Park</td><td>270935</td></tr>
-	<tr><th scope=row>4</th><td>NY</td><td>New York</td><td>New York City-Manhattan</td><td>East Village</td><td>270829</td></tr>
-	<tr><th scope=row>5</th><td>NY</td><td>Albany</td><td>Albany</td><td>Park South</td><td>342684</td></tr>
-	<tr><th scope=row>6</th><td>NY</td><td>Onondaga</td><td>Syracuse</td><td>Meadowbrook</td><td>274481</td></tr>
-	<tr><th scope=row>7</th><td>NY</td><td>Queens</td><td>New York City-Queens</td><td>Auburndale</td><td>270797</td></tr>
-	<tr><th scope=row>8</th><td>NY</td><td>Richmond</td><td>New York City-Staten Island</td><td>Rosebank</td><td>197599</td></tr>
-	<tr><th scope=row>9</th><td>NY</td><td>Onondaga</td><td>Syracuse</td><td>Downtown</td><td>273487</td></tr>
-	<tr><th scope=row>10</th><td>NY</td><td>Onondaga</td><td>Syracuse</td><td>Salt Springs</td><td>275276</td></tr>
-	<tr><th scope=row>11</th><td>NY</td><td>Erie</td><td>Buffalo</td><td>Starin Central</td><td>270940</td></tr>
-	<tr><th scope=row>12</th><td>NY</td><td>Erie</td><td>Buffalo</td><td>Cold Spring</td><td>273299</td></tr>
-	<tr><th scope=row>13</th><td>NY</td><td>New York</td><td>New York City-Manhattan</td><td>Battery Park</td><td>272869</td></tr>
-	<tr><th scope=row>14</th><td>NY</td><td>Monroe</td><td>Rochester</td><td>Charlotte</td><td>193771</td></tr>
-	<tr><th scope=row>15</th><td>NY</td><td>Bronx</td><td>New York City-Bronx</td><td>Throggs Neck</td><td>343210</td></tr>
-	<tr><th scope=row>16</th><td>NY</td><td>New York</td><td>New York City-Manhattan</td><td>Carnegie Hill</td><td>270810</td></tr>
-	<tr><th scope=row>17</th><td>NY</td><td>Queens</td><td>New York City-Queens</td><td>College Point</td><td>193942</td></tr>
-	<tr><th scope=row>18</th><td>NY</td><td>Erie</td><td>Buffalo</td><td>Leroy</td><td>270869</td></tr>
-	<tr><th scope=row>19</th><td>NY</td><td>Richmond</td><td>New York City-Staten Island</td><td>Mariners Harbor</td><td>196213</td></tr>
+  <tr><th scope=row>0</th><td>NY</td><td>Monroe</td><td>Rochester</td><td>Ellwanger-Barry</td><td>343894</td></tr>
+  <tr><th scope=row>1</th><td>NY</td><td>New York</td><td>New York City-Manhattan</td><td>West Village</td><td>270964</td></tr>
+  <tr><th scope=row>2</th><td>NY</td><td>Kings</td><td>New York City-Brooklyn</td><td>Bensonhurst</td><td>193285</td></tr>
+  <tr><th scope=row>3</th><td>NY</td><td>Erie</td><td>Buffalo</td><td>South Park</td><td>270935</td></tr>
+  <tr><th scope=row>4</th><td>NY</td><td>New York</td><td>New York City-Manhattan</td><td>East Village</td><td>270829</td></tr>
+  <tr><th scope=row>5</th><td>NY</td><td>Albany</td><td>Albany</td><td>Park South</td><td>342684</td></tr>
+  <tr><th scope=row>6</th><td>NY</td><td>Onondaga</td><td>Syracuse</td><td>Meadowbrook</td><td>274481</td></tr>
+  <tr><th scope=row>7</th><td>NY</td><td>Queens</td><td>New York City-Queens</td><td>Auburndale</td><td>270797</td></tr>
+  <tr><th scope=row>8</th><td>NY</td><td>Richmond</td><td>New York City-Staten Island</td><td>Rosebank</td><td>197599</td></tr>
+  <tr><th scope=row>9</th><td>NY</td><td>Onondaga</td><td>Syracuse</td><td>Downtown</td><td>273487</td></tr>
 </tbody>
 </table>
 
@@ -2682,7 +2584,7 @@ ggplot(nyc_df) +
 ```
 
 
-![png](./images/output_298_0.png)
+![png](./images/output_292_0.png)
 
 
 We now go back to the data to find the neighborhood information based on the pickup and dropoff coordinates. We store pickup longitude and latitude in a separate `data.frame`, replacing NAs with zeroes (the function we're about to use doesn't work with NAs). We then use the `coordinates` function to point to the columns that correspond to the geographical coordinates. Finally, we use the `over` function to find the region (in this case the neighborhood) that the coordinates in the data fall into, and we append the neighborhood name as a new column to the `nyc_taxi` dataset.
@@ -2703,189 +2605,27 @@ We can use `table` to get a count of pick-up neighborhoods:
 
 
 ```R
-table(nyc_taxi$pickup_nhood, useNA = "ifany")
+head(table(nyc_taxi$pickup_nhood, useNA = "ifany"))
 ```
 
 
 
 
-    
-                          19th Ward                 Abbott McKinley                        Albright 
-                                  0                               0                               0 
-                              Allen                       Annandale                      Arbor Hill 
-                                  0                               0                               0 
-                      Ardon Heights        Astoria-Long Island City             Atlantic-University 
-                                  0                               0                               0 
-                         Auburndale                         Babcock                    Battery Park 
-                                  0                               0                            6715 
-                          Bay Ridge                      Baychester                         Bayside 
-                                  0                               0                               0 
-                 Bedford-Stuyvesant                    Bedford Park                       Beechwood 
-                                  0                               0                               0 
-                        Bensonhurst                            Best                   Bishop's Gate 
-                                  0                               0                               0 
-                         Black Rock       Bloomfield-Chelsea-Travis                     Boerum Hill 
-                                  0                               0                               0 
-                       Borough Park                        Brighton               Broadway-Fillmore 
-                                  0                               0                               0 
-                       Brown Square                      Browncroft                     Brownsville 
-                                  0                               0                               0 
-                             Bryant       Buckingham Lake-Crestwood                        Bushwick 
-                                  0                               0                               0 
-    Campus Area-University District                        Canarsie                   Carnegie Hill 
-                                  0                               0                            8754 
-                    Carroll Gardens                  Cazenovia Park                   Center Square 
-                                  0                               0                               0 
-                     Central Avenue       Central Business District                    Central Park 
-                                  0                               0                           10283 
-                      Charles House     Charlestown-Richmond Valley                       Charlotte 
-                                  0                               0                               0 
-                            Chelsea                       Chinatown                     City Island 
-                              51487                            2373                               0 
-                          Clearview                         Clifton                         Clinton 
-                                  0                               0                           23749 
-                        Cobble Hill                      Cobbs Hill                     Cold Spring 
-                                  0                               0                               0 
-                      College Point                        Columbus                    Coney Island 
-                                  0                               0                               0 
-                          Corn Hill                          Corona                    Country Club 
-                                  0                               0                               0 
-                      Culver-Winton             Delaware-West Ferry                 Delaware Avenue 
-                                  0                               0                               0 
-                      Delaware Park         Douglastown-Little Neck                        Downtown 
-                                  0                               0                               0 
-                              Dunes              Duran Eastman Park                       Dutchtown 
-                                  0                               0                               0 
-                      Dyker Heights                     East Avenue                   East Brooklyn 
-                                  0                               0                               0 
-                        East Harlem                    East Village                     Eastchester 
-                               2512                           27341                               0 
-                           Eastwood                        Edgerton                 Ellwanger-Barry 
-                                  0                               0                               0 
-                            Elmwood                         Emerson                          Emslie 
-                                  0                               0                               0 
-                        Ettingville                   Far West-Side              Financial District 
-                                  0                               0                           15756 
-                         First Ward                        Flatbush                        Flushing 
-                                  0                               0                               0 
-                            Fordham                          Forest                    Forest Hills 
-                                  0                               0                               0 
-                         Fort Green                     Fresh Kills                      Front Park 
-                                  0                               0                               0 
-                   Garment District               Genesee-Jefferson                 Genesee Moselle 
-                              42275                               0                               0 
-                Genesee Valley Park                        Glendale                        Gramercy 
-                                  0                               0                           60907 
-                        Grant Ferry        Gravesend-Sheepshead Bay                     Great Kills 
-                                  0                               0                               0 
-                  Greenwich Village                       Greenwood                          Grider 
-                              35158                               0                               0 
-                   Hamilton Heights                     Hamlin Park                          Harlem 
-                               1516                               0                            3805 
-                         Helderberg                     High Bridge                        Highland 
-                                  0                               0                               0 
-                  Homestead Heights                    Howard Beach                    Howland Hook 
-                                  0                               0                               0 
-                           Huguenot                     Hunts Point                          Inwood 
-                                  0                               0                              91 
-                    Jackson Heights                         Jamaica                      Kaisertown 
-                                  0                               0                               0 
-                           Kenfield                      Kensington                    Kings Bridge 
-                                  0                               0                               0 
-                           Kingsley          Krank Park-Cherry Hill                       Lakefront 
-                                  0                               0                               0 
-                           Lakeview                       Lancaster                         Lasalle 
-                                  0                               0                               0 
-                          Laurelton                           Leroy                    Lincoln Park 
-                                  0                               0                               0 
-                       Little Italy                         Lovejoy                 Lower East Side 
-                               6675                               0                           17508 
-                         Lyell-Otis                    Mansion Area              Mapleton-Flatlands 
-                                  0                               0                               0 
-                          Maplewood                 Mariners Harbor                         Maspeth 
-                                  0                               0                               0 
-                        Masten Park                 Mayor's Heights                     Meadowbrook 
-                                  0                               0                               0 
-                       Medical Park                         Melrose                  Middle Village 
-                                  0                               0                               0 
-                      Midland Beach                         Midtown                        Military 
-                                  0                          123597                               0 
-                           Mlk Park             Morningside Heights                  Morris Heights 
-                                  0                            3957                               0 
-                        Morris Park                      Mott Haven                     Murray Hill 
-                                  0                               0                           25237 
-                      Near Eastside                  Near Northeast                   Near Westside 
-                                  0                               0                               0 
-                       New Brighton                    New Scotland                    Nkew Gardens 
-                                  0                               0                               0 
-                        Normanskill        North Albany-Shaker Park                  North Delaware 
-                                  0                               0                               0 
-           North Marketview Heights                      North Park               North Sutton Area 
-                                  0                               0                            8080 
-                       North Valley                Northland-Lyceum                       Northside 
-                                  0                               0                               0 
-                            Oakwood                  Outer Comstock                     Park Avenue 
-                                  0                               0                               0 
-                        Park Meadow                      Park Slope                      Park South 
-                                  0                               0                               0 
-                        Parkchester                        Parkside              Pearl-Meigs-Monroe 
-                                  0                               0                               0 
-                         Pine Hills               Plymouth-Exchange                   Port Richmond 
-                                  0                               0                               0 
-                       Prince's Bay                  Queens Village                 Queensboro Hill 
-                                  0                               0                               0 
-                           Red Hook                    Richmondtown                       Ridgewood 
-                                  0                               0                               0 
-                          Riverdale                  Riverside Park                        Rosebank 
-                                  0                               0                               0 
-                           Rosedale                       Rossville                     Saintalbans 
-                                  0                               0                               0 
-                       Salt Springs                   Schiller Park                   Second Avenue 
-                                  0                               0                               0 
-                          Sedgewick                          Seneca                 Sheridan Hollow 
-                                  0                               0                               0 
-                         Skunk City             Skytop-South Campus                            Soho 
-                                  0                               0                           15615 
-                          Soundview                    South Abbott                     South Beach 
-                                  0                               0                               0 
-                        South Bronx                  South Ellicott                       South End 
-                                  0                               0                               0 
-           South Marketview Heights                      South Park                    South Valley 
-                                  0                               0                               0 
-                        South Wedge                       Southwest             Springfield Gardens 
-                                  0                               0                               0 
-                     Spuyten Duyvil                    Squaw Island                  Starin Central 
-                                  0                               0                               0 
-                           Steinway                      Strathmore                          Strong 
-                                  0                               0                               0 
-                         Sunny Side                     Sunset Park                 Susan B Anthony 
-                                  0                               0                               0 
-                          Swillburg                   The Rockaways                    Throggs Neck 
-                                  0                               0                               0 
-                              Tifft                       Todt Hill                    Tottensville 
-                                  0                               0                               0 
-                            Tremont                        Triangle                         Tribeca 
-                                  0                               0                           12538 
-                         Union Port                      University              University Heights 
-                                  0                               0                               0 
-                    University Hill                 Upper East Side                     Upper Falls 
-                                  0                          103574                               0 
-            Upper Washington Avenue                 Upper West Side                          Utopia 
-                                  0                           63412                               0 
-                             Valley        Wakefield-Williamsbridge              Washington Heights 
-                                  0                               0                             975 
-                  Washington Square                      Waterfront                         Wescott 
-                                  0                               0                               0 
-                          West Hill                    West Village           Westerleigh-Castleton 
-                                  0                           18838                               0 
-                           Westside                       Whitehall                      Whitestone 
-                                  0                               0                               0 
-                       Willert Park                 Williams Bridge                    Williamsburg 
-                                  0                               0                               0 
-            Woodhaven-Richmond Hill               Woodlawn-Nordwood                         Woodrow 
-                                  0                               0                               0 
-                           Woodside                       Yorkville                            <NA> 
-                                  0                            5080                           72846 
+<dl class=dl-horizontal>
+  <dt>19th Ward</dt>
+    <dd>0</dd>
+  <dt>Abbott McKinley</dt>
+    <dd>0</dd>
+  <dt>Albright</dt>
+    <dd>0</dd>
+  <dt>Allen</dt>
+    <dd>0</dd>
+  <dt>Annandale</dt>
+    <dd>0</dd>
+  <dt>Arbor Hill</dt>
+    <dd>0</dd>
+</dl>
+
 
 
 
@@ -3119,16 +2859,16 @@ do.something(1:10, 3) # first input is a vector, output is also a vector
 
 
 <ol class=list-inline>
-	<li>2</li>
-	<li>2.33333333333333</li>
-	<li>2.66666666666667</li>
-	<li>3</li>
-	<li>3.33333333333333</li>
-	<li>3.66666666666667</li>
-	<li>4</li>
-	<li>4.33333333333333</li>
-	<li>4.66666666666667</li>
-	<li>5</li>
+  <li>2</li>
+  <li>2.33333333333333</li>
+  <li>2.66666666666667</li>
+  <li>3</li>
+  <li>3.33333333333333</li>
+  <li>3.66666666666667</li>
+  <li>4</li>
+  <li>4.33333333333333</li>
+  <li>4.66666666666667</li>
+  <li>5</li>
 </ol>
 
 
@@ -3143,16 +2883,16 @@ do.something(1:10, seq(1, 20, by = 2)) # both inputs are vectors, as is the outp
 
 
 <ol class=list-inline>
-	<li>6</li>
-	<li>2.33333333333333</li>
-	<li>1.6</li>
-	<li>1.28571428571429</li>
-	<li>1.11111111111111</li>
-	<li>1</li>
-	<li>0.923076923076923</li>
-	<li>0.866666666666667</li>
-	<li>0.823529411764706</li>
-	<li>0.789473684210526</li>
+  <li>6</li>
+  <li>2.33333333333333</li>
+  <li>1.6</li>
+  <li>1.28571428571429</li>
+  <li>1.11111111111111</li>
+  <li>1</li>
+  <li>0.923076923076923</li>
+  <li>0.866666666666667</li>
+  <li>0.823529411764706</li>
+  <li>0.789473684210526</li>
 </ol>
 
 
@@ -3181,12 +2921,12 @@ ifelse(0:5 > 1, 55, 0) # condition is vector, so is the output
 
 
 <ol class=list-inline>
-	<li>0</li>
-	<li>0</li>
-	<li>55</li>
-	<li>55</li>
-	<li>55</li>
-	<li>55</li>
+  <li>0</li>
+  <li>0</li>
+  <li>55</li>
+  <li>55</li>
+  <li>55</li>
+  <li>55</li>
 </ol>
 
 
@@ -3201,12 +2941,12 @@ ifelse(0:5 > 1, letters[1:6], LETTERS[1:6]) # all inputs are vectors, so is the 
 
 
 <ol class=list-inline>
-	<li>"A"</li>
-	<li>"B"</li>
-	<li>"c"</li>
-	<li>"d"</li>
-	<li>"e"</li>
-	<li>"f"</li>
+  <li>"A"</li>
+  <li>"B"</li>
+  <li>"c"</li>
+  <li>"d"</li>
+  <li>"e"</li>
+  <li>"f"</li>
 </ol>
 
 
@@ -3297,7 +3037,7 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![png](./images/output_358_0.png)
+![png](./images/output_352_0.png)
 
 
 The histogram confirms what we suspected: tipping is affected by the method of payment. However, it is unlikely to believe that people who pay cash simply don't tip. A more believable scenario is that cash customers tip too, but their tip does not get recorded into the system as tip. In the next exercise, we try our hand at simulating tipping behavior for cash customers.
@@ -3387,11 +3127,11 @@ upper_limits[findInterval(1:5, upper_limits) + 1] # solution to (B)
 
 
 <ol class=list-inline>
-	<li>3</li>
-	<li>3</li>
-	<li>4.5</li>
-	<li>4.5</li>
-	<li>6</li>
+  <li>3</li>
+  <li>3</li>
+  <li>4.5</li>
+  <li>4.5</li>
+  <li>6</li>
 </ol>
 
 
@@ -3413,14 +3153,14 @@ round.up.fare(sample_of_fares)
 
 
 <ol class=list-inline>
-	<li>1</li>
-	<li>3</li>
-	<li>4.5</li>
-	<li>10</li>
-	<li>NA</li>
-	<li>NA</li>
-	<li>NA</li>
-	<li>NA</li>
+  <li>1</li>
+  <li>3</li>
+  <li>4.5</li>
+  <li>10</li>
+  <li>NA</li>
+  <li>NA</li>
+  <li>NA</li>
+  <li>NA</li>
 </ol>
 
 
@@ -3464,7 +3204,7 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![png](./images/output_382_0.png)
+![png](./images/output_376_0.png)
 
 
 ### Exercise 5.5
@@ -3519,7 +3259,7 @@ ggplot(data = nyc_taxi) +
 ```
 
 
-![png](./images/output_389_0.png)
+![png](./images/output_383_0.png)
 
 
 ---
@@ -3531,7 +3271,7 @@ We now have a data set that's more or less ready for analysis. In the next secti
 str(nyc_taxi)
 ```
 
-    'data.frame':	770654 obs. of  25 variables:
+    'data.frame': 770654 obs. of  25 variables:
      $ pickup_datetime      : POSIXct, format: "2015-01-15 09:47:05" "2015-01-08 16:24:00" "2015-01-28 21:50:16" "2015-01-28 21:50:18" ...
      $ dropoff_datetime     : POSIXct, format: "2015-01-15 09:48:54" "2015-01-08 16:36:47" "2015-01-28 22:09:25" "2015-01-28 22:17:41" ...
      $ passenger_count      : int  1 1 1 2 1 1 3 1 1 5 ...
@@ -3570,12 +3310,12 @@ head(nyc_taxi)
 <table>
 <thead><tr><th></th><th scope=col>pickup_datetime</th><th scope=col>dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>ellip.h</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>pickup_hour</th><th scope=col>pickup_dow</th><th scope=col>dropoff_hour</th><th scope=col>dropoff_dow</th><th scope=col>trip_duration</th><th scope=col>pickup_nhood</th><th scope=col>dropoff_nhood</th><th scope=col>tip_percent</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0</td><td>5</td><td>5AM-9AM</td><td>Thu</td><td>5AM-9AM</td><td>Thu</td><td>109</td><td>North Sutton Area</td><td>Upper East Side</td><td>22</td></tr>
-	<tr><th scope=row>2</th><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>14</td><td>12PM-4PM</td><td>Thu</td><td>12PM-4PM</td><td>Thu</td><td>767</td><td>Harlem</td><td>Carnegie Hill</td><td>18</td></tr>
-	<tr><th scope=row>3</th><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>23.2</td><td>6PM-10PM</td><td>Wed</td><td>6PM-10PM</td><td>Wed</td><td>1149</td><td>Tribeca</td><td>Upper East Side</td><td>17</td></tr>
-	<tr><th scope=row>4</th><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.7</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>30.2</td><td>6PM-10PM</td><td>Wed</td><td>6PM-10PM</td><td>Wed</td><td>1643</td><td>Clinton</td><td>NA</td><td>16</td></tr>
-	<tr><th scope=row>5</th><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>Newark</td><td>-74.2</td><td>40.7</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>81.8</td><td>1AM-5AM</td><td>Thu</td><td>1AM-5AM</td><td>Thu</td><td>1463</td><td>Midtown</td><td>NA</td><td>1</td></tr>
-	<tr><th scope=row>6</th><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>cash</td><td><e2><8b><af></td><td>0.3</td><td>6.3</td><td>9AM-12PM</td><td>Wed</td><td>9AM-12PM</td><td>Wed</td><td>354</td><td>Midtown</td><td>Midtown</td><td>8</td></tr>
+  <tr><th scope=row>1</th><td>2015-01-15 09:47:05</td><td>2015-01-15 09:48:54</td><td>1</td><td>0.5</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0</td><td>5</td><td>5AM-9AM</td><td>Thu</td><td>5AM-9AM</td><td>Thu</td><td>109</td><td>North Sutton Area</td><td>Upper East Side</td><td>22</td></tr>
+  <tr><th scope=row>2</th><td>2015-01-08 16:24:00</td><td>2015-01-08 16:36:47</td><td>1</td><td>1.88</td><td>-73.9</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>14</td><td>12PM-4PM</td><td>Thu</td><td>12PM-4PM</td><td>Thu</td><td>767</td><td>Harlem</td><td>Carnegie Hill</td><td>18</td></tr>
+  <tr><th scope=row>3</th><td>2015-01-28 21:50:16</td><td>2015-01-28 22:09:25</td><td>1</td><td>5.1</td><td>-74</td><td>40.7</td><td>standard</td><td>-74</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>23.2</td><td>6PM-10PM</td><td>Wed</td><td>6PM-10PM</td><td>Wed</td><td>1149</td><td>Tribeca</td><td>Upper East Side</td><td>17</td></tr>
+  <tr><th scope=row>4</th><td>2015-01-28 21:50:18</td><td>2015-01-28 22:17:41</td><td>2</td><td>6.76</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.7</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>30.2</td><td>6PM-10PM</td><td>Wed</td><td>6PM-10PM</td><td>Wed</td><td>1643</td><td>Clinton</td><td>NA</td><td>16</td></tr>
+  <tr><th scope=row>5</th><td>2015-01-01 05:29:50</td><td>2015-01-01 05:54:13</td><td>1</td><td>17.5</td><td>-74</td><td>40.8</td><td>Newark</td><td>-74.2</td><td>40.7</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>81.8</td><td>1AM-5AM</td><td>Thu</td><td>1AM-5AM</td><td>Thu</td><td>1463</td><td>Midtown</td><td>NA</td><td>1</td></tr>
+  <tr><th scope=row>6</th><td>2015-01-28 10:50:01</td><td>2015-01-28 10:55:55</td><td>1</td><td>0.6</td><td>-74</td><td>40.8</td><td>standard</td><td>-74</td><td>40.8</td><td>cash</td><td><e2><8b><af></td><td>0.3</td><td>6.3</td><td>9AM-12PM</td><td>Wed</td><td>9AM-12PM</td><td>Wed</td><td>354</td><td>Midtown</td><td>Midtown</td><td>8</td></tr>
 </tbody>
 </table>
 
@@ -3634,7 +3374,7 @@ summary(nyc_taxi) # summary of the whole data
      Mean   :  0   Mean   : 0.498   Mean   :  2    Mean   :  0.3   Mean   : 0.297        Mean   :  16   12PM-4PM:146204  
      3rd Qu.:  0   3rd Qu.: 0.500   3rd Qu.:  2    3rd Qu.:  0.0   3rd Qu.: 0.300        3rd Qu.:  18   4PM-6PM : 84123  
      Max.   :900   Max.   : 0.500   Max.   :433    Max.   :120.0   Max.   : 0.300        Max.   :1900   6PM-10PM:181190  
-                                    NA's   :3447                                                        10PM-1AM: 88483  
+                                    NA's   :3440                                                        10PM-1AM: 88483  
        pickup_dow       dropoff_hour     dropoff_dow     trip_duration               pickup_nhood   
      Sat    :121889   1AM-5AM : 45991   Sat    :121861   Min.   :    -321   Midtown        :123597  
      Fri    :118448   5AM-9AM :110738   Fri    :118119   1st Qu.:     393   Upper East Side:103574  
@@ -3650,7 +3390,7 @@ summary(nyc_taxi) # summary of the whole data
      Gramercy       : 54651   Mean   : 14   
      Chelsea        : 46279   3rd Qu.: 18   
      (Other)        :288723   Max.   :118   
-     NA's           :104546   NA's   :3523  
+     NA's           :104546   NA's   :3513  
 
 
 
@@ -3741,7 +3481,7 @@ weighted.mean(nyc_taxi$tip_percent, na.rm = TRUE) # simple average
 
 
 
-13.8822808620692
+13.8872006580277
 
 
 
@@ -3753,7 +3493,7 @@ weighted.mean(nyc_taxi$tip_percent, nyc_taxi$trip_distance, na.rm = TRUE) # weig
 
 
 
-13.0167356409599
+13.0164978970157
 
 
 
@@ -3794,8 +3534,8 @@ range(nyc_taxi$trip_duration, na.rm = TRUE) # minimum and maximum
 
 
 <ol class=list-inline>
-	<li>-321</li>
-	<li>32906498</li>
+  <li>-321</li>
+  <li>32906498</li>
 </ol>
 
 
@@ -3810,8 +3550,8 @@ c(min(nyc_taxi$trip_duration, na.rm = TRUE), max(nyc_taxi$trip_duration, na.rm =
 
 
 <ol class=list-inline>
-	<li>-321</li>
-	<li>32906498</li>
+  <li>-321</li>
+  <li>32906498</li>
 </ol>
 
 
@@ -3856,10 +3596,10 @@ quantile(nyc_taxi$trip_duration, probs = c(.25, .75), na.rm = TRUE) # IQR == dif
 
 
 <dl class=dl-horizontal>
-	<dt>25%</dt>
-		<dd>393</dd>
-	<dt>75%</dt>
-		<dd>1056</dd>
+  <dt>25%</dt>
+    <dd>393</dd>
+  <dt>75%</dt>
+    <dd>1056</dd>
 </dl>
 
 
@@ -3894,12 +3634,12 @@ c(quantile(nyc_taxi$trip_distance, probs = .9),
 
 
 <dl class=dl-horizontal>
-	<dt>90%</dt>
-		<dd>6.5</dd>
-	<dt>60%</dt>
-		<dd>2.1</dd>
-	<dt>30%</dt>
-		<dd>1.12</dd>
+  <dt>90%</dt>
+    <dd>6.5</dd>
+  <dt>60%</dt>
+    <dd>2.1</dd>
+  <dt>30%</dt>
+    <dd>1.12</dd>
 </dl>
 
 
@@ -3916,12 +3656,12 @@ quantile(nyc_taxi$trip_distance, probs = c(.3, .6, .9))
 
 
 <dl class=dl-horizontal>
-	<dt>30%</dt>
-		<dd>1.12</dd>
-	<dt>60%</dt>
-		<dd>2.1</dd>
-	<dt>90%</dt>
-		<dd>6.5</dd>
+  <dt>30%</dt>
+    <dd>1.12</dd>
+  <dt>60%</dt>
+    <dd>2.1</dd>
+  <dt>90%</dt>
+    <dd>6.5</dd>
 </dl>
 
 
@@ -3951,7 +3691,8 @@ p <- profr(my_test_function())
 plot(p)
 ```
 
-![png](./images/output_438_1.png)
+
+![png](./images/output_432_0.png)
 
 
 Describe what the plot is telling us: what is the bottleneck in getting quantiles?
@@ -3976,9 +3717,9 @@ print(microbenchmark(
 ```
 
     Unit: milliseconds
-                  expr   min  lq  mean median    uq   max neval
-     first(random.vec)  78.2  81  82.5   81.8  84.7  85.2    10
-     scond(random.vec) 142.4 146 154.6  153.1 161.4 170.2    10
+                  expr   min    lq  mean median  uq   max neval
+     first(random.vec)  74.4  75.3  75.6   75.7  76  76.5    10
+     scond(random.vec) 127.2 128.3 133.8  130.5 138 154.6    10
     
 
 Describe what the results say?  Do the runtimes bear out our intuition?
@@ -4043,132 +3784,24 @@ When we pass more than one column to `table`, we get counts for each *combinatio
 
 
 ```R
-with(nyc_taxi, table(pickup_nhood, dropoff_nhood)) # two-way table: an R `matrix`
+two_way <- with(nyc_taxi, table(pickup_nhood, dropoff_nhood)) # two-way table: an R `matrix`
+two_way[1:5, 1:5]
 ```
 
 
 
 
-                         dropoff_nhood
-    pickup_nhood          West Village East Village Battery Park Carnegie Hill Gramercy  Soho Murray Hill Little Italy
-      West Village                1002          880          405            50     1359   966         505          283
-      East Village                 910         2319          183            60     3418   845        1032          415
-      Battery Park                 300          155          233            17      342   377         198           73
-      Carnegie Hill                 47           40           37           299      180    32         136           15
-      Gramercy                    1620         3585          461           260     7414  1666        3947          507
-      Soho                        1044          812          352            38     1125   691         412          230
-      Murray Hill                  413          873          196           135     3255   433        1003          126
-      Little Italy                 349          519           92            15      605   258         193           80
-      Central Park                  59           71           23           376      297    45         185           20
-      Greenwich Village           1829         2739          471           108     3611  1653        1232          527
-      Midtown                     1827         2314          995          1392     9866  1676        4710          466
-      Morningside Heights           18           16           13            84       47    14          30            6
-      Harlem                        17           22            7            47       52    12          22            5
-      Hamilton Heights              12            8            3             6       19     6           2            2
-      Tribeca                      775          447          491            35      729   800         292          208
-      North Sutton Area             43          258           28            92      837    72         508           21
-      Upper East Side              617         1246          337          3930     4615   669        2628          203
-      Financial District           473          671          504            36     1059   639         465          221
-      Inwood                         1            0            0             0        0     0           1            0
-      Chelsea                     2377         1876          645           182     4968  1542        1906          400
-      Lower East Side              551         1647          172            31     1593   634         504          262
-      Chinatown                     69          159           37             0      166    73          65           33
-      Washington Heights             8            4            2             3       12     3           5            0
-      Upper West Side              485          388          249          1460     1475   286         810           62
-      Clinton                      697          439          275            95     1327   338         758          119
-      Yorkville                     18           45           11           170      130    17          74            9
-      Garment District             784         1032          368           207     4030   640        2284          188
-      East Harlem                    3           20            2            30       55     4          16            3
-                         dropoff_nhood
-    pickup_nhood          Central Park Greenwich Village Midtown Morningside Heights Harlem Hamilton Heights Tribeca
-      West Village                  82              1589    2027                  38     97               46     648
-      East Village                  94              2219    2206                  69    159               56     482
-      Battery Park                  29               303     907                   9     14                3     621
-      Carnegie Hill                332                89    1433                 105    125               18      41
-      Gramercy                     286              3746    9446                  95    221               72     908
-      Soho                          59              1330    1434                  27     44               17     731
-      Murray Hill                  184               909    4898                  50     96               17     290
-      Little Italy                  24               598     609                  12     28               14     233
-      Central Park                 685               119    1878                 160    255               35      42
-      Greenwich Village            160              2874    3356                  82    142               63    1101
-      Midtown                     1838              3125   24929                 569    895              302    1149
-      Morningside Heights           83                25     297                 358    270              165       4
-      Harlem                        79                15     185                 240    956              202      12
-      Hamilton Heights              13                11      81                 190    265              190       2
-      Tribeca                       41               901    1259                  20     42               23     660
-      North Sutton Area             73               159    1779                  14     41                7      42
-      Upper East Side             2194              1400   17963                 603   1226              190     458
-      Financial District            63               695    1894                  18     49               15     829
-      Inwood                         1                 0       2                   3      2                3       0
-      Chelsea                      265              3415    6965                 151    298              163    1081
-      Lower East Side               47              1076    1136                  34    108               37     413
-      Chinatown                     11               135     233                   9     17                7      77
-      Washington Heights             3                 4      43                  42     78              122       1
-      Upper West Side             1583               703    9888                2297   1495              744     287
-      Clinton                      220               738    5001                 136    229               96     303
-      Yorkville                    139                44     424                  66    273               49      20
-      Garment District             442              1308   10924                 165    282              112     507
-      East Harlem                   15                10     120                  64    393               47       6
-                         dropoff_nhood
-    pickup_nhood          North Sutton Area Upper East Side Financial District Inwood Chelsea Lower East Side Chinatown
-      West Village                       63             750                569     17    2718             538        79
-      East Village                      184            1549                869     10    1703            1757       197
-      Battery Park                       21             236                631      1     604             170        48
-      Carnegie Hill                      81            3184                 52      4     129              24         4
-      Gramercy                          543            5055               1384     30    4755            1747       193
-      Soho                               43             566                758      4    1663             726       120
-      Murray Hill                       297            2951                583     11    1506             484        45
-      Little Italy                       21             293                245      1     566             372        39
-      Central Park                       70            2275                 45      5     235              43         6
-      Greenwich Village                 120            1649                953     16    3740            1389       167
-      Midtown                          1310           17712               2157     90    6393            1301       218
-      Morningside Heights                12             359                 10     12      80              18         4
-      Harlem                              3             266                 20      7      48              20         1
-      Hamilton Heights                    0              48                  6      7      40               6         0
-      Tribeca                            36             433                971     11    1067             480       122
-      North Sutton Area                 128            1971                161      2     214             103        11
-      Upper East Side                  1791           34711                993     56    2051             782        79
-      Financial District                 76             748               1250      9     951             929       239
-      Inwood                              0               3                  0     14       0               0         0
-      Chelsea                           202            2334               1054     39    7278             984       135
-      Lower East Side                   122             814                907      8     922            1197       168
-      Chinatown                           3              91                187      1     113             157        36
-      Washington Heights                  3              34                  4     28      27               3         1
-      Upper West Side                   344            9062                292    106    1848             249        21
-      Clinton                            68            1189                425     24    2812             277        59
-      Yorkville                          27            1365                 37     11      93              46         5
-      Garment District                  219            3381                789     34    3130             556       109
-      East Harlem                        13             393                 11      7      27              19         1
-                         dropoff_nhood
-    pickup_nhood          Washington Heights Upper West Side Clinton Yorkville Garment District East Harlem
-      West Village                        59             644     741        43              956          24
-      East Village                        89             622     519       150             1155          97
-      Battery Park                        17             203     218        18              361           5
-      Carnegie Hill                       39            1344      81       292              171         141
-      Gramercy                           129            1684    1418       309             4227         145
-      Soho                                35             399     369        27              801          12
-      Murray Hill                         61             827     848       147             2117          68
-      Little Italy                        11             142     143        16              258           9
-      Central Park                        55            1983     224       203              284         121
-      Greenwich Village                  115             947     733       110             1711          47
-      Midtown                            574           10044    5724       888             9006         413
-      Morningside Heights                114            1359      70        82               74         120
-      Harlem                             117             509      56       184               43         326
-      Hamilton Heights                    88             251      32        20               17          65
-      Tribeca                             26             347     271        26              535          11
-      North Sutton Area                   20             333      92        69              363          40
-      Upper East Side                    424            9720    1408      2998             3449        1243
-      Financial District                  39             300     396        54              687          21
-      Inwood                              25               7       0         0                0           1
-      Chelsea                            196            2270    2928       188             3640          97
-      Lower East Side                     49             388     281        75              559          42
-      Chinatown                           12              42      75        10              117           6
-      Washington Heights                 231             112      22        11               15          17
-      Upper West Side                    953           20404    2245       915             1372         570
-      Clinton                            184            2040    1940       118             1837          73
-      Yorkville                           45             693      67       366              122         354
-      Garment District                   178            1947    2539       253             2137         109
-      East Harlem                         49             152      22       405               35         287
+<table>
+<thead><tr><th></th><th scope=col>West Village</th><th scope=col>East Village</th><th scope=col>Battery Park</th><th scope=col>Carnegie Hill</th><th scope=col>Gramercy</th></tr></thead>
+<tbody>
+  <tr><th scope=row>West Village</th><td>1002</td><td> 880</td><td> 405</td><td>  50</td><td>1359</td></tr>
+  <tr><th scope=row>East Village</th><td> 910</td><td>2319</td><td> 183</td><td>  60</td><td>3418</td></tr>
+  <tr><th scope=row>Battery Park</th><td>300</td><td>155</td><td>233</td><td> 17</td><td>342</td></tr>
+  <tr><th scope=row>Carnegie Hill</th><td> 47</td><td> 40</td><td> 37</td><td>299</td><td>180</td></tr>
+  <tr><th scope=row>Gramercy</th><td>1620</td><td>3585</td><td> 461</td><td> 260</td><td>7414</td></tr>
+</tbody>
+</table>
+
 
 
 
@@ -4239,13 +3872,13 @@ arr_3d[ , , 2]
 <table>
 <thead><tr><th></th><th scope=col>1AM-5AM</th><th scope=col>5AM-9AM</th><th scope=col>9AM-12PM</th><th scope=col>12PM-4PM</th><th scope=col>4PM-6PM</th><th scope=col>6PM-10PM</th><th scope=col>10PM-1AM</th></tr></thead>
 <tbody>
-	<tr><th scope=row>Sun</th><td>4413</td><td>3579</td><td>6388</td><td>8940</td><td>4378</td><td>7232</td><td>5640</td></tr>
-	<tr><th scope=row>Mon</th><td>1565</td><td>6121</td><td>5944</td><td>8275</td><td>4388</td><td>7491</td><td>3054</td></tr>
-	<tr><th scope=row>Tue</th><td>1417</td><td>6231</td><td>5796</td><td>8235</td><td>4486</td><td>8248</td><td>2905</td></tr>
-	<tr><th scope=row>Wed</th><td>1482</td><td>6312</td><td>5808</td><td>8111</td><td>4150</td><td>8401</td><td>3339</td></tr>
-	<tr><th scope=row>Thu</th><td>2076</td><td>6385</td><td>6118</td><td>8457</td><td>4459</td><td>9184</td><td>4102</td></tr>
-	<tr><th scope=row>Fri</th><td> 2343</td><td> 6359</td><td> 6320</td><td> 8508</td><td> 4736</td><td>10221</td><td> 4865</td></tr>
-	<tr><th scope=row>Sat</th><td> 4081</td><td> 4345</td><td> 6868</td><td> 9781</td><td> 5555</td><td>10544</td><td> 6650</td></tr>
+  <tr><th scope=row>Sun</th><td>4413</td><td>3579</td><td>6388</td><td>8940</td><td>4378</td><td>7232</td><td>5640</td></tr>
+  <tr><th scope=row>Mon</th><td>1565</td><td>6121</td><td>5944</td><td>8275</td><td>4388</td><td>7491</td><td>3054</td></tr>
+  <tr><th scope=row>Tue</th><td>1417</td><td>6231</td><td>5796</td><td>8235</td><td>4486</td><td>8248</td><td>2905</td></tr>
+  <tr><th scope=row>Wed</th><td>1482</td><td>6312</td><td>5808</td><td>8111</td><td>4150</td><td>8401</td><td>3339</td></tr>
+  <tr><th scope=row>Thu</th><td>2076</td><td>6385</td><td>6118</td><td>8457</td><td>4459</td><td>9184</td><td>4102</td></tr>
+  <tr><th scope=row>Fri</th><td> 2343</td><td> 6359</td><td> 6320</td><td> 8508</td><td> 4736</td><td>10221</td><td> 4865</td></tr>
+  <tr><th scope=row>Sat</th><td> 4081</td><td> 4345</td><td> 6868</td><td> 9781</td><td> 5555</td><td>10544</td><td> 6650</td></tr>
 </tbody>
 </table>
 
@@ -4280,12 +3913,12 @@ head(df_arr_3d)
 <table>
 <thead><tr><th></th><th scope=col>pickup_dow</th><th scope=col>pickup_hour</th><th scope=col>payment_type</th><th scope=col>Freq</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>Sun</td><td>1AM-5AM</td><td>card</td><td>7717</td></tr>
-	<tr><th scope=row>2</th><td>Mon</td><td>1AM-5AM</td><td>card</td><td>1930</td></tr>
-	<tr><th scope=row>3</th><td>Tue</td><td>1AM-5AM</td><td>card</td><td>1708</td></tr>
-	<tr><th scope=row>4</th><td>Wed</td><td>1AM-5AM</td><td>card</td><td>1967</td></tr>
-	<tr><th scope=row>5</th><td>Thu</td><td>1AM-5AM</td><td>card</td><td>2620</td></tr>
-	<tr><th scope=row>6</th><td>Fri</td><td>1AM-5AM</td><td>card</td><td>3348</td></tr>
+  <tr><th scope=row>1</th><td>Sun</td><td>1AM-5AM</td><td>card</td><td>7717</td></tr>
+  <tr><th scope=row>2</th><td>Mon</td><td>1AM-5AM</td><td>card</td><td>1930</td></tr>
+  <tr><th scope=row>3</th><td>Tue</td><td>1AM-5AM</td><td>card</td><td>1708</td></tr>
+  <tr><th scope=row>4</th><td>Wed</td><td>1AM-5AM</td><td>card</td><td>1967</td></tr>
+  <tr><th scope=row>5</th><td>Thu</td><td>1AM-5AM</td><td>card</td><td>2620</td></tr>
+  <tr><th scope=row>6</th><td>Fri</td><td>1AM-5AM</td><td>card</td><td>3348</td></tr>
 </tbody>
 </table>
 
@@ -4305,7 +3938,7 @@ subset(df_arr_3d, pickup_dow == 'Tue' & pickup_hour == '5AM-9AM' & payment_type 
 <table>
 <thead><tr><th></th><th scope=col>pickup_dow</th><th scope=col>pickup_hour</th><th scope=col>payment_type</th><th scope=col>Freq</th></tr></thead>
 <tbody>
-	<tr><th scope=row>59</th><td>Tue</td><td>5AM-9AM</td><td>cash</td><td>6231</td></tr>
+  <tr><th scope=row>59</th><td>Tue</td><td>5AM-9AM</td><td>cash</td><td>6231</td></tr>
 </tbody>
 </table>
 
@@ -4325,9 +3958,9 @@ dim(arr_3d)
 
 
 <ol class=list-inline>
-	<li>7</li>
-	<li>7</li>
-	<li>2</li>
+  <li>7</li>
+  <li>7</li>
+  <li>2</li>
 </ol>
 
 
@@ -4337,61 +3970,23 @@ The second argiment to `apply` is used to specify which dimension(s) we are aggr
 
 
 ```R
-apply(arr_3d, 2, sum) # because `pickup_hour` is the second dimension, we sum over `pickup_hour`
+print(apply(arr_3d, 2, sum)) # because `pickup_hour` is the second dimension, we sum over `pickup_hour`
 ```
 
-
-
-
-<dl class=dl-horizontal>
-	<dt>1AM-5AM</dt>
-		<dd>43758</dd>
-	<dt>5AM-9AM</dt>
-		<dd>116757</dd>
-	<dt>9AM-12PM</dt>
-		<dd>108969</dd>
-	<dt>12PM-4PM</dt>
-		<dd>145507</dd>
-	<dt>4PM-6PM</dt>
-		<dd>83753</dd>
-	<dt>6PM-10PM</dt>
-		<dd>180521</dd>
-	<dt>10PM-1AM</dt>
-		<dd>88031</dd>
-</dl>
-
-
-
+     1AM-5AM  5AM-9AM 9AM-12PM 12PM-4PM  4PM-6PM 6PM-10PM 10PM-1AM 
+       43758   116757   108969   145507    83753   180521    88031 
+    
 
 Once again, when the dimensions have names it is better to use the names instead of the numeric index.
 
 
 ```R
-apply(arr_3d, "pickup_hour", sum) # same as above, but more readable notation
+print(apply(arr_3d, "pickup_hour", sum)) # same as above, but more readable notation
 ```
 
-
-
-
-<dl class=dl-horizontal>
-	<dt>1AM-5AM</dt>
-		<dd>43758</dd>
-	<dt>5AM-9AM</dt>
-		<dd>116757</dd>
-	<dt>9AM-12PM</dt>
-		<dd>108969</dd>
-	<dt>12PM-4PM</dt>
-		<dd>145507</dd>
-	<dt>4PM-6PM</dt>
-		<dd>83753</dd>
-	<dt>6PM-10PM</dt>
-		<dd>180521</dd>
-	<dt>10PM-1AM</dt>
-		<dd>88031</dd>
-</dl>
-
-
-
+     1AM-5AM  5AM-9AM 9AM-12PM 12PM-4PM  4PM-6PM 6PM-10PM 10PM-1AM 
+       43758   116757   108969   145507    83753   180521    88031 
+    
 
 So in the above example, we used apply to collapse a 3D `array` into a 2D `array` by summing across the values in the second dimension (the dimension representing pick-up hour).
 
@@ -4473,31 +4068,12 @@ We can confirm this by using `apply` to run the `sum` function across the first 
 
 
 ```R
-apply(prop.table(arr_3d, 1), 1, sum) # check that across rows, proportions add to 1
+print(apply(prop.table(arr_3d, 1), 1, sum)) # check that across rows, proportions add to 1
 ```
 
-
-
-
-<dl class=dl-horizontal>
-	<dt>Sun</dt>
-		<dd>1</dd>
-	<dt>Mon</dt>
-		<dd>1</dd>
-	<dt>Tue</dt>
-		<dd>1</dd>
-	<dt>Wed</dt>
-		<dd>1</dd>
-	<dt>Thu</dt>
-		<dd>1</dd>
-	<dt>Fri</dt>
-		<dd>1</dd>
-	<dt>Sat</dt>
-		<dd>1</dd>
-</dl>
-
-
-
+    Sun Mon Tue Wed Thu Fri Sat 
+      1   1   1   1   1   1   1 
+    
 
 Similarly, if the second argument to `prop.table` is 2, we get proportions that add up to 1 accross the values of the 2nd dimension. Since the second dimension corresponds to pick-up hour, for each pickup-hour, we get the proportion of observations that fall into each pick-up day of week and payment type combination.
 
@@ -4540,31 +4116,12 @@ Which once again we can double-check with `apply`:
 
 
 ```R
-apply(prop.table(arr_3d, 2), 2, sum) # check that across columns, proportions add to 1
+print(apply(prop.table(arr_3d, 2), 2, sum)) # check that across columns, proportions add to 1
 ```
 
-
-
-
-<dl class=dl-horizontal>
-	<dt>1AM-5AM</dt>
-		<dd>1</dd>
-	<dt>5AM-9AM</dt>
-		<dd>1</dd>
-	<dt>9AM-12PM</dt>
-		<dd>1</dd>
-	<dt>12PM-4PM</dt>
-		<dd>1</dd>
-	<dt>4PM-6PM</dt>
-		<dd>1</dd>
-	<dt>6PM-10PM</dt>
-		<dd>1</dd>
-	<dt>10PM-1AM</dt>
-		<dd>1</dd>
-</dl>
-
-
-
+     1AM-5AM  5AM-9AM 9AM-12PM 12PM-4PM  4PM-6PM 6PM-10PM 10PM-1AM 
+           1        1        1        1        1        1        1 
+    
 
 Finally, if the second argument to `prop.table` is 3, we get proportions that add up to 1 accross the values of the 3nd dimension. So for each payment type, the proportions now add up to 1.
 
@@ -4676,7 +4233,7 @@ print(s_res)
 ```
 
     passenger_count   trip_distance     fare_amount      tip_amount   trip_duration     tip_percent 
-               1.68           26.80           12.70            2.10          923.70           13.88 
+               1.68           26.80           12.70            2.10          923.70           13.89 
     
 
 The object `sapply` returns in this case is a vector: `mean` is a summary function that returns a single number, and `sapply` applies `mean` to multiple columns, returning a **named vector** with the means as its elements and the original column names preserved. Because `s_res` is a named vector, we can query it by name:
@@ -4769,7 +4326,7 @@ print(s_res)
 ```
 
     passenger_count   trip_distance     fare_amount      tip_amount   trip_duration     tip_percent 
-               2.68           26.80           12.70            2.10          923.70           13.88 
+               2.68           26.80           12.70            2.10          923.70           13.89 
     
 
 With `l_res` using a single bracket fails, because `l_res["passenger_count"]` is still a `list` and we can't add 1 to a `list`.
@@ -4853,8 +4410,8 @@ qsap1[c('5%', '95%'), c('trip_distance', 'trip_duration')]
 <table>
 <thead><tr><th></th><th scope=col>trip_distance</th><th scope=col>trip_duration</th></tr></thead>
 <tbody>
-	<tr><th scope=row>5%</th><td>  0.5</td><td>178.0</td></tr>
-	<tr><th scope=row>95%</th><td>  10.2</td><td>2040.0</td></tr>
+  <tr><th scope=row>5%</th><td>  0.5</td><td>178.0</td></tr>
+  <tr><th scope=row>95%</th><td>  10.2</td><td>2040.0</td></tr>
 </tbody>
 </table>
 
@@ -4872,10 +4429,10 @@ qlap1[['trip_distance']][c('5%', '95%')]
 
 
 <dl class=dl-horizontal>
-	<dt>5%</dt>
-		<dd>0.5</dd>
-	<dt>95%</dt>
-		<dd>10.23</dd>
+  <dt>5%</dt>
+    <dd>0.5</dd>
+  <dt>95%</dt>
+    <dd>10.23</dd>
 </dl>
 
 
@@ -4890,10 +4447,10 @@ qlap1[['trip_duration']][c('5%', '95%')]
 
 
 <dl class=dl-horizontal>
-	<dt>5%</dt>
-		<dd>178</dd>
-	<dt>95%</dt>
-		<dd>2040</dd>
+  <dt>5%</dt>
+    <dd>178</dd>
+  <dt>95%</dt>
+    <dd>2040</dd>
 </dl>
 
 
@@ -4910,124 +4467,124 @@ qsap2[c('passenger_count', 'tip_percent')]
 
 
 <dl>
-	<dt>$passenger_count</dt>
-		<dd><ol class=list-inline>
-	<li>1</li>
-	<li>2</li>
-	<li>3</li>
-	<li>5</li>
-	<li>4</li>
-	<li>6</li>
-	<li>0</li>
-	<li>7</li>
-	<li>9</li>
+  <dt>$passenger_count</dt>
+    <dd><ol class=list-inline>
+  <li>1</li>
+  <li>2</li>
+  <li>3</li>
+  <li>5</li>
+  <li>4</li>
+  <li>6</li>
+  <li>0</li>
+  <li>7</li>
+  <li>9</li>
 </ol>
 </dd>
-	<dt>$tip_percent</dt>
-		<dd><ol class=list-inline>
-	<li>22</li>
-	<li>18</li>
-	<li>17</li>
-	<li>16</li>
-	<li>1</li>
-	<li>8</li>
-	<li>20</li>
-	<li>10</li>
-	<li>7</li>
-	<li>0</li>
-	<li>12</li>
-	<li>9</li>
-	<li>19</li>
-	<li>6</li>
-	<li>24</li>
-	<li>5</li>
-	<li>4</li>
-	<li>11</li>
-	<li>23</li>
-	<li>14</li>
-	<li>3</li>
-	<li>13</li>
-	<li>26</li>
-	<li>21</li>
-	<li>25</li>
-	<li>15</li>
-	<li>27</li>
-	<li>NA</li>
-	<li>33</li>
-	<li>30</li>
-	<li>2</li>
-	<li>37</li>
-	<li>31</li>
-	<li>40</li>
-	<li>34</li>
-	<li>28</li>
-	<li>29</li>
-	<li>41</li>
-	<li>51</li>
-	<li>32</li>
-	<li>50</li>
-	<li>100</li>
-	<li>42</li>
-	<li>35</li>
-	<li>99</li>
-	<li>45</li>
-	<li>36</li>
-	<li>46</li>
-	<li>64</li>
-	<li>55</li>
-	<li>44</li>
-	<li>86</li>
-	<li>38</li>
-	<li>63</li>
-	<li>48</li>
-	<li>60</li>
-	<li>47</li>
-	<li>39</li>
-	<li>53</li>
-	<li>74</li>
-	<li>52</li>
-	<li>76</li>
-	<li>61</li>
-	<li>92</li>
-	<li>58</li>
-	<li>81</li>
-	<li>43</li>
-	<li>56</li>
-	<li>54</li>
-	<li>80</li>
-	<li>84</li>
-	<li>66</li>
-	<li>57</li>
-	<li>68</li>
-	<li>59</li>
-	<li>118</li>
-	<li>62</li>
-	<li>49</li>
-	<li>70</li>
-	<li>73</li>
-	<li>88</li>
-	<li>95</li>
-	<li>89</li>
-	<li>97</li>
-	<li>77</li>
-	<li>65</li>
-	<li>85</li>
-	<li>72</li>
-	<li>82</li>
-	<li>90</li>
-	<li>91</li>
-	<li>78</li>
-	<li>79</li>
-	<li>71</li>
-	<li>94</li>
-	<li>96</li>
-	<li>67</li>
-	<li>98</li>
-	<li>93</li>
-	<li>75</li>
-	<li>69</li>
-	<li>83</li>
-	<li>87</li>
+  <dt>$tip_percent</dt>
+    <dd><ol class=list-inline>
+  <li>22</li>
+  <li>18</li>
+  <li>17</li>
+  <li>16</li>
+  <li>1</li>
+  <li>8</li>
+  <li>20</li>
+  <li>10</li>
+  <li>7</li>
+  <li>0</li>
+  <li>12</li>
+  <li>9</li>
+  <li>19</li>
+  <li>6</li>
+  <li>24</li>
+  <li>5</li>
+  <li>4</li>
+  <li>11</li>
+  <li>23</li>
+  <li>14</li>
+  <li>3</li>
+  <li>13</li>
+  <li>26</li>
+  <li>21</li>
+  <li>25</li>
+  <li>15</li>
+  <li>27</li>
+  <li>NA</li>
+  <li>33</li>
+  <li>30</li>
+  <li>2</li>
+  <li>37</li>
+  <li>31</li>
+  <li>40</li>
+  <li>34</li>
+  <li>28</li>
+  <li>29</li>
+  <li>41</li>
+  <li>51</li>
+  <li>32</li>
+  <li>50</li>
+  <li>100</li>
+  <li>42</li>
+  <li>35</li>
+  <li>99</li>
+  <li>45</li>
+  <li>36</li>
+  <li>46</li>
+  <li>64</li>
+  <li>55</li>
+  <li>44</li>
+  <li>86</li>
+  <li>38</li>
+  <li>63</li>
+  <li>48</li>
+  <li>60</li>
+  <li>47</li>
+  <li>39</li>
+  <li>53</li>
+  <li>74</li>
+  <li>52</li>
+  <li>76</li>
+  <li>61</li>
+  <li>92</li>
+  <li>58</li>
+  <li>81</li>
+  <li>43</li>
+  <li>56</li>
+  <li>54</li>
+  <li>80</li>
+  <li>84</li>
+  <li>66</li>
+  <li>57</li>
+  <li>68</li>
+  <li>59</li>
+  <li>118</li>
+  <li>62</li>
+  <li>49</li>
+  <li>70</li>
+  <li>73</li>
+  <li>88</li>
+  <li>95</li>
+  <li>89</li>
+  <li>97</li>
+  <li>77</li>
+  <li>65</li>
+  <li>85</li>
+  <li>72</li>
+  <li>82</li>
+  <li>90</li>
+  <li>91</li>
+  <li>78</li>
+  <li>79</li>
+  <li>71</li>
+  <li>94</li>
+  <li>96</li>
+  <li>67</li>
+  <li>93</li>
+  <li>75</li>
+  <li>69</li>
+  <li>83</li>
+  <li>87</li>
+  <li>98</li>
 </ol>
 </dd>
 </dl>
@@ -5074,11 +4631,11 @@ print(tapply(nyc_taxi$tip_amount, nyc_taxi$pickup_nhood, mean, trim = 0.1, na.rm
            West Village        East Village        Battery Park       Carnegie Hill            Gramercy                Soho 
                    1.69                1.72                2.29                1.50                1.58                1.74 
             Murray Hill        Little Italy        Central Park   Greenwich Village             Midtown Morningside Heights 
-                   1.62                1.74                1.49                1.61                1.62                1.73 
+                   1.62                1.74                1.49                1.61                1.62                1.72 
                  Harlem    Hamilton Heights             Tribeca   North Sutton Area     Upper East Side  Financial District 
                    1.35                1.53                1.87                1.49                1.48                2.34 
                  Inwood             Chelsea     Lower East Side           Chinatown  Washington Heights     Upper West Side 
-                   1.46                1.62                1.83                1.73                1.95                1.50 
+                   1.45                1.62                1.83                1.74                1.96                1.50 
                 Clinton           Yorkville    Garment District         East Harlem 
                    1.56                1.45                1.55                1.21 
     
@@ -5087,962 +4644,36 @@ We can group the results by pickup and dropoff neighborhood pairs, by combining 
 
 
 ```R
-print(
-    tapply(nyc_taxi$tip_amount, 
+flat_array <- tapply(nyc_taxi$tip_amount, 
            paste(nyc_taxi$pickup_nhood, nyc_taxi$dropoff_nhood, sep = " to "), 
-           mean, trim = 0.1, na.rm = TRUE))
+           mean, trim = 0.1, na.rm = TRUE)
+
+print(head(flat_array))
 ```
 
-                  Battery Park to Battery Park              Battery Park to Carnegie Hill 
-                                         1.047                                      4.298 
-                  Battery Park to Central Park                    Battery Park to Chelsea 
-                                         3.475                                      2.100 
-                     Battery Park to Chinatown                    Battery Park to Clinton 
-                                         1.693                                      2.431 
-                   Battery Park to East Harlem               Battery Park to East Village 
-                                         3.600                                      2.434 
-            Battery Park to Financial District           Battery Park to Garment District 
-                                         1.246                                      2.646 
-                      Battery Park to Gramercy          Battery Park to Greenwich Village 
-                                         2.701                                      1.872 
-              Battery Park to Hamilton Heights                     Battery Park to Harlem 
-                                         4.350                                      6.493 
-                        Battery Park to Inwood               Battery Park to Little Italy 
-                                         6.000                                      1.968 
-               Battery Park to Lower East Side                    Battery Park to Midtown 
-                                         2.009                                      3.228 
-           Battery Park to Morningside Heights                Battery Park to Murray Hill 
-                                         3.407                                      3.442 
-                            Battery Park to NA          Battery Park to North Sutton Area 
-                                         5.526                                      3.596 
-                          Battery Park to Soho                    Battery Park to Tribeca 
-                                         1.525                                      1.094 
-               Battery Park to Upper East Side            Battery Park to Upper West Side 
-                                         3.854                                      3.388 
-            Battery Park to Washington Heights               Battery Park to West Village 
-                                         5.801                                      1.592 
-                     Battery Park to Yorkville              Carnegie Hill to Battery Park 
-                                         4.611                                      4.472 
-                Carnegie Hill to Carnegie Hill              Carnegie Hill to Central Park 
-                                         0.904                                      1.268 
-                      Carnegie Hill to Chelsea                 Carnegie Hill to Chinatown 
-                                         3.285                                      5.930 
-                      Carnegie Hill to Clinton               Carnegie Hill to East Harlem 
-                                         2.308                                      1.168 
-                 Carnegie Hill to East Village        Carnegie Hill to Financial District 
-                                         3.084                                      3.790 
-             Carnegie Hill to Garment District                  Carnegie Hill to Gramercy 
-                                         2.515                                      2.796 
-            Carnegie Hill to Greenwich Village          Carnegie Hill to Hamilton Heights 
-                                         3.209                                      2.066 
-                       Carnegie Hill to Harlem                    Carnegie Hill to Inwood 
-                                         1.423                                      6.625 
-                 Carnegie Hill to Little Italy           Carnegie Hill to Lower East Side 
-                                         3.183                                      3.784 
-                      Carnegie Hill to Midtown       Carnegie Hill to Morningside Heights 
-                                         1.866                                      1.788 
-                  Carnegie Hill to Murray Hill                        Carnegie Hill to NA 
-                                         2.004                                      4.739 
-            Carnegie Hill to North Sutton Area                      Carnegie Hill to Soho 
-                                         2.153                                      3.800 
-                      Carnegie Hill to Tribeca           Carnegie Hill to Upper East Side 
-                                         3.341                                      1.142 
-              Carnegie Hill to Upper West Side        Carnegie Hill to Washington Heights 
-                                         1.439                                      3.452 
-                 Carnegie Hill to West Village                 Carnegie Hill to Yorkville 
-                                         3.790                                      0.968 
-                  Central Park to Battery Park              Central Park to Carnegie Hill 
-                                         3.613                                      1.366 
-                  Central Park to Central Park                    Central Park to Chelsea 
-                                         1.081                                      2.179 
-                     Central Park to Chinatown                    Central Park to Clinton 
-                                         3.875                                      1.646 
-                   Central Park to East Harlem               Central Park to East Village 
-                                         1.499                                      3.044 
-            Central Park to Financial District           Central Park to Garment District 
-                                         3.784                                      1.678 
-                      Central Park to Gramercy          Central Park to Greenwich Village 
-                                         2.245                                      2.778 
-              Central Park to Hamilton Heights                     Central Park to Harlem 
-                                         1.833                                      1.503 
-                        Central Park to Inwood               Central Park to Little Italy 
-                                         3.330                                      3.271 
-               Central Park to Lower East Side                    Central Park to Midtown 
-                                         3.372                                      1.402 
-           Central Park to Morningside Heights                Central Park to Murray Hill 
-                                         1.506                                      2.010 
-                            Central Park to NA          Central Park to North Sutton Area 
-                                         5.426                                      1.652 
-                          Central Park to Soho                    Central Park to Tribeca 
-                                         2.986                                      3.261 
-               Central Park to Upper East Side            Central Park to Upper West Side 
-                                         1.373                                      1.146 
-            Central Park to Washington Heights               Central Park to West Village 
-                                         3.112                                      2.733 
-                     Central Park to Yorkville                    Chelsea to Battery Park 
-                                         1.304                                      2.094 
-                      Chelsea to Carnegie Hill                    Chelsea to Central Park 
-                                         3.014                                      2.132 
-                            Chelsea to Chelsea                       Chelsea to Chinatown 
-                                         1.111                                      1.933 
-                            Chelsea to Clinton                     Chelsea to East Harlem 
-                                         1.315                                      2.845 
-                       Chelsea to East Village              Chelsea to Financial District 
-                                         1.699                                      2.313 
-                   Chelsea to Garment District                        Chelsea to Gramercy 
-                                         1.173                                      1.310 
-                  Chelsea to Greenwich Village                Chelsea to Hamilton Heights 
-                                         1.305                                      4.087 
-                             Chelsea to Harlem                          Chelsea to Inwood 
-                                         3.437                                      5.049 
-                       Chelsea to Little Italy                 Chelsea to Lower East Side 
-                                         1.895                                      2.051 
-                            Chelsea to Midtown             Chelsea to Morningside Heights 
-                                         1.644                                      3.439 
-                        Chelsea to Murray Hill                              Chelsea to NA 
-                                         1.576                                      4.506 
-                  Chelsea to North Sutton Area                            Chelsea to Soho 
-                                         2.030                                      1.614 
-                            Chelsea to Tribeca                 Chelsea to Upper East Side 
-                                         1.800                                      2.563 
-                    Chelsea to Upper West Side              Chelsea to Washington Heights 
-                                         2.242                                      4.385 
-                       Chelsea to West Village                       Chelsea to Yorkville 
-                                         1.192                                      2.688 
-                     Chinatown to Battery Park                  Chinatown to Central Park 
-                                         1.423                                      3.957 
-                          Chinatown to Chelsea                     Chinatown to Chinatown 
-                                         1.911                                      0.839 
-                          Chinatown to Clinton                   Chinatown to East Harlem 
-                                         2.242                                      2.997 
-                     Chinatown to East Village            Chinatown to Financial District 
-                                         1.359                                      1.093 
-                 Chinatown to Garment District                      Chinatown to Gramercy 
-                                         1.821                                      1.676 
-                Chinatown to Greenwich Village              Chinatown to Hamilton Heights 
-                                         1.218                                      3.493 
-                           Chinatown to Harlem                        Chinatown to Inwood 
-                                         3.724                                      8.060 
-                     Chinatown to Little Italy               Chinatown to Lower East Side 
-                                         0.950                                      1.089 
-                          Chinatown to Midtown           Chinatown to Morningside Heights 
-                                         2.240                                      3.963 
-                      Chinatown to Murray Hill                            Chinatown to NA 
-                                         1.659                                      2.518 
-                Chinatown to North Sutton Area                          Chinatown to Soho 
-                                         1.820                                      1.121 
-                          Chinatown to Tribeca               Chinatown to Upper East Side 
-                                         1.009                                      2.761 
-                  Chinatown to Upper West Side            Chinatown to Washington Heights 
-                                         3.629                                      3.983 
-                     Chinatown to West Village                     Chinatown to Yorkville 
-                                         1.418                                      3.135 
-                       Clinton to Battery Park                   Clinton to Carnegie Hill 
-                                         2.268                                      2.162 
-                       Clinton to Central Park                         Clinton to Chelsea 
-                                         1.547                                      1.215 
-                          Clinton to Chinatown                         Clinton to Clinton 
-                                         2.261                                      1.002 
-                        Clinton to East Harlem                    Clinton to East Village 
-                                         2.088                                      2.344 
-                 Clinton to Financial District                Clinton to Garment District 
-                                         2.684                                      1.138 
-                           Clinton to Gramercy               Clinton to Greenwich Village 
-                                         1.699                                      1.909 
-                   Clinton to Hamilton Heights                          Clinton to Harlem 
-                                         2.757                                      2.633 
-                             Clinton to Inwood                    Clinton to Little Italy 
-                                         3.461                                      2.385 
-                    Clinton to Lower East Side                         Clinton to Midtown 
-                                         2.657                                      1.207 
-                Clinton to Morningside Heights                     Clinton to Murray Hill 
-                                         2.336                                      1.442 
-                                 Clinton to NA               Clinton to North Sutton Area 
-                                         4.600                                      1.854 
-                               Clinton to Soho                         Clinton to Tribeca 
-                                         2.076                                      2.123 
-                    Clinton to Upper East Side                 Clinton to Upper West Side 
-                                         2.001                                      1.447 
-                 Clinton to Washington Heights                    Clinton to West Village 
-                                         3.661                                      1.526 
-                          Clinton to Yorkville                East Harlem to Battery Park 
-                                         2.420                                      6.205 
-                  East Harlem to Carnegie Hill                East Harlem to Central Park 
-                                         1.386                                      1.286 
-                        East Harlem to Chelsea                   East Harlem to Chinatown 
-                                         2.911                                      0.000 
-                        East Harlem to Clinton                 East Harlem to East Harlem 
-                                         2.214                                      0.813 
-                   East Harlem to East Village          East Harlem to Financial District 
-                                         2.029                                      3.722 
-               East Harlem to Garment District                    East Harlem to Gramercy 
-                                         3.332                                      2.356 
-              East Harlem to Greenwich Village            East Harlem to Hamilton Heights 
-                                         3.092                                      1.255 
-                         East Harlem to Harlem                      East Harlem to Inwood 
-                                         0.899                                      1.071 
-                   East Harlem to Little Italy             East Harlem to Lower East Side 
-                                         4.550                                      2.728 
-                        East Harlem to Midtown         East Harlem to Morningside Heights 
-                                         1.890                                      1.071 
-                    East Harlem to Murray Hill                          East Harlem to NA 
-                                         2.143                                      1.919 
-              East Harlem to North Sutton Area                        East Harlem to Soho 
-                                         2.241                                      2.375 
-                        East Harlem to Tribeca             East Harlem to Upper East Side 
-                                         3.673                                      1.272 
-                East Harlem to Upper West Side          East Harlem to Washington Heights 
-                                         1.547                                      1.772 
-                   East Harlem to West Village                   East Harlem to Yorkville 
-                                         2.687                                      0.771 
-                  East Village to Battery Park              East Village to Carnegie Hill 
-                                         2.162                                      3.165 
-                  East Village to Central Park                    East Village to Chelsea 
-                                         2.739                                      1.678 
-                     East Village to Chinatown                    East Village to Clinton 
-                                         1.340                                      2.268 
-                   East Village to East Harlem               East Village to East Village 
-                                         3.259                                      1.000 
-            East Village to Financial District           East Village to Garment District 
-                                         2.033                                      1.841 
-                      East Village to Gramercy          East Village to Greenwich Village 
-                                         1.229                                      1.169 
-              East Village to Hamilton Heights                     East Village to Harlem 
-                                         4.059                                      3.826 
-                        East Village to Inwood               East Village to Little Italy 
-                                         4.646                                      1.221 
-               East Village to Lower East Side                    East Village to Midtown 
-                                         1.237                                      2.003 
-           East Village to Morningside Heights                East Village to Murray Hill 
-                                         3.919                                      1.648 
-                            East Village to NA          East Village to North Sutton Area 
-                                         3.211                                      1.755 
-                          East Village to Soho                    East Village to Tribeca 
-                                         1.324                                      1.659 
-               East Village to Upper East Side            East Village to Upper West Side 
-                                         2.297                                      3.327 
-            East Village to Washington Heights               East Village to West Village 
-                                         4.781                                      1.538 
-                     East Village to Yorkville         Financial District to Battery Park 
-                                         2.573                                      1.315 
-           Financial District to Carnegie Hill         Financial District to Central Park 
-                                         4.130                                      4.056 
-                 Financial District to Chelsea            Financial District to Chinatown 
-                                         2.254                                      1.227 
-                 Financial District to Clinton          Financial District to East Harlem 
-                                         2.757                                      3.969 
-            Financial District to East Village   Financial District to Financial District 
-                                         2.097                                      1.016 
-        Financial District to Garment District             Financial District to Gramercy 
-                                         2.653                                      2.544 
-       Financial District to Greenwich Village     Financial District to Hamilton Heights 
-                                         1.876                                      4.565 
-                  Financial District to Harlem               Financial District to Inwood 
-                                         4.079                                      5.958 
-            Financial District to Little Italy      Financial District to Lower East Side 
-                                         1.436                                      1.432 
-                 Financial District to Midtown  Financial District to Morningside Heights 
-                                         3.162                                      4.237 
-             Financial District to Murray Hill                   Financial District to NA 
-                                         2.791                                      4.223 
-       Financial District to North Sutton Area                 Financial District to Soho 
-                                         2.589                                      1.451 
-                 Financial District to Tribeca      Financial District to Upper East Side 
-                                         1.243                                      3.819 
-         Financial District to Upper West Side   Financial District to Washington Heights 
-                                         3.789                                      4.590 
-            Financial District to West Village            Financial District to Yorkville 
-                                         1.840                                      3.767 
-              Garment District to Battery Park          Garment District to Carnegie Hill 
-                                         2.451                                      2.238 
-              Garment District to Central Park                Garment District to Chelsea 
-                                         1.448                                      1.116 
-                 Garment District to Chinatown                Garment District to Clinton 
-                                         1.691                                      1.122 
-               Garment District to East Harlem           Garment District to East Village 
-                                         2.238                                      1.878 
-        Garment District to Financial District       Garment District to Garment District 
-                                         2.674                                      0.961 
-                  Garment District to Gramercy      Garment District to Greenwich Village 
-                                         1.291                                      1.467 
-          Garment District to Hamilton Heights                 Garment District to Harlem 
-                                         3.493                                      2.802 
-                    Garment District to Inwood           Garment District to Little Italy 
-                                         4.425                                      2.120 
-           Garment District to Lower East Side                Garment District to Midtown 
-                                         2.224                                      1.266 
-       Garment District to Morningside Heights            Garment District to Murray Hill 
-                                         3.001                                      1.239 
-                        Garment District to NA      Garment District to North Sutton Area 
-                                         4.449                                      1.767 
-                      Garment District to Soho                Garment District to Tribeca 
-                                         1.769                                      2.047 
-           Garment District to Upper East Side        Garment District to Upper West Side 
-                                         2.093                                      1.843 
-        Garment District to Washington Heights           Garment District to West Village 
-                                         3.837                                      1.490 
-                 Garment District to Yorkville                   Gramercy to Battery Park 
-                                         2.297                                      2.506 
-                     Gramercy to Carnegie Hill                   Gramercy to Central Park 
-                                         2.233                                      2.164 
-                           Gramercy to Chelsea                      Gramercy to Chinatown 
-                                         1.328                                      1.729 
-                           Gramercy to Clinton                    Gramercy to East Harlem 
-                                         1.715                                      2.271 
-                      Gramercy to East Village             Gramercy to Financial District 
-                                         1.264                                      2.276 
-                  Gramercy to Garment District                       Gramercy to Gramercy 
-                                         1.351                                      1.059 
-                 Gramercy to Greenwich Village               Gramercy to Hamilton Heights 
-                                         1.275                                      4.117 
-                            Gramercy to Harlem                         Gramercy to Inwood 
-                                         3.201                                      4.337 
-                      Gramercy to Little Italy                Gramercy to Lower East Side 
-                                         1.559                                      1.699 
-                           Gramercy to Midtown            Gramercy to Morningside Heights 
-                                         1.528                                      3.470 
-                       Gramercy to Murray Hill                             Gramercy to NA 
-                                         1.183                                      3.994 
-                 Gramercy to North Sutton Area                           Gramercy to Soho 
-                                         1.495                                      1.595 
-                           Gramercy to Tribeca                Gramercy to Upper East Side 
-                                         1.973                                      2.017 
-                   Gramercy to Upper West Side             Gramercy to Washington Heights 
-                                         2.632                                      4.454 
-                      Gramercy to West Village                      Gramercy to Yorkville 
-                                         1.537                                      2.392 
-             Greenwich Village to Battery Park         Greenwich Village to Carnegie Hill 
-                                         1.848                                      3.372 
-             Greenwich Village to Central Park               Greenwich Village to Chelsea 
-                                         2.655                                      1.292 
-                Greenwich Village to Chinatown               Greenwich Village to Clinton 
-                                         1.353                                      1.874 
-              Greenwich Village to East Harlem          Greenwich Village to East Village 
-                                         3.368                                      1.206 
-       Greenwich Village to Financial District      Greenwich Village to Garment District 
-                                         1.798                                      1.449 
-                 Greenwich Village to Gramercy     Greenwich Village to Greenwich Village 
-                                         1.348                                      1.034 
-         Greenwich Village to Hamilton Heights                Greenwich Village to Harlem 
-                                         4.131                                      3.867 
-                   Greenwich Village to Inwood          Greenwich Village to Little Italy 
-                                         4.205                                      1.250 
-          Greenwich Village to Lower East Side               Greenwich Village to Midtown 
-                                         1.456                                      1.932 
-      Greenwich Village to Morningside Heights           Greenwich Village to Murray Hill 
-                                         4.027                                      1.695 
-                       Greenwich Village to NA     Greenwich Village to North Sutton Area 
-                                         3.652                                      2.277 
-                     Greenwich Village to Soho               Greenwich Village to Tribeca 
-                                         1.155                                      1.432 
-          Greenwich Village to Upper East Side       Greenwich Village to Upper West Side 
-                                         2.631                                      2.937 
-       Greenwich Village to Washington Heights          Greenwich Village to West Village 
-                                         4.683                                      1.131 
-                Greenwich Village to Yorkville           Hamilton Heights to Battery Park 
-                                         2.848                                      3.500 
-             Hamilton Heights to Carnegie Hill           Hamilton Heights to Central Park 
-                                         2.258                                      1.505 
-                   Hamilton Heights to Chelsea                Hamilton Heights to Clinton 
-                                         3.352                                      2.446 
-               Hamilton Heights to East Harlem           Hamilton Heights to East Village 
-                                         1.159                                      3.520 
-        Hamilton Heights to Financial District       Hamilton Heights to Garment District 
-                                         4.772                                      2.031 
-                  Hamilton Heights to Gramercy      Hamilton Heights to Greenwich Village 
-                                         3.386                                      2.733 
-          Hamilton Heights to Hamilton Heights                 Hamilton Heights to Harlem 
-                                         0.784                                      1.054 
-                    Hamilton Heights to Inwood           Hamilton Heights to Little Italy 
-                                         1.850                                      6.660 
-           Hamilton Heights to Lower East Side                Hamilton Heights to Midtown 
-                                         4.018                                      2.707 
-       Hamilton Heights to Morningside Heights            Hamilton Heights to Murray Hill 
-                                         0.965                                      3.800 
-                        Hamilton Heights to NA                   Hamilton Heights to Soho 
-                                         3.477                                      3.742 
-                   Hamilton Heights to Tribeca        Hamilton Heights to Upper East Side 
-                                         4.000                                      2.413 
-           Hamilton Heights to Upper West Side     Hamilton Heights to Washington Heights 
-                                         1.648                                      1.273 
-              Hamilton Heights to West Village              Hamilton Heights to Yorkville 
-                                         3.954                                      2.219 
-                        Harlem to Battery Park                    Harlem to Carnegie Hill 
-                                         3.907                                      1.529 
-                        Harlem to Central Park                          Harlem to Chelsea 
-                                         1.235                                      2.772 
-                           Harlem to Chinatown                          Harlem to Clinton 
-                                         2.000                                      2.217 
-                         Harlem to East Harlem                     Harlem to East Village 
-                                         0.939                                      2.602 
-                  Harlem to Financial District                 Harlem to Garment District 
-                                         3.261                                      2.520 
-                            Harlem to Gramercy                Harlem to Greenwich Village 
-                                         2.555                                      3.748 
-                    Harlem to Hamilton Heights                           Harlem to Harlem 
-                                         1.040                                      0.851 
-                              Harlem to Inwood                     Harlem to Little Italy 
-                                         3.464                                      5.122 
-                     Harlem to Lower East Side                          Harlem to Midtown 
-                                         3.520                                      2.653 
-                 Harlem to Morningside Heights                      Harlem to Murray Hill 
-                                         1.055                                      3.075 
-                                  Harlem to NA                Harlem to North Sutton Area 
-                                         2.586                                      4.217 
-                                Harlem to Soho                          Harlem to Tribeca 
-                                         3.432                                      3.188 
-                     Harlem to Upper East Side                  Harlem to Upper West Side 
-                                         1.860                                      1.406 
-                  Harlem to Washington Heights                     Harlem to West Village 
-                                         1.810                                      3.445 
-                           Harlem to Yorkville                     Inwood to Central Park 
-                                         0.966                                      1.500 
-                         Inwood to East Harlem                 Inwood to Hamilton Heights 
-                                         1.000                                      3.907 
-                              Inwood to Harlem                           Inwood to Inwood 
-                                         2.410                                      0.671 
-                             Inwood to Midtown              Inwood to Morningside Heights 
-                                         3.750                                      1.667 
-                         Inwood to Murray Hill                               Inwood to NA 
-                                         3.000                                      1.544 
-                     Inwood to Upper East Side                  Inwood to Upper West Side 
-                                         3.900                                      2.167 
-                  Inwood to Washington Heights                     Inwood to West Village 
-                                         1.187                                      6.600 
-                  Little Italy to Battery Park              Little Italy to Carnegie Hill 
-                                         1.548                                      3.519 
-                  Little Italy to Central Park                    Little Italy to Chelsea 
-                                         2.842                                      1.748 
-                     Little Italy to Chinatown                    Little Italy to Clinton 
-                                         1.021                                      2.178 
-                   Little Italy to East Harlem               Little Italy to East Village 
-                                         2.923                                      1.216 
-            Little Italy to Financial District           Little Italy to Garment District 
-                                         1.462                                      1.974 
-                      Little Italy to Gramercy          Little Italy to Greenwich Village 
-                                         1.499                                      1.118 
-              Little Italy to Hamilton Heights                     Little Italy to Harlem 
-                                         3.498                                      4.777 
-                        Little Italy to Inwood               Little Italy to Little Italy 
-                                         9.500                                      1.052 
-               Little Italy to Lower East Side                    Little Italy to Midtown 
-                                         1.193                                      2.172 
-           Little Italy to Morningside Heights                Little Italy to Murray Hill 
-                                         3.910                                      1.872 
-                            Little Italy to NA          Little Italy to North Sutton Area 
-                                         3.045                                      2.189 
-                          Little Italy to Soho                    Little Italy to Tribeca 
-                                         1.099                                      1.226 
-               Little Italy to Upper East Side            Little Italy to Upper West Side 
-                                         2.760                                      3.466 
-            Little Italy to Washington Heights               Little Italy to West Village 
-                                         6.686                                      1.480 
-                     Little Italy to Yorkville            Lower East Side to Battery Park 
-                                         3.294                                      2.014 
-              Lower East Side to Carnegie Hill            Lower East Side to Central Park 
-                                         3.148                                      3.150 
-                    Lower East Side to Chelsea               Lower East Side to Chinatown 
-                                         1.951                                      1.066 
-                    Lower East Side to Clinton             Lower East Side to East Harlem 
-                                         2.483                                      3.335 
-               Lower East Side to East Village      Lower East Side to Financial District 
-                                         1.110                                      1.581 
-           Lower East Side to Garment District                Lower East Side to Gramercy 
-                                         2.195                                      1.543 
-          Lower East Side to Greenwich Village        Lower East Side to Hamilton Heights 
-                                         1.311                                      4.164 
-                     Lower East Side to Harlem                  Lower East Side to Inwood 
-                                         4.257                                      7.197 
-               Lower East Side to Little Italy         Lower East Side to Lower East Side 
-                                         1.160                                      0.978 
-                    Lower East Side to Midtown     Lower East Side to Morningside Heights 
-                                         2.265                                      4.431 
-                Lower East Side to Murray Hill                      Lower East Side to NA 
-                                         1.991                                      2.616 
-          Lower East Side to North Sutton Area                    Lower East Side to Soho 
-                                         2.300                                      1.295 
-                    Lower East Side to Tribeca         Lower East Side to Upper East Side 
-                                         1.437                                      2.710 
-            Lower East Side to Upper West Side      Lower East Side to Washington Heights 
-                                         3.655                                      5.183 
-               Lower East Side to West Village               Lower East Side to Yorkville 
-                                         1.682                                      3.233 
-                       Midtown to Battery Park                   Midtown to Carnegie Hill 
-                                         3.420                                      1.710 
-                       Midtown to Central Park                         Midtown to Chelsea 
-                                         1.362                                      1.715 
-                          Midtown to Chinatown                         Midtown to Clinton 
-                                         2.106                                      1.289 
-                        Midtown to East Harlem                    Midtown to East Village 
-                                         1.906                                      2.120 
-                 Midtown to Financial District                Midtown to Garment District 
-                                         3.333                                      1.276 
-                           Midtown to Gramercy               Midtown to Greenwich Village 
-                                         1.519                                      2.009 
-                   Midtown to Hamilton Heights                          Midtown to Harlem 
-                                         2.922                                      2.614 
-                             Midtown to Inwood                    Midtown to Little Italy 
-                                         4.617                                      2.242 
-                    Midtown to Lower East Side                         Midtown to Midtown 
-                                         2.510                                      1.111 
-                Midtown to Morningside Heights                     Midtown to Murray Hill 
-                                         2.416                                      1.230 
-                                 Midtown to NA               Midtown to North Sutton Area 
-                                         4.739                                      1.142 
-                               Midtown to Soho                         Midtown to Tribeca 
-                                         2.325                                      2.738 
-                    Midtown to Upper East Side                 Midtown to Upper West Side 
-                                         1.454                                      1.540 
-                 Midtown to Washington Heights                    Midtown to West Village 
-                                         3.645                                      2.078 
-                          Midtown to Yorkville        Morningside Heights to Battery Park 
-                                         1.921                                      4.803 
-          Morningside Heights to Carnegie Hill        Morningside Heights to Central Park 
-                                         1.750                                      1.434 
-                Morningside Heights to Chelsea           Morningside Heights to Chinatown 
-                                         3.296                                      4.428 
-                Morningside Heights to Clinton         Morningside Heights to East Harlem 
-                                         2.373                                      1.429 
-           Morningside Heights to East Village  Morningside Heights to Financial District 
-                                         5.456                                      4.594 
-       Morningside Heights to Garment District            Morningside Heights to Gramercy 
-                                         2.997                                      3.976 
-      Morningside Heights to Greenwich Village    Morningside Heights to Hamilton Heights 
-                                         3.837                                      0.995 
-                 Morningside Heights to Harlem              Morningside Heights to Inwood 
-                                         1.092                                      2.990 
-           Morningside Heights to Little Italy     Morningside Heights to Lower East Side 
-                                         3.513                                      4.822 
-                Morningside Heights to Midtown Morningside Heights to Morningside Heights 
-                                         2.766                                      0.910 
-            Morningside Heights to Murray Hill                  Morningside Heights to NA 
-                                         4.111                                      5.514 
-      Morningside Heights to North Sutton Area                Morningside Heights to Soho 
-                                         3.564                                      3.817 
-                Morningside Heights to Tribeca     Morningside Heights to Upper East Side 
-                                         4.595                                      2.203 
-        Morningside Heights to Upper West Side  Morningside Heights to Washington Heights 
-                                         1.370                                      1.920 
-           Morningside Heights to West Village           Morningside Heights to Yorkville 
-                                         4.212                                      1.611 
-                   Murray Hill to Battery Park               Murray Hill to Carnegie Hill 
-                                         3.187                                      1.807 
-                   Murray Hill to Central Park                     Murray Hill to Chelsea 
-                                         1.853                                      1.502 
-                      Murray Hill to Chinatown                     Murray Hill to Clinton 
-                                         2.223                                      1.481 
-                    Murray Hill to East Harlem                Murray Hill to East Village 
-                                         2.058                                      1.600 
-             Murray Hill to Financial District            Murray Hill to Garment District 
-                                         2.906                                      1.254 
-                       Murray Hill to Gramercy           Murray Hill to Greenwich Village 
-                                         1.185                                      1.601 
-               Murray Hill to Hamilton Heights                      Murray Hill to Harlem 
-                                         4.533                                      2.944 
-                         Murray Hill to Inwood                Murray Hill to Little Italy 
-                                         4.662                                      1.846 
-                Murray Hill to Lower East Side                     Murray Hill to Midtown 
-                                         2.062                                      1.263 
-            Murray Hill to Morningside Heights                 Murray Hill to Murray Hill 
-                                         3.252                                      1.015 
-                             Murray Hill to NA           Murray Hill to North Sutton Area 
-                                         4.740                                      1.166 
-                           Murray Hill to Soho                     Murray Hill to Tribeca 
-                                         2.073                                      2.424 
-                Murray Hill to Upper East Side             Murray Hill to Upper West Side 
-                                         1.703                                      2.121 
-             Murray Hill to Washington Heights                Murray Hill to West Village 
-                                         4.424                                      1.988 
-                      Murray Hill to Yorkville                         NA to Battery Park 
-                                         1.933                                      7.207 
-                           NA to Carnegie Hill                         NA to Central Park 
-                                         5.955                                      5.837 
-                                 NA to Chelsea                            NA to Chinatown 
-                                         6.173                                      2.626 
-                                 NA to Clinton                          NA to East Harlem 
-                                         5.960                                      3.657 
-                            NA to East Village                   NA to Financial District 
-                                         4.672                                      6.283 
-                        NA to Garment District                             NA to Gramercy 
-                                         5.537                                      5.732 
-                       NA to Greenwich Village                     NA to Hamilton Heights 
-                                         5.377                                      4.463 
-                                  NA to Harlem                               NA to Inwood 
-                                         4.688                                      5.190 
-                            NA to Little Italy                      NA to Lower East Side 
-                                         4.555                                      3.532 
-                                 NA to Midtown                  NA to Morningside Heights 
-                                         5.976                                      6.139 
-                             NA to Murray Hill                                   NA to NA 
-                                         5.853                                      2.137 
-                       NA to North Sutton Area                                 NA to Soho 
-                                         4.781                                      5.427 
-                                 NA to Tribeca                      NA to Upper East Side 
-                                         4.982                                      5.156 
-                         NA to Upper West Side                   NA to Washington Heights 
-                                         6.385                                      5.238 
-                            NA to West Village                            NA to Yorkville 
-                                         5.843                                      5.411 
-             North Sutton Area to Battery Park         North Sutton Area to Carnegie Hill 
-                                         3.650                                      1.536 
-             North Sutton Area to Central Park               North Sutton Area to Chelsea 
-                                         1.809                                      2.171 
-                North Sutton Area to Chinatown               North Sutton Area to Clinton 
-                                         4.004                                      2.021 
-              North Sutton Area to East Harlem          North Sutton Area to East Village 
-                                         1.908                                      1.870 
-       North Sutton Area to Financial District      North Sutton Area to Garment District 
-                                         2.951                                      1.864 
-                 North Sutton Area to Gramercy     North Sutton Area to Greenwich Village 
-                                         1.448                                      2.181 
-         North Sutton Area to Hamilton Heights                North Sutton Area to Harlem 
-                                         1.200                                      2.361 
-                   North Sutton Area to Inwood          North Sutton Area to Little Italy 
-                                         5.830                                      1.746 
-          North Sutton Area to Lower East Side               North Sutton Area to Midtown 
-                                         2.148                                      1.115 
-      North Sutton Area to Morningside Heights           North Sutton Area to Murray Hill 
-                                         2.763                                      1.221 
-                       North Sutton Area to NA     North Sutton Area to North Sutton Area 
-                                         3.437                                      1.120 
-                     North Sutton Area to Soho               North Sutton Area to Tribeca 
-                                         2.628                                      3.148 
-          North Sutton Area to Upper East Side       North Sutton Area to Upper West Side 
-                                         1.174                                      1.943 
-       North Sutton Area to Washington Heights          North Sutton Area to West Village 
-                                         3.163                                      2.701 
-                North Sutton Area to Yorkville                       Soho to Battery Park 
-                                         1.924                                      1.523 
-                         Soho to Carnegie Hill                       Soho to Central Park 
-                                         4.036                                      2.318 
-                               Soho to Chelsea                          Soho to Chinatown 
-                                         1.577                                      1.119 
-                               Soho to Clinton                        Soho to East Harlem 
-                                         2.256                                      3.135 
-                          Soho to East Village                 Soho to Financial District 
-                                         1.386                                      1.488 
-                      Soho to Garment District                           Soho to Gramercy 
-                                         1.724                                      1.700 
-                     Soho to Greenwich Village                   Soho to Hamilton Heights 
-                                         1.130                                      3.057 
-                                Soho to Harlem                             Soho to Inwood 
-                                         4.494                                      6.505 
-                          Soho to Little Italy                    Soho to Lower East Side 
-                                         1.085                                      1.276 
-                               Soho to Midtown                Soho to Morningside Heights 
-                                         2.276                                      3.630 
-                           Soho to Murray Hill                                 Soho to NA 
-                                         2.302                                      3.546 
-                     Soho to North Sutton Area                               Soho to Soho 
-                                         2.626                                      0.987 
-                               Soho to Tribeca                    Soho to Upper East Side 
-                                         1.174                                      3.156 
-                       Soho to Upper West Side                 Soho to Washington Heights 
-                                         3.278                                      4.541 
-                          Soho to West Village                          Soho to Yorkville 
-                                         1.176                                      3.699 
-                       Tribeca to Battery Park                   Tribeca to Carnegie Hill 
-                                         1.169                                      4.008 
-                       Tribeca to Central Park                         Tribeca to Chelsea 
-                                         3.640                                      1.784 
-                          Tribeca to Chinatown                         Tribeca to Clinton 
-                                         1.142                                      2.227 
-                        Tribeca to East Harlem                    Tribeca to East Village 
-                                         4.657                                      1.830 
-                 Tribeca to Financial District                Tribeca to Garment District 
-                                         1.252                                      2.013 
-                           Tribeca to Gramercy               Tribeca to Greenwich Village 
-                                         2.069                                      1.387 
-                   Tribeca to Hamilton Heights                          Tribeca to Harlem 
-                                         4.643                                      5.035 
-                             Tribeca to Inwood                    Tribeca to Little Italy 
-                                         7.976                                      1.202 
-                    Tribeca to Lower East Side                         Tribeca to Midtown 
-                                         1.389                                      2.578 
-                Tribeca to Morningside Heights                     Tribeca to Murray Hill 
-                                         4.124                                      2.760 
-                                 Tribeca to NA               Tribeca to North Sutton Area 
-                                         3.466                                      3.070 
-                               Tribeca to Soho                         Tribeca to Tribeca 
-                                         1.117                                      0.982 
-                    Tribeca to Upper East Side                 Tribeca to Upper West Side 
-                                         3.777                                      3.308 
-                 Tribeca to Washington Heights                    Tribeca to West Village 
-                                         5.765                                      1.349 
-                          Tribeca to Yorkville            Upper East Side to Battery Park 
-                                         4.126                                      3.737 
-              Upper East Side to Carnegie Hill            Upper East Side to Central Park 
-                                         1.067                                      1.343 
-                    Upper East Side to Chelsea               Upper East Side to Chinatown 
-                                         2.616                                      2.900 
-                    Upper East Side to Clinton             Upper East Side to East Harlem 
-                                         2.128                                      1.286 
-               Upper East Side to East Village      Upper East Side to Financial District 
-                                         2.461                                      3.386 
-           Upper East Side to Garment District                Upper East Side to Gramercy 
-                                         2.192                                      2.032 
-          Upper East Side to Greenwich Village        Upper East Side to Hamilton Heights 
-                                         2.664                                      2.354 
-                     Upper East Side to Harlem                  Upper East Side to Inwood 
-                                         1.723                                      4.061 
-               Upper East Side to Little Italy         Upper East Side to Lower East Side 
-                                         2.969                                      2.827 
-                    Upper East Side to Midtown     Upper East Side to Morningside Heights 
-                                         1.497                                      2.183 
-                Upper East Side to Murray Hill                      Upper East Side to NA 
-                                         1.716                                      3.884 
-          Upper East Side to North Sutton Area                    Upper East Side to Soho 
-                                         1.214                                      3.284 
-                    Upper East Side to Tribeca         Upper East Side to Upper East Side 
-                                         3.804                                      1.028 
-            Upper East Side to Upper West Side      Upper East Side to Washington Heights 
-                                         1.562                                      3.693 
-               Upper East Side to West Village               Upper East Side to Yorkville 
-                                         3.027                                      1.121 
-               Upper West Side to Battery Park           Upper West Side to Carnegie Hill 
-                                         3.385                                      1.456 
-               Upper West Side to Central Park                 Upper West Side to Chelsea 
-                                         1.129                                      2.154 
-                  Upper West Side to Chinatown                 Upper West Side to Clinton 
-                                         3.050                                      1.497 
-                Upper West Side to East Harlem            Upper West Side to East Village 
-                                         1.651                                      3.243 
-         Upper West Side to Financial District        Upper West Side to Garment District 
-                                         3.667                                      1.829 
-                   Upper West Side to Gramercy       Upper West Side to Greenwich Village 
-                                         2.572                                      2.796 
-           Upper West Side to Hamilton Heights                  Upper West Side to Harlem 
-                                         1.690                                      1.547 
-                     Upper West Side to Inwood            Upper West Side to Little Italy 
-                                         3.649                                      3.408 
-            Upper West Side to Lower East Side                 Upper West Side to Midtown 
-                                         3.666                                      1.498 
-        Upper West Side to Morningside Heights             Upper West Side to Murray Hill 
-                                         1.273                                      2.201 
-                         Upper West Side to NA       Upper West Side to North Sutton Area 
-                                         4.985                                      1.880 
-                       Upper West Side to Soho                 Upper West Side to Tribeca 
-                                         3.172                                      3.159 
-            Upper West Side to Upper East Side         Upper West Side to Upper West Side 
-                                         1.588                                      1.062 
-         Upper West Side to Washington Heights            Upper West Side to West Village 
-                                         2.646                                      2.561 
-                  Upper West Side to Yorkville         Washington Heights to Battery Park 
-                                         1.409                                      2.000 
-           Washington Heights to Carnegie Hill         Washington Heights to Central Park 
-                                         3.487                                      2.607 
-                 Washington Heights to Chelsea            Washington Heights to Chinatown 
-                                         4.144                                      7.760 
-                 Washington Heights to Clinton          Washington Heights to East Harlem 
-                                         3.364                                      1.938 
-            Washington Heights to East Village   Washington Heights to Financial District 
-                                         4.790                                      3.750 
-        Washington Heights to Garment District             Washington Heights to Gramercy 
-                                         4.055                                      4.147 
-       Washington Heights to Greenwich Village     Washington Heights to Hamilton Heights 
-                                         6.527                                      0.997 
-                  Washington Heights to Harlem               Washington Heights to Inwood 
-                                         1.447                                      1.519 
-         Washington Heights to Lower East Side              Washington Heights to Midtown 
-                                         2.333                                      3.628 
-     Washington Heights to Morningside Heights          Washington Heights to Murray Hill 
-                                         2.006                                      4.304 
-                      Washington Heights to NA    Washington Heights to North Sutton Area 
-                                         2.799                                      1.000 
-                    Washington Heights to Soho              Washington Heights to Tribeca 
-                                         5.817                                      3.500 
-         Washington Heights to Upper East Side      Washington Heights to Upper West Side 
-                                         3.728                                      2.771 
-      Washington Heights to Washington Heights         Washington Heights to West Village 
-                                         0.925                                      4.037 
-               Washington Heights to Yorkville               West Village to Battery Park 
-                                         1.722                                      1.652 
-                 West Village to Carnegie Hill               West Village to Central Park 
-                                         3.316                                      2.136 
-                       West Village to Chelsea                  West Village to Chinatown 
-                                         1.216                                      1.536 
-                       West Village to Clinton                West Village to East Harlem 
-                                         1.606                                      4.041 
-                  West Village to East Village         West Village to Financial District 
-                                         1.609                                      1.894 
-              West Village to Garment District                   West Village to Gramercy 
-                                         1.367                                      1.617 
-             West Village to Greenwich Village           West Village to Hamilton Heights 
-                                         1.186                                      3.116 
-                        West Village to Harlem                     West Village to Inwood 
-                                         3.910                                      4.187 
-                  West Village to Little Italy            West Village to Lower East Side 
-                                         1.586                                      1.860 
-                       West Village to Midtown        West Village to Morningside Heights 
-                                         2.010                                      3.644 
-                   West Village to Murray Hill                         West Village to NA 
-                                         2.013                                      4.033 
-             West Village to North Sutton Area                       West Village to Soho 
-                                         2.596                                      1.291 
-                       West Village to Tribeca            West Village to Upper East Side 
-                                         1.410                                      3.003 
-               West Village to Upper West Side         West Village to Washington Heights 
-                                         2.545                                      4.558 
-                  West Village to West Village                  West Village to Yorkville 
-                                         0.972                                      3.356 
-                     Yorkville to Battery Park                 Yorkville to Carnegie Hill 
-                                         5.119                                      1.006 
-                     Yorkville to Central Park                       Yorkville to Chelsea 
-                                         1.191                                      2.792 
-                        Yorkville to Chinatown                       Yorkville to Clinton 
-                                         3.872                                      2.329 
-                      Yorkville to East Harlem                  Yorkville to East Village 
-                                         0.864                                      3.015 
-               Yorkville to Financial District              Yorkville to Garment District 
-                                         3.970                                      2.869 
-                         Yorkville to Gramercy             Yorkville to Greenwich Village 
-                                         2.400                                      3.980 
-                 Yorkville to Hamilton Heights                        Yorkville to Harlem 
-                                         1.454                                      0.981 
-                           Yorkville to Inwood                  Yorkville to Little Italy 
-                                         2.908                                      4.067 
-                  Yorkville to Lower East Side                       Yorkville to Midtown 
-                                         3.016                                      2.035 
-              Yorkville to Morningside Heights                   Yorkville to Murray Hill 
-                                         1.427                                      2.187 
-                               Yorkville to NA             Yorkville to North Sutton Area 
-                                         3.052                                      1.903 
-                             Yorkville to Soho                       Yorkville to Tribeca 
-                                         2.534                                      4.207 
-                  Yorkville to Upper East Side               Yorkville to Upper West Side 
-                                         1.181                                      1.313 
-               Yorkville to Washington Heights                  Yorkville to West Village 
-                                         2.052                                      3.730 
-                        Yorkville to Yorkville 
-                                         0.850 
+     Battery Park to Battery Park Battery Park to Carnegie Hill  Battery Park to Central Park       Battery Park to Chelsea 
+                             1.06                          4.30                          3.44                          2.09 
+        Battery Park to Chinatown       Battery Park to Clinton 
+                             1.67                          2.44 
     
 
 By putting both grouping columns in a `list` we can get an `array` (a 2D `array` or `matrix` in this case) instead of the flat vector we got earlier.
 
 
 ```R
-print(
-    tapply(nyc_taxi$tip_amount, 
+square_array <- tapply(nyc_taxi$tip_amount, 
            list(nyc_taxi$pickup_nhood, nyc_taxi$dropoff_nhood), 
-           mean, trim = 0.1, na.rm = TRUE))
+           mean, trim = 0.1, na.rm = TRUE)
+
+print(square_array[1:5, 1:5])
 ```
 
-                        West Village East Village Battery Park Carnegie Hill Gramercy  Soho Murray Hill Little Italy
-    West Village               0.972         1.61         1.65         3.316     1.62 1.291        2.01         1.59
-    East Village               1.538         1.00         2.16         3.165     1.23 1.324        1.65         1.22
-    Battery Park               1.592         2.43         1.05         4.298     2.70 1.525        3.44         1.97
-    Carnegie Hill              3.790         3.08         4.47         0.904     2.80 3.800        2.00         3.18
-    Gramercy                   1.537         1.26         2.51         2.233     1.06 1.595        1.18         1.56
-    Soho                       1.176         1.39         1.52         4.036     1.70 0.987        2.30         1.09
-    Murray Hill                1.988         1.60         3.19         1.807     1.18 2.073        1.02         1.85
-    Little Italy               1.480         1.22         1.55         3.519     1.50 1.099        1.87         1.05
-    Central Park               2.733         3.04         3.61         1.366     2.24 2.986        2.01         3.27
-    Greenwich Village          1.131         1.21         1.85         3.372     1.35 1.155        1.69         1.25
-    Midtown                    2.078         2.12         3.42         1.710     1.52 2.325        1.23         2.24
-    Morningside Heights        4.212         5.46         4.80         1.750     3.98 3.817        4.11         3.51
-    Harlem                     3.445         2.60         3.91         1.529     2.56 3.432        3.08         5.12
-    Hamilton Heights           3.954         3.52         3.50         2.258     3.39 3.742        3.80         6.66
-    Tribeca                    1.349         1.83         1.17         4.008     2.07 1.117        2.76         1.20
-    North Sutton Area          2.701         1.87         3.65         1.536     1.45 2.628        1.22         1.75
-    Upper East Side            3.027         2.46         3.74         1.067     2.03 3.284        1.72         2.97
-    Financial District         1.840         2.10         1.31         4.130     2.54 1.451        2.79         1.44
-    Inwood                     6.600           NA           NA            NA       NA    NA        3.00           NA
-    Chelsea                    1.192         1.70         2.09         3.014     1.31 1.614        1.58         1.89
-    Lower East Side            1.682         1.11         2.01         3.148     1.54 1.295        1.99         1.16
-    Chinatown                  1.418         1.36         1.42            NA     1.68 1.121        1.66         0.95
-    Washington Heights         4.037         4.79         2.00         3.487     4.15 5.817        4.30           NA
-    Upper West Side            2.561         3.24         3.38         1.456     2.57 3.172        2.20         3.41
-    Clinton                    1.526         2.34         2.27         2.162     1.70 2.076        1.44         2.38
-    Yorkville                  3.730         3.02         5.12         1.006     2.40 2.534        2.19         4.07
-    Garment District           1.490         1.88         2.45         2.238     1.29 1.769        1.24         2.12
-    East Harlem                2.687         2.03         6.21         1.386     2.36 2.375        2.14         4.55
-                        Central Park Greenwich Village Midtown Morningside Heights Harlem Hamilton Heights Tribeca
-    West Village                2.14              1.19    2.01               3.644  3.910            3.116   1.410
-    East Village                2.74              1.17    2.00               3.919  3.826            4.059   1.659
-    Battery Park                3.48              1.87    3.23               3.407  6.493            4.350   1.094
-    Carnegie Hill               1.27              3.21    1.87               1.788  1.423            2.066   3.341
-    Gramercy                    2.16              1.27    1.53               3.470  3.201            4.117   1.973
-    Soho                        2.32              1.13    2.28               3.630  4.494            3.057   1.174
-    Murray Hill                 1.85              1.60    1.26               3.252  2.944            4.533   2.424
-    Little Italy                2.84              1.12    2.17               3.910  4.777            3.498   1.226
-    Central Park                1.08              2.78    1.40               1.506  1.503            1.833   3.261
-    Greenwich Village           2.65              1.03    1.93               4.027  3.867            4.131   1.432
-    Midtown                     1.36              2.01    1.11               2.416  2.614            2.922   2.738
-    Morningside Heights         1.43              3.84    2.77               0.910  1.092            0.995   4.595
-    Harlem                      1.24              3.75    2.65               1.055  0.851            1.040   3.188
-    Hamilton Heights            1.51              2.73    2.71               0.965  1.054            0.784   4.000
-    Tribeca                     3.64              1.39    2.58               4.124  5.035            4.643   0.982
-    North Sutton Area           1.81              2.18    1.12               2.763  2.361            1.200   3.148
-    Upper East Side             1.34              2.66    1.50               2.183  1.723            2.354   3.804
-    Financial District          4.06              1.88    3.16               4.237  4.079            4.565   1.243
-    Inwood                      1.50                NA    3.75               1.667  2.410            3.907      NA
-    Chelsea                     2.13              1.30    1.64               3.439  3.437            4.087   1.800
-    Lower East Side             3.15              1.31    2.26               4.431  4.257            4.164   1.437
-    Chinatown                   3.96              1.22    2.24               3.963  3.724            3.493   1.009
-    Washington Heights          2.61              6.53    3.63               2.006  1.447            0.997   3.500
-    Upper West Side             1.13              2.80    1.50               1.273  1.547            1.690   3.159
-    Clinton                     1.55              1.91    1.21               2.336  2.633            2.757   2.123
-    Yorkville                   1.19              3.98    2.03               1.427  0.981            1.454   4.207
-    Garment District            1.45              1.47    1.27               3.001  2.802            3.493   2.047
-    East Harlem                 1.29              3.09    1.89               1.071  0.899            1.255   3.673
-                        North Sutton Area Upper East Side Financial District Inwood Chelsea Lower East Side Chinatown
-    West Village                     2.60            3.00               1.89  4.187    1.22           1.860     1.536
-    East Village                     1.75            2.30               2.03  4.646    1.68           1.237     1.340
-    Battery Park                     3.60            3.85               1.25  6.000    2.10           2.009     1.693
-    Carnegie Hill                    2.15            1.14               3.79  6.625    3.28           3.784     5.930
-    Gramercy                         1.49            2.02               2.28  4.337    1.33           1.699     1.729
-    Soho                             2.63            3.16               1.49  6.505    1.58           1.276     1.119
-    Murray Hill                      1.17            1.70               2.91  4.662    1.50           2.062     2.223
-    Little Italy                     2.19            2.76               1.46  9.500    1.75           1.193     1.021
-    Central Park                     1.65            1.37               3.78  3.330    2.18           3.372     3.875
-    Greenwich Village                2.28            2.63               1.80  4.205    1.29           1.456     1.353
-    Midtown                          1.14            1.45               3.33  4.617    1.72           2.510     2.106
-    Morningside Heights              3.56            2.20               4.59  2.990    3.30           4.822     4.428
-    Harlem                           4.22            1.86               3.26  3.464    2.77           3.520     2.000
-    Hamilton Heights                   NA            2.41               4.77  1.850    3.35           4.018        NA
-    Tribeca                          3.07            3.78               1.25  7.976    1.78           1.389     1.142
-    North Sutton Area                1.12            1.17               2.95  5.830    2.17           2.148     4.004
-    Upper East Side                  1.21            1.03               3.39  4.061    2.62           2.827     2.900
-    Financial District               2.59            3.82               1.02  5.958    2.25           1.432     1.227
-    Inwood                             NA            3.90                 NA  0.671      NA              NA        NA
-    Chelsea                          2.03            2.56               2.31  5.049    1.11           2.051     1.933
-    Lower East Side                  2.30            2.71               1.58  7.197    1.95           0.978     1.066
-    Chinatown                        1.82            2.76               1.09  8.060    1.91           1.089     0.839
-    Washington Heights               1.00            3.73               3.75  1.519    4.14           2.333     7.760
-    Upper West Side                  1.88            1.59               3.67  3.649    2.15           3.666     3.050
-    Clinton                          1.85            2.00               2.68  3.461    1.21           2.657     2.261
-    Yorkville                        1.90            1.18               3.97  2.908    2.79           3.016     3.872
-    Garment District                 1.77            2.09               2.67  4.425    1.12           2.224     1.691
-    East Harlem                      2.24            1.27               3.72  1.071    2.91           2.728     0.000
-                        Washington Heights Upper West Side Clinton Yorkville Garment District East Harlem
-    West Village                     4.558            2.55    1.61     3.356            1.367       4.041
-    East Village                     4.781            3.33    2.27     2.573            1.841       3.259
-    Battery Park                     5.801            3.39    2.43     4.611            2.646       3.600
-    Carnegie Hill                    3.452            1.44    2.31     0.968            2.515       1.168
-    Gramercy                         4.454            2.63    1.72     2.392            1.351       2.271
-    Soho                             4.541            3.28    2.26     3.699            1.724       3.135
-    Murray Hill                      4.424            2.12    1.48     1.933            1.254       2.058
-    Little Italy                     6.686            3.47    2.18     3.294            1.974       2.923
-    Central Park                     3.112            1.15    1.65     1.304            1.678       1.499
-    Greenwich Village                4.683            2.94    1.87     2.848            1.449       3.368
-    Midtown                          3.645            1.54    1.29     1.921            1.276       1.906
-    Morningside Heights              1.920            1.37    2.37     1.611            2.997       1.429
-    Harlem                           1.810            1.41    2.22     0.966            2.520       0.939
-    Hamilton Heights                 1.273            1.65    2.45     2.219            2.031       1.159
-    Tribeca                          5.765            3.31    2.23     4.126            2.013       4.657
-    North Sutton Area                3.163            1.94    2.02     1.924            1.864       1.908
-    Upper East Side                  3.693            1.56    2.13     1.121            2.192       1.286
-    Financial District               4.590            3.79    2.76     3.767            2.653       3.969
-    Inwood                           1.187            2.17      NA        NA               NA       1.000
-    Chelsea                          4.385            2.24    1.32     2.688            1.173       2.845
-    Lower East Side                  5.183            3.66    2.48     3.233            2.195       3.335
-    Chinatown                        3.983            3.63    2.24     3.135            1.821       2.997
-    Washington Heights               0.925            2.77    3.36     1.722            4.055       1.938
-    Upper West Side                  2.646            1.06    1.50     1.409            1.829       1.651
-    Clinton                          3.661            1.45    1.00     2.420            1.138       2.088
-    Yorkville                        2.052            1.31    2.33     0.850            2.869       0.864
-    Garment District                 3.837            1.84    1.12     2.297            0.961       2.238
-    East Harlem                      1.772            1.55    2.21     0.771            3.332       0.813
+                  West Village East Village Battery Park Carnegie Hill Gramercy
+    West Village         0.975         1.61         1.64         3.316     1.62
+    East Village         1.543         1.00         2.16         3.165     1.23
+    Battery Park         1.605         2.43         1.06         4.298     2.69
+    Carnegie Hill        3.790         3.08         4.47         0.904     2.80
+    Gramercy             1.536         1.27         2.50         2.197     1.06
     
 
 As we use R more and more, we will see that a lot of R functions return a `list` as output (or something that is fundamentally a `list` but looks cosmetically different). In fact, as it happens a `data.frame` is also just a kind a `list`, with each element of the list corresponding to a column of the `data.frame`, and **all elements having the same length**. Why would a `data.frame` be a `list` and not a `matrix`? Because like a `vector`, a `matirx` or any `array` is **atomic**, meaning that its elements must be of the same type (usually `numeric`). Notice what happens if we try to force a vector to have one `character` elemnt and one `numeric` one:
@@ -6056,8 +4687,8 @@ c("one", 1)
 
 
 <ol class=list-inline>
-	<li>"one"</li>
-	<li>"1"</li>
+  <li>"one"</li>
+  <li>"1"</li>
 </ol>
 
 
@@ -6074,8 +4705,8 @@ list("one", 1)
 
 
 <ol>
-	<li>"one"</li>
-	<li>1</li>
+  <li>"one"</li>
+  <li>1</li>
 </ol>
 
 
@@ -6170,13 +4801,13 @@ print(my.summary(nyc_taxi$pickup_dow, nyc_taxi$pickup_hour, nyc_taxi$tip_amount)
     
     $average_by_group
         1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun    2.07    2.07     1.85     2.14    2.08     2.14     2.08
-    Mon    2.43    2.06     2.05     2.13    2.09     2.13     2.40
-    Tue    2.35    2.04     2.11     2.16    2.08     2.13     2.37
-    Wed    2.31    2.03     2.12     2.25    2.20     2.17     2.25
-    Thu    2.24    2.02     2.12     2.31    2.18     2.19     2.27
-    Fri    2.34    2.05     2.09     2.24    2.14     2.05     2.19
-    Sat    2.14    1.99     1.79     1.87    1.85     1.92     2.06
+    Sun    2.07    2.06     1.85     2.14    2.08     2.14     2.08
+    Mon    2.42    2.06     2.05     2.13    2.08     2.13     2.41
+    Tue    2.35    2.04     2.11     2.16    2.08     2.13     2.38
+    Wed    2.32    2.03     2.12     2.25    2.20     2.17     2.25
+    Thu    2.25    2.02     2.13     2.31    2.19     2.19     2.27
+    Fri    2.33    2.05     2.10     2.24    2.14     2.05     2.18
+    Sat    2.14    1.98     1.78     1.87    1.85     1.92     2.06
     
     
 
@@ -6252,13 +4883,13 @@ print(my.summary(nyc_taxi$pickup_dow, nyc_taxi$pickup_hour, nyc_taxi$tip_amount)
     
     $average_by_group
         1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun    2.07    2.07     1.85     2.14    2.08     2.14     2.08
-    Mon    2.43    2.06     2.05     2.13    2.09     2.13     2.40
-    Tue    2.35    2.04     2.11     2.16    2.08     2.13     2.37
-    Wed    2.31    2.03     2.12     2.25    2.20     2.17     2.25
-    Thu    2.24    2.02     2.12     2.31    2.18     2.19     2.27
-    Fri    2.34    2.05     2.09     2.24    2.14     2.05     2.19
-    Sat    2.14    1.99     1.79     1.87    1.85     1.92     2.06
+    Sun    2.07    2.06     1.85     2.14    2.08     2.14     2.08
+    Mon    2.42    2.06     2.05     2.13    2.08     2.13     2.41
+    Tue    2.35    2.04     2.11     2.16    2.08     2.13     2.38
+    Wed    2.32    2.03     2.12     2.25    2.20     2.17     2.25
+    Thu    2.25    2.02     2.13     2.31    2.19     2.19     2.27
+    Fri    2.33    2.05     2.10     2.24    2.14     2.05     2.18
+    Sat    2.14    1.98     1.78     1.87    1.85     1.92     2.06
     
     
 
@@ -6278,250 +4909,7 @@ To run `my.summary` on multiple numeric columns at once, we can use `lapply`:
 
 ```R
 res <- lapply(nyc_taxi[ , trip_metrics], my.summary, grp_1 = nyc_taxi$pickup_dow, grp_2 = nyc_taxi$pickup_hour)
-print(res)
 ```
-
-    $passenger_count
-    $passenger_count$mean
-    [1] 1.68
-    
-    $passenger_count$trimmed_mean
-    [1] 1.68
-    
-    $passenger_count$row_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.1169  0.0789   0.1502   0.2102  0.1054   0.1834   0.1550
-      Mon  0.0359  0.1839   0.1467   0.1998  0.1200   0.2331   0.0804
-      Tue  0.0301  0.1872   0.1429   0.1919  0.1144   0.2525   0.0810
-      Wed  0.0324  0.1883   0.1411   0.1840  0.1093   0.2533   0.0917
-      Thu  0.0411  0.1784   0.1393   0.1804  0.1049   0.2516   0.1042
-      Fri  0.0485  0.1677   0.1363   0.1750  0.1050   0.2444   0.1231
-      Sat  0.0923  0.0868   0.1384   0.1902  0.1072   0.2255   0.1596
-    
-    $passenger_count$col_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.2768  0.0704   0.1436   0.1502  0.1309   0.1058   0.1831
-      Mon  0.0800  0.1541   0.1318   0.1342  0.1401   0.1263   0.0893
-      Tue  0.0716  0.1676   0.1371   0.1377  0.1426   0.1462   0.0960
-      Wed  0.0790  0.1728   0.1388   0.1354  0.1397   0.1504   0.1115
-      Thu  0.1073  0.1754   0.1467   0.1421  0.1436   0.1599   0.1356
-      Fri  0.1302  0.1695   0.1477   0.1418  0.1478   0.1598   0.1648
-      Sat  0.2550  0.0902   0.1543   0.1586  0.1553   0.1517   0.2198
-    
-    $passenger_count$average_by_group
-        1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun    1.75    1.67     1.74     1.75    1.72     1.70     1.74
-    Mon    1.65    1.58     1.64     1.68    1.65     1.68     1.66
-    Tue    1.61    1.58     1.64     1.66    1.65     1.67     1.65
-    Wed    1.62    1.61     1.65     1.65    1.65     1.67     1.69
-    Thu    1.64    1.60     1.63     1.66    1.67     1.68     1.70
-    Fri    1.67    1.61     1.64     1.67    1.67     1.73     1.73
-    Sat    1.74    1.64     1.71     1.75    1.77     1.77     1.76
-    
-    
-    $trip_distance
-    $trip_distance$mean
-    [1] 26.8
-    
-    $trip_distance$trimmed_mean
-    [1] 2.92
-    
-    $trip_distance$row_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.1169  0.0789   0.1502   0.2102  0.1054   0.1834   0.1550
-      Mon  0.0359  0.1839   0.1467   0.1998  0.1200   0.2331   0.0804
-      Tue  0.0301  0.1872   0.1429   0.1919  0.1144   0.2525   0.0810
-      Wed  0.0324  0.1883   0.1411   0.1840  0.1093   0.2533   0.0917
-      Thu  0.0411  0.1784   0.1393   0.1804  0.1049   0.2516   0.1042
-      Fri  0.0485  0.1677   0.1363   0.1750  0.1050   0.2444   0.1231
-      Sat  0.0923  0.0868   0.1384   0.1902  0.1072   0.2255   0.1596
-    
-    $trip_distance$col_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.2768  0.0704   0.1436   0.1502  0.1309   0.1058   0.1831
-      Mon  0.0800  0.1541   0.1318   0.1342  0.1401   0.1263   0.0893
-      Tue  0.0716  0.1676   0.1371   0.1377  0.1426   0.1462   0.0960
-      Wed  0.0790  0.1728   0.1388   0.1354  0.1397   0.1504   0.1115
-      Thu  0.1073  0.1754   0.1467   0.1421  0.1436   0.1599   0.1356
-      Fri  0.1302  0.1695   0.1477   0.1418  0.1478   0.1598   0.1648
-      Sat  0.2550  0.0902   0.1543   0.1586  0.1553   0.1517   0.2198
-    
-    $trip_distance$average_by_group
-        1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun  658.35  446.23     2.74     3.14    3.09     3.25     3.20
-    Mon    4.42    2.84     2.73     2.94    2.68   297.82     3.94
-    Tue    4.27    2.66     2.56     2.78    2.50     2.93     3.74
-    Wed    4.17    2.63     2.58     2.85    2.54     2.93     3.46
-    Thu    3.89    2.61     2.58     2.99    2.67     2.94     3.49
-    Fri    3.98    2.77     2.59     2.93    2.67     2.76     3.26
-    Sat    3.61    3.16     2.52     2.64    2.56     2.63     3.03
-    
-    
-    $fare_amount
-    $fare_amount$mean
-    [1] 12.7
-    
-    $fare_amount$trimmed_mean
-    [1] 12.7
-    
-    $fare_amount$row_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.1169  0.0789   0.1502   0.2102  0.1054   0.1834   0.1550
-      Mon  0.0359  0.1839   0.1467   0.1998  0.1200   0.2331   0.0804
-      Tue  0.0301  0.1872   0.1429   0.1919  0.1144   0.2525   0.0810
-      Wed  0.0324  0.1883   0.1411   0.1840  0.1093   0.2533   0.0917
-      Thu  0.0411  0.1784   0.1393   0.1804  0.1049   0.2516   0.1042
-      Fri  0.0485  0.1677   0.1363   0.1750  0.1050   0.2444   0.1231
-      Sat  0.0923  0.0868   0.1384   0.1902  0.1072   0.2255   0.1596
-    
-    $fare_amount$col_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.2768  0.0704   0.1436   0.1502  0.1309   0.1058   0.1831
-      Mon  0.0800  0.1541   0.1318   0.1342  0.1401   0.1263   0.0893
-      Tue  0.0716  0.1676   0.1371   0.1377  0.1426   0.1462   0.0960
-      Wed  0.0790  0.1728   0.1388   0.1354  0.1397   0.1504   0.1115
-      Thu  0.1073  0.1754   0.1467   0.1421  0.1436   0.1599   0.1356
-      Fri  0.1302  0.1695   0.1477   0.1418  0.1478   0.1598   0.1648
-      Sat  0.2550  0.0902   0.1543   0.1586  0.1553   0.1517   0.2198
-    
-    $fare_amount$average_by_group
-        1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun    13.2    13.0     11.5     13.3    13.0     12.9     12.7
-    Mon    15.5    12.4     12.6     13.1    12.1     12.1     14.3
-    Tue    15.0    12.2     12.8     13.2    12.2     12.0     13.9
-    Wed    14.6    12.0     13.0     13.7    12.6     12.4     13.3
-    Thu    14.2    12.0     12.9     14.1    13.0     12.5     13.7
-    Fri    14.5    12.3     12.8     13.8    12.7     12.1     13.1
-    Sat    13.6    12.3     11.2     12.0    11.9     11.9     12.6
-    
-    
-    $tip_amount
-    $tip_amount$mean
-    [1] 2.1
-    
-    $tip_amount$trimmed_mean
-    [1] 2.1
-    
-    $tip_amount$row_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.1169  0.0789   0.1502   0.2102  0.1054   0.1834   0.1550
-      Mon  0.0359  0.1839   0.1467   0.1998  0.1200   0.2331   0.0804
-      Tue  0.0301  0.1872   0.1429   0.1919  0.1144   0.2525   0.0810
-      Wed  0.0324  0.1883   0.1411   0.1840  0.1093   0.2533   0.0917
-      Thu  0.0411  0.1784   0.1393   0.1804  0.1049   0.2516   0.1042
-      Fri  0.0485  0.1677   0.1363   0.1750  0.1050   0.2444   0.1231
-      Sat  0.0923  0.0868   0.1384   0.1902  0.1072   0.2255   0.1596
-    
-    $tip_amount$col_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.2768  0.0704   0.1436   0.1502  0.1309   0.1058   0.1831
-      Mon  0.0800  0.1541   0.1318   0.1342  0.1401   0.1263   0.0893
-      Tue  0.0716  0.1676   0.1371   0.1377  0.1426   0.1462   0.0960
-      Wed  0.0790  0.1728   0.1388   0.1354  0.1397   0.1504   0.1115
-      Thu  0.1073  0.1754   0.1467   0.1421  0.1436   0.1599   0.1356
-      Fri  0.1302  0.1695   0.1477   0.1418  0.1478   0.1598   0.1648
-      Sat  0.2550  0.0902   0.1543   0.1586  0.1553   0.1517   0.2198
-    
-    $tip_amount$average_by_group
-        1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun    2.07    2.07     1.85     2.14    2.08     2.14     2.08
-    Mon    2.43    2.06     2.05     2.13    2.09     2.13     2.40
-    Tue    2.35    2.04     2.11     2.16    2.08     2.13     2.37
-    Wed    2.31    2.03     2.12     2.25    2.20     2.17     2.25
-    Thu    2.24    2.02     2.12     2.31    2.18     2.19     2.27
-    Fri    2.34    2.05     2.09     2.24    2.14     2.05     2.19
-    Sat    2.14    1.99     1.79     1.87    1.85     1.92     2.06
-    
-    
-    $trip_duration
-    $trip_duration$mean
-    [1] 924
-    
-    $trip_duration$trimmed_mean
-    [1] 876
-    
-    $trip_duration$row_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.1169  0.0789   0.1502   0.2102  0.1054   0.1834   0.1550
-      Mon  0.0359  0.1839   0.1467   0.1998  0.1200   0.2331   0.0804
-      Tue  0.0301  0.1872   0.1429   0.1919  0.1144   0.2525   0.0810
-      Wed  0.0324  0.1883   0.1411   0.1840  0.1093   0.2533   0.0917
-      Thu  0.0411  0.1784   0.1393   0.1804  0.1049   0.2516   0.1042
-      Fri  0.0485  0.1677   0.1363   0.1750  0.1050   0.2444   0.1231
-      Sat  0.0923  0.0868   0.1384   0.1902  0.1072   0.2255   0.1596
-    
-    $trip_duration$col_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.2768  0.0704   0.1436   0.1502  0.1309   0.1058   0.1831
-      Mon  0.0800  0.1541   0.1318   0.1342  0.1401   0.1263   0.0893
-      Tue  0.0716  0.1676   0.1371   0.1377  0.1426   0.1462   0.0960
-      Wed  0.0790  0.1728   0.1388   0.1354  0.1397   0.1504   0.1115
-      Thu  0.1073  0.1754   0.1467   0.1421  0.1436   0.1599   0.1356
-      Fri  0.1302  0.1695   0.1477   0.1418  0.1478   0.1598   0.1648
-      Sat  0.2550  0.0902   0.1543   0.1586  0.1553   0.1517   0.2198
-    
-    $trip_duration$average_by_group
-        1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun     763     735      757      937     909      798      847
-    Mon     812     878      926     1024     844      725      780
-    Tue     824     868      968      989     942      776      803
-    Wed     785     853      996     1052     960      820      822
-    Thu     807     833      982     1114    1009      849      828
-    Fri     747     866      968     1062     923      836      881
-    Sat     828     700      764     2296     906      867      874
-    
-    
-    $tip_percent
-    $tip_percent$mean
-    [1] 13.9
-    
-    $tip_percent$trimmed_mean
-    [1] 13.9
-    
-    $tip_percent$row_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.1169  0.0789   0.1502   0.2102  0.1054   0.1834   0.1550
-      Mon  0.0359  0.1839   0.1467   0.1998  0.1200   0.2331   0.0804
-      Tue  0.0301  0.1872   0.1429   0.1919  0.1144   0.2525   0.0810
-      Wed  0.0324  0.1883   0.1411   0.1840  0.1093   0.2533   0.0917
-      Thu  0.0411  0.1784   0.1393   0.1804  0.1049   0.2516   0.1042
-      Fri  0.0485  0.1677   0.1363   0.1750  0.1050   0.2444   0.1231
-      Sat  0.0923  0.0868   0.1384   0.1902  0.1072   0.2255   0.1596
-    
-    $tip_percent$col_proportions
-         grp_2
-    grp_1 1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-      Sun  0.2768  0.0704   0.1436   0.1502  0.1309   0.1058   0.1831
-      Mon  0.0800  0.1541   0.1318   0.1342  0.1401   0.1263   0.0893
-      Tue  0.0716  0.1676   0.1371   0.1377  0.1426   0.1462   0.0960
-      Wed  0.0790  0.1728   0.1388   0.1354  0.1397   0.1504   0.1115
-      Thu  0.1073  0.1754   0.1467   0.1421  0.1436   0.1599   0.1356
-      Fri  0.1302  0.1695   0.1477   0.1418  0.1478   0.1598   0.1648
-      Sat  0.2550  0.0902   0.1543   0.1586  0.1553   0.1517   0.2198
-    
-    $tip_percent$average_by_group
-        1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun    13.6    13.4     13.6     13.4    13.4     13.8     13.8
-    Mon    13.3    13.9     13.5     13.6    14.5     14.7     13.9
-    Tue    13.3    14.0     13.6     13.6    14.4     14.7     14.3
-    Wed    13.5    14.0     13.6     13.6    14.5     14.6     14.2
-    Thu    13.4    14.0     13.7     13.6    14.3     14.5     14.1
-    Fri    13.6    13.8     13.6     13.5    14.2     14.2     14.0
-    Sat    13.5    13.7     13.5     13.2    13.3     13.7     13.8
-    
-    
-    
 
 `res` is just a nested `list` and we can 'drill into' any individual piece we want with the right query. At the first level are the column names.
 
@@ -6560,13 +4948,13 @@ print(res$tip_amount)
     
     $average_by_group
         1AM-5AM 5AM-9AM 9AM-12PM 12PM-4PM 4PM-6PM 6PM-10PM 10PM-1AM
-    Sun    2.07    2.07     1.85     2.14    2.08     2.14     2.08
-    Mon    2.43    2.06     2.05     2.13    2.09     2.13     2.40
-    Tue    2.35    2.04     2.11     2.16    2.08     2.13     2.37
-    Wed    2.31    2.03     2.12     2.25    2.20     2.17     2.25
-    Thu    2.24    2.02     2.12     2.31    2.18     2.19     2.27
-    Fri    2.34    2.05     2.09     2.24    2.14     2.05     2.19
-    Sat    2.14    1.99     1.79     1.87    1.85     1.92     2.06
+    Sun    2.07    2.06     1.85     2.14    2.08     2.14     2.08
+    Mon    2.42    2.06     2.05     2.13    2.08     2.13     2.41
+    Tue    2.35    2.04     2.11     2.16    2.08     2.13     2.38
+    Wed    2.32    2.03     2.12     2.25    2.20     2.17     2.25
+    Thu    2.25    2.02     2.13     2.31    2.19     2.19     2.27
+    Fri    2.33    2.05     2.10     2.24    2.14     2.05     2.18
+    Sat    2.14    1.98     1.78     1.87    1.85     1.92     2.06
     
     
 
@@ -6622,182 +5010,23 @@ With each of the above function, we can either pass the data directly to the fun
 
 ```R
 library(dplyr)
-filter(nyc_taxi, fare_amount > quantile(fare_amount, probs = .9999)) # pass data directly to the function
+filter(nyc_taxi, fare_amount > 500) # pass data directly to the function
 ```
 
 
-    Error in as.POSIXlt.character(x, tz, ...): character string is not in a standard unambiguous format
-    
 
 
+<table>
+<thead><tr><th></th><th scope=col>pickup_datetime</th><th scope=col>dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>ellip.h</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>pickup_hour</th><th scope=col>pickup_dow</th><th scope=col>dropoff_hour</th><th scope=col>dropoff_dow</th><th scope=col>trip_duration</th><th scope=col>pickup_nhood</th><th scope=col>dropoff_nhood</th><th scope=col>tip_percent</th></tr></thead>
+<tbody>
+  <tr><th scope=row>1</th><td>2015-01-07 08:52:00</td><td>2015-01-07 08:52:00</td><td>1</td><td>0</td><td>0</td><td>NA</td><td>negotiated</td><td>NA</td><td>NA</td><td>card</td><td><e2><8b><af></td><td>0</td><td>588</td><td>5AM-9AM</td><td>Wed</td><td>5AM-9AM</td><td>Wed</td><td>0</td><td>NA</td><td>NA</td><td>0</td></tr>
+  <tr><th scope=row>2</th><td>2015-02-11 16:32:00</td><td>2015-02-11 16:32:00</td><td>1</td><td>0</td><td>0</td><td>NA</td><td>negotiated</td><td>NA</td><td>NA</td><td>card</td><td><e2><8b><af></td><td>0</td><td>699</td><td>12PM-4PM</td><td>Wed</td><td>12PM-4PM</td><td>Wed</td><td>0</td><td>NA</td><td>NA</td><td>0</td></tr>
+  <tr><th scope=row>3</th><td>2015-02-12 18:54:00</td><td>2015-02-12 18:54:00</td><td>1</td><td>0</td><td>0</td><td>NA</td><td>negotiated</td><td>NA</td><td>NA</td><td>card</td><td><e2><8b><af></td><td>0</td><td>1900</td><td>4PM-6PM</td><td>Thu</td><td>4PM-6PM</td><td>Thu</td><td>0</td><td>NA</td><td>NA</td><td>0</td></tr>
+  <tr><th scope=row>4</th><td>2015-03-06 22:59:13</td><td>2015-03-06 22:59:33</td><td>4</td><td>0</td><td>-73.9</td><td>40.8</td><td>negotiated</td><td>-73.9</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>1190</td><td>6PM-10PM</td><td>Fri</td><td>6PM-10PM</td><td>Fri</td><td>20</td><td>NA</td><td>NA</td><td>27</td></tr>
+  <tr><th scope=row>5</th><td>2015-03-10 09:25:00</td><td>2015-03-10 09:25:00</td><td>1</td><td>0</td><td>0</td><td>NA</td><td>negotiated</td><td>NA</td><td>NA</td><td>card</td><td><e2><8b><af></td><td>0</td><td>673</td><td>5AM-9AM</td><td>Tue</td><td>5AM-9AM</td><td>Tue</td><td>0</td><td>NA</td><td>NA</td><td>0</td></tr>
+</tbody>
+</table>
 
-
-
-           pickup_datetime    dropoff_datetime passenger_count trip_distance pickup_longitude pickup_latitude
-    1  2015-01-10 22:08:15 2015-01-10 23:12:22               1         43.46            -74.0            40.8
-    2  2015-01-21 20:14:02 2015-01-21 22:51:29               1         42.72            -74.0            40.8
-    3  2015-01-12 12:13:35 2015-01-12 13:57:01               1         42.37            -73.8            40.7
-    4  2015-01-11 13:27:32 2015-01-11 13:28:18               1          0.00            -73.9            40.7
-    5  2015-01-12 13:32:40 2015-01-12 13:34:20               1          0.00            -74.0            40.7
-    6  2015-01-04 20:36:27 2015-01-04 20:36:42               1          0.00            -73.5              NA
-    7  2015-01-07 08:52:00 2015-01-07 08:52:00               1          0.00              0.0              NA
-    8  2015-01-03 22:23:37 2015-01-04 00:23:11               1        103.56            -74.0            40.7
-    9  2015-01-31 19:02:36 2015-01-31 19:02:41               4          0.00              0.0              NA
-    10 2015-02-26 09:55:18 2015-02-26 09:55:48               1          0.00            -74.3            40.5
-    11 2015-02-01 08:52:26 2015-02-01 08:54:28               3          0.00              0.0              NA
-    12 2015-02-11 19:23:00 2015-02-11 19:23:00               1          0.00              0.0              NA
-    13 2015-02-11 16:32:00 2015-02-11 16:32:00               1          0.00              0.0              NA
-    14 2015-02-26 00:47:31 2015-02-26 00:48:32               2          0.00            -74.2            40.7
-    15 2015-02-04 12:10:00 2015-02-04 12:10:00               1          0.00              0.0              NA
-    16 2015-02-06 12:06:14 2015-02-06 12:07:31               1          0.00              0.0              NA
-    17 2015-02-03 01:16:54 2015-02-03 02:23:53               1         45.10            -74.0            40.7
-    18 2015-02-28 12:49:16 2015-02-28 13:45:56               1         39.31            -73.8            40.6
-    19 2015-02-12 16:19:29 2015-02-12 16:23:07               1          0.27            -74.0            40.8
-    20 2015-02-12 18:54:00 2015-02-12 18:54:00               1          0.00              0.0              NA
-    21 2015-02-18 20:47:02 2015-02-18 22:16:22               1         50.24            -73.8            40.7
-    22 2015-02-24 16:19:34 2015-02-24 16:20:52               1          0.30            -73.7              NA
-    23 2015-02-09 08:16:26 2015-02-09 10:20:03               1         64.30            -73.8            40.6
-    24 2015-03-19 02:37:47 2015-03-19 03:13:02               2         33.90            -73.9            40.9
-    25 2015-03-28 23:08:34 2015-03-29 03:02:03               1         51.40            -74.0            40.7
-    26 2015-03-16 17:43:54 2015-03-16 18:34:03               1         32.90            -73.9            40.8
-    27 2015-03-16 11:25:24 2015-03-16 11:25:24               1          0.00            -74.1            40.8
-    28 2015-03-06 22:59:13 2015-03-06 22:59:33               4          0.00            -73.9            40.8
-    29 2015-03-21 04:46:05 2015-03-21 05:38:51               1         45.35            -73.8            40.6
-    30 2015-03-02 12:22:10 2015-03-02 12:23:26               1          0.00            -74.6            40.6
-    31 2015-03-23 17:48:57 2015-03-23 19:09:24               1         50.10            -73.9            40.8
-    32 2015-03-01 21:03:48 2015-03-01 21:58:46               1          3.97            -73.9            40.7
-    33 2015-03-10 09:25:00 2015-03-10 09:25:00               1          0.00              0.0              NA
-    34 2015-03-22 22:14:12 2015-03-22 23:03:25               1         37.80            -73.8            40.6
-    35 2015-03-31 07:43:16 2015-03-31 09:39:03               3         61.30            -73.8            40.6
-    36 2015-03-02 01:45:55 2015-03-02 02:54:56               1         51.60            -73.8            40.6
-    37 2015-03-12 23:25:23 2015-03-13 00:56:25               1         61.70            -73.8            40.7
-    38 2015-03-28 07:32:16 2015-03-28 08:34:23               1         51.66            -74.0            40.7
-    39 2015-03-29 20:39:09 2015-03-29 21:24:51               2         41.50            -73.9            40.8
-    40 2015-03-18 10:21:04 2015-03-18 10:21:04               4          0.00            -73.8              NA
-                rate_code_id dropoff_longitude dropoff_latitude payment_type fare_amount extra mta_tax tip_amount
-    1             negotiated             -73.3             40.7         cash         200   0.0     0.0         NA
-    2  Nassau or Westchester             -73.8             40.7         card         193   0.5     0.5       48.6
-    3  Nassau or Westchester             -73.8             40.7         card         231   0.0     0.5       57.8
-    4             negotiated             -73.9             40.7         cash         475   0.0     0.0         NA
-    5             negotiated             -74.0             40.7         card         260   0.0     0.0        0.0
-    6             negotiated             -73.5               NA         card         209   0.0     0.0        0.0
-    7             negotiated                NA               NA         card         588   0.0     0.0        0.0
-    8             negotiated                NA             40.0         cash         400   0.0     0.5         NA
-    9             negotiated                NA               NA         card         228   0.0     0.0        0.0
-    10            negotiated             -74.3             40.5         card         268   0.0     0.0       20.0
-    11            negotiated                NA               NA         card         210   0.0     0.5       25.0
-    12            negotiated                NA               NA         card         401   0.0     0.0        0.0
-    13            negotiated                NA               NA         card         699   0.0     0.0        0.0
-    14            negotiated             -74.2             40.7         card         200   0.0     0.0        0.0
-    15            negotiated                NA               NA         card         465   0.0     0.0        0.0
-    16            negotiated                NA               NA         card         209   0.0     0.5       12.0
-    17            negotiated             -73.3             40.7         card         209   0.0     0.0       41.9
-    18            negotiated             -73.5               NA         card         200   0.0     0.0       15.1
-    19            negotiated             -74.0             40.8         card         250   0.0     0.0        0.0
-    20            negotiated                NA               NA         card        1000 900.0     0.0        0.0
-    21            negotiated             -74.4             40.5         card         241   0.0     0.0       24.0
-    22            negotiated             -73.7               NA         card         200   0.0     0.0       30.0
-    23            negotiated             -74.6             40.3         cash         300   0.0     0.0         NA
-    24            negotiated             -73.5               NA         card         200   0.0     0.0       50.1
-    25              standard             -74.0             40.7         card         194   0.5     0.5       58.4
-    26            negotiated             -73.5               NA         card         210   0.0     0.0       20.0
-    27            negotiated             -74.1             40.8         card         250   0.0     0.0        0.0
-    28            negotiated             -73.9             40.8         card         865   0.0     0.0      325.0
-    29            negotiated             -74.3             40.5         card         206   0.0     0.0       45.7
-    30            negotiated             -74.6             40.6         card         250   0.0     0.0       50.0
-    31 Nassau or Westchester             -73.1             40.8         card         192   1.0     0.5       25.0
-    32            negotiated             -73.9             40.7         card         287   0.0     0.0        5.0
-    33            negotiated                NA               NA         card         673   0.0     0.0        0.0
-    34            negotiated             -73.6               NA         card         300   0.0     0.0        0.0
-    35            negotiated             -73.4               NA         cash         218   0.0     0.0         NA
-    36            negotiated             -73.5               NA         card         250   0.0     0.0       76.7
-    37            negotiated             -74.6             40.6         card         228   0.0     0.0       15.0
-    38            negotiated             -74.5             40.4         card         199   0.0     0.5       45.2
-    39            negotiated             -73.2             40.8         card         225   0.0     0.0       45.0
-    40            negotiated                NA               NA         cash         220   0.0     0.0         NA
-       tolls_amount improvement_surcharge total_amount pickup_hour pickup_dow dropoff_hour dropoff_dow trip_duration
-    1          0.00                   0.3          200    6PM-10PM        Sat     10PM-1AM         Sat          3847
-    2          0.00                   0.3          243    6PM-10PM        Wed     6PM-10PM         Wed          9447
-    3          0.00                   0.3          290    9AM-12PM        Mon     12PM-4PM         Mon          6206
-    4          0.00                   0.3          475    12PM-4PM        Sun     12PM-4PM         Sun            46
-    5          0.00                   0.3          260    12PM-4PM        Mon     12PM-4PM         Mon           100
-    6          6.33                   0.3          216    6PM-10PM        Sun     6PM-10PM         Sun            15
-    7          0.00                   0.0          588     5AM-9AM        Wed      5AM-9AM         Wed             0
-    8          0.00                   0.3          401    6PM-10PM        Sat     10PM-1AM         Sun          7174
-    9          0.00                   0.3          228    6PM-10PM        Sat     6PM-10PM         Sat             5
-    10         0.00                   0.3          288     5AM-9AM        Thu      5AM-9AM         Thu            30
-    11         0.00                   0.3          236     5AM-9AM        Sun      5AM-9AM         Sun           122
-    12         0.00                   0.0          401    6PM-10PM        Wed     6PM-10PM         Wed             0
-    13         0.00                   0.0          699    12PM-4PM        Wed     12PM-4PM         Wed             0
-    14         0.00                   0.3          200    10PM-1AM        Thu     10PM-1AM         Thu            61
-    15         0.00                   0.0          465    9AM-12PM        Wed     9AM-12PM         Wed             0
-    16         0.00                   0.3          222    9AM-12PM        Fri     9AM-12PM         Fri            77
-    17         0.00                   0.3          251    10PM-1AM        Tue      1AM-5AM         Tue          4019
-    18         5.33                   0.3          221    9AM-12PM        Sat     12PM-4PM         Sat          3400
-    19         0.00                   0.3          250    12PM-4PM        Thu     12PM-4PM         Thu           218
-    20         0.00                   0.0         1900     4PM-6PM        Thu      4PM-6PM         Thu             0
-    21         0.00                   0.3          265    6PM-10PM        Wed     6PM-10PM         Wed          5360
-    22         5.64                   0.3          236    12PM-4PM        Tue     12PM-4PM         Tue            78
-    23        22.41                   0.3          323     5AM-9AM        Mon     9AM-12PM         Mon          7417
-    24         0.00                   0.3          250     1AM-5AM        Thu      1AM-5AM         Thu          2115
-    25         0.00                   0.3          253    10PM-1AM        Sat      1AM-5AM         Sun         14009
-    26         0.00                   0.3          230     4PM-6PM        Mon      4PM-6PM         Mon          3009
-    27         0.00                   0.0          250    9AM-12PM        Mon     9AM-12PM         Mon             0
-    28         0.00                   0.3         1190    6PM-10PM        Fri     6PM-10PM         Fri            20
-    29        22.41                   0.3          274     1AM-5AM        Sat      1AM-5AM         Sat          3166
-    30         0.00                   0.3          300    9AM-12PM        Mon     9AM-12PM         Mon            76
-    31         0.00                   0.3          219     4PM-6PM        Mon     6PM-10PM         Mon          4827
-    32         0.00                   0.3          292    6PM-10PM        Sun     6PM-10PM         Sun          3298
-    33         0.00                   0.0          673     5AM-9AM        Tue      5AM-9AM         Tue             0
-    34         0.00                   0.3          300    6PM-10PM        Sun     10PM-1AM         Sun          2953
-    35         5.33                   0.3          224     5AM-9AM        Tue      5AM-9AM         Tue          6947
-    36         5.33                   0.3          332    10PM-1AM        Mon      1AM-5AM         Mon          4141
-    37        11.75                   0.3          255    10PM-1AM        Thu     10PM-1AM         Fri          5462
-    38        26.25                   0.3          271     5AM-9AM        Sat      5AM-9AM         Sat          3727
-    39         0.00                   0.3          270    6PM-10PM        Sun     6PM-10PM         Sun          2742
-    40         0.00                   0.3          220    9AM-12PM        Wed     9AM-12PM         Wed             0
-             pickup_nhood    dropoff_nhood tip_percent
-    1     Upper East Side             <NA>          NA
-    2             Clinton             <NA>          20
-    3                <NA>             <NA>          20
-    4                <NA>             <NA>          NA
-    5             Chelsea          Chelsea           0
-    6                <NA>             <NA>           0
-    7                <NA>             <NA>           0
-    8         Murray Hill             <NA>          NA
-    9                <NA>             <NA>           0
-    10               <NA>             <NA>           6
-    11               <NA>             <NA>          10
-    12               <NA>             <NA>           0
-    13               <NA>             <NA>           0
-    14               <NA>             <NA>           0
-    15               <NA>             <NA>           0
-    16               <NA>             <NA>           5
-    17 Financial District             <NA>          16
-    18               <NA>             <NA>           7
-    19       Central Park  Upper East Side           0
-    20               <NA>             <NA>           0
-    21               <NA>             <NA>           9
-    22               <NA>             <NA>          13
-    23               <NA>             <NA>          NA
-    24               <NA>             <NA>          20
-    25       East Village             <NA>          23
-    26               <NA>             <NA>           8
-    27               <NA>             <NA>           0
-    28               <NA>             <NA>          27
-    29               <NA>             <NA>          18
-    30               <NA>             <NA>          16
-    31               <NA>             <NA>          11
-    32               <NA>             <NA>           1
-    33               <NA>             <NA>           0
-    34               <NA>             <NA>           0
-    35               <NA>             <NA>          NA
-    36               <NA>             <NA>          23
-    37               <NA>             <NA>           6
-    38       Battery Park             <NA>          18
-    39               <NA>             <NA>          16
-    40               <NA>             <NA>          NA
-     [ reached getOption("max.print") -- omitted 38 rows ]
 
 
 
@@ -6805,182 +5034,23 @@ In the second case, we start a pipeline with the data, followed by the piping fu
 
 
 ```R
-nyc_taxi %>% filter(fare_amount > quantile(fare_amount, probs = .9999)) # infer the data from the pipeline
+nyc_taxi %>% filter(fare_amount > 500) # infer the data from the pipeline
 ```
 
 
-    Error in as.POSIXlt.character(x, tz, ...): character string is not in a standard unambiguous format
-    
 
 
+<table>
+<thead><tr><th></th><th scope=col>pickup_datetime</th><th scope=col>dropoff_datetime</th><th scope=col>passenger_count</th><th scope=col>trip_distance</th><th scope=col>pickup_longitude</th><th scope=col>pickup_latitude</th><th scope=col>rate_code_id</th><th scope=col>dropoff_longitude</th><th scope=col>dropoff_latitude</th><th scope=col>payment_type</th><th scope=col>ellip.h</th><th scope=col>improvement_surcharge</th><th scope=col>total_amount</th><th scope=col>pickup_hour</th><th scope=col>pickup_dow</th><th scope=col>dropoff_hour</th><th scope=col>dropoff_dow</th><th scope=col>trip_duration</th><th scope=col>pickup_nhood</th><th scope=col>dropoff_nhood</th><th scope=col>tip_percent</th></tr></thead>
+<tbody>
+  <tr><th scope=row>1</th><td>2015-01-07 08:52:00</td><td>2015-01-07 08:52:00</td><td>1</td><td>0</td><td>0</td><td>NA</td><td>negotiated</td><td>NA</td><td>NA</td><td>card</td><td><e2><8b><af></td><td>0</td><td>588</td><td>5AM-9AM</td><td>Wed</td><td>5AM-9AM</td><td>Wed</td><td>0</td><td>NA</td><td>NA</td><td>0</td></tr>
+  <tr><th scope=row>2</th><td>2015-02-11 16:32:00</td><td>2015-02-11 16:32:00</td><td>1</td><td>0</td><td>0</td><td>NA</td><td>negotiated</td><td>NA</td><td>NA</td><td>card</td><td><e2><8b><af></td><td>0</td><td>699</td><td>12PM-4PM</td><td>Wed</td><td>12PM-4PM</td><td>Wed</td><td>0</td><td>NA</td><td>NA</td><td>0</td></tr>
+  <tr><th scope=row>3</th><td>2015-02-12 18:54:00</td><td>2015-02-12 18:54:00</td><td>1</td><td>0</td><td>0</td><td>NA</td><td>negotiated</td><td>NA</td><td>NA</td><td>card</td><td><e2><8b><af></td><td>0</td><td>1900</td><td>4PM-6PM</td><td>Thu</td><td>4PM-6PM</td><td>Thu</td><td>0</td><td>NA</td><td>NA</td><td>0</td></tr>
+  <tr><th scope=row>4</th><td>2015-03-06 22:59:13</td><td>2015-03-06 22:59:33</td><td>4</td><td>0</td><td>-73.9</td><td>40.8</td><td>negotiated</td><td>-73.9</td><td>40.8</td><td>card</td><td><e2><8b><af></td><td>0.3</td><td>1190</td><td>6PM-10PM</td><td>Fri</td><td>6PM-10PM</td><td>Fri</td><td>20</td><td>NA</td><td>NA</td><td>27</td></tr>
+  <tr><th scope=row>5</th><td>2015-03-10 09:25:00</td><td>2015-03-10 09:25:00</td><td>1</td><td>0</td><td>0</td><td>NA</td><td>negotiated</td><td>NA</td><td>NA</td><td>card</td><td><e2><8b><af></td><td>0</td><td>673</td><td>5AM-9AM</td><td>Tue</td><td>5AM-9AM</td><td>Tue</td><td>0</td><td>NA</td><td>NA</td><td>0</td></tr>
+</tbody>
+</table>
 
-
-
-           pickup_datetime    dropoff_datetime passenger_count trip_distance pickup_longitude pickup_latitude
-    1  2015-01-10 22:08:15 2015-01-10 23:12:22               1         43.46            -74.0            40.8
-    2  2015-01-21 20:14:02 2015-01-21 22:51:29               1         42.72            -74.0            40.8
-    3  2015-01-12 12:13:35 2015-01-12 13:57:01               1         42.37            -73.8            40.7
-    4  2015-01-11 13:27:32 2015-01-11 13:28:18               1          0.00            -73.9            40.7
-    5  2015-01-12 13:32:40 2015-01-12 13:34:20               1          0.00            -74.0            40.7
-    6  2015-01-04 20:36:27 2015-01-04 20:36:42               1          0.00            -73.5              NA
-    7  2015-01-07 08:52:00 2015-01-07 08:52:00               1          0.00              0.0              NA
-    8  2015-01-03 22:23:37 2015-01-04 00:23:11               1        103.56            -74.0            40.7
-    9  2015-01-31 19:02:36 2015-01-31 19:02:41               4          0.00              0.0              NA
-    10 2015-02-26 09:55:18 2015-02-26 09:55:48               1          0.00            -74.3            40.5
-    11 2015-02-01 08:52:26 2015-02-01 08:54:28               3          0.00              0.0              NA
-    12 2015-02-11 19:23:00 2015-02-11 19:23:00               1          0.00              0.0              NA
-    13 2015-02-11 16:32:00 2015-02-11 16:32:00               1          0.00              0.0              NA
-    14 2015-02-26 00:47:31 2015-02-26 00:48:32               2          0.00            -74.2            40.7
-    15 2015-02-04 12:10:00 2015-02-04 12:10:00               1          0.00              0.0              NA
-    16 2015-02-06 12:06:14 2015-02-06 12:07:31               1          0.00              0.0              NA
-    17 2015-02-03 01:16:54 2015-02-03 02:23:53               1         45.10            -74.0            40.7
-    18 2015-02-28 12:49:16 2015-02-28 13:45:56               1         39.31            -73.8            40.6
-    19 2015-02-12 16:19:29 2015-02-12 16:23:07               1          0.27            -74.0            40.8
-    20 2015-02-12 18:54:00 2015-02-12 18:54:00               1          0.00              0.0              NA
-    21 2015-02-18 20:47:02 2015-02-18 22:16:22               1         50.24            -73.8            40.7
-    22 2015-02-24 16:19:34 2015-02-24 16:20:52               1          0.30            -73.7              NA
-    23 2015-02-09 08:16:26 2015-02-09 10:20:03               1         64.30            -73.8            40.6
-    24 2015-03-19 02:37:47 2015-03-19 03:13:02               2         33.90            -73.9            40.9
-    25 2015-03-28 23:08:34 2015-03-29 03:02:03               1         51.40            -74.0            40.7
-    26 2015-03-16 17:43:54 2015-03-16 18:34:03               1         32.90            -73.9            40.8
-    27 2015-03-16 11:25:24 2015-03-16 11:25:24               1          0.00            -74.1            40.8
-    28 2015-03-06 22:59:13 2015-03-06 22:59:33               4          0.00            -73.9            40.8
-    29 2015-03-21 04:46:05 2015-03-21 05:38:51               1         45.35            -73.8            40.6
-    30 2015-03-02 12:22:10 2015-03-02 12:23:26               1          0.00            -74.6            40.6
-    31 2015-03-23 17:48:57 2015-03-23 19:09:24               1         50.10            -73.9            40.8
-    32 2015-03-01 21:03:48 2015-03-01 21:58:46               1          3.97            -73.9            40.7
-    33 2015-03-10 09:25:00 2015-03-10 09:25:00               1          0.00              0.0              NA
-    34 2015-03-22 22:14:12 2015-03-22 23:03:25               1         37.80            -73.8            40.6
-    35 2015-03-31 07:43:16 2015-03-31 09:39:03               3         61.30            -73.8            40.6
-    36 2015-03-02 01:45:55 2015-03-02 02:54:56               1         51.60            -73.8            40.6
-    37 2015-03-12 23:25:23 2015-03-13 00:56:25               1         61.70            -73.8            40.7
-    38 2015-03-28 07:32:16 2015-03-28 08:34:23               1         51.66            -74.0            40.7
-    39 2015-03-29 20:39:09 2015-03-29 21:24:51               2         41.50            -73.9            40.8
-    40 2015-03-18 10:21:04 2015-03-18 10:21:04               4          0.00            -73.8              NA
-                rate_code_id dropoff_longitude dropoff_latitude payment_type fare_amount extra mta_tax tip_amount
-    1             negotiated             -73.3             40.7         cash         200   0.0     0.0         NA
-    2  Nassau or Westchester             -73.8             40.7         card         193   0.5     0.5       48.6
-    3  Nassau or Westchester             -73.8             40.7         card         231   0.0     0.5       57.8
-    4             negotiated             -73.9             40.7         cash         475   0.0     0.0         NA
-    5             negotiated             -74.0             40.7         card         260   0.0     0.0        0.0
-    6             negotiated             -73.5               NA         card         209   0.0     0.0        0.0
-    7             negotiated                NA               NA         card         588   0.0     0.0        0.0
-    8             negotiated                NA             40.0         cash         400   0.0     0.5         NA
-    9             negotiated                NA               NA         card         228   0.0     0.0        0.0
-    10            negotiated             -74.3             40.5         card         268   0.0     0.0       20.0
-    11            negotiated                NA               NA         card         210   0.0     0.5       25.0
-    12            negotiated                NA               NA         card         401   0.0     0.0        0.0
-    13            negotiated                NA               NA         card         699   0.0     0.0        0.0
-    14            negotiated             -74.2             40.7         card         200   0.0     0.0        0.0
-    15            negotiated                NA               NA         card         465   0.0     0.0        0.0
-    16            negotiated                NA               NA         card         209   0.0     0.5       12.0
-    17            negotiated             -73.3             40.7         card         209   0.0     0.0       41.9
-    18            negotiated             -73.5               NA         card         200   0.0     0.0       15.1
-    19            negotiated             -74.0             40.8         card         250   0.0     0.0        0.0
-    20            negotiated                NA               NA         card        1000 900.0     0.0        0.0
-    21            negotiated             -74.4             40.5         card         241   0.0     0.0       24.0
-    22            negotiated             -73.7               NA         card         200   0.0     0.0       30.0
-    23            negotiated             -74.6             40.3         cash         300   0.0     0.0         NA
-    24            negotiated             -73.5               NA         card         200   0.0     0.0       50.1
-    25              standard             -74.0             40.7         card         194   0.5     0.5       58.4
-    26            negotiated             -73.5               NA         card         210   0.0     0.0       20.0
-    27            negotiated             -74.1             40.8         card         250   0.0     0.0        0.0
-    28            negotiated             -73.9             40.8         card         865   0.0     0.0      325.0
-    29            negotiated             -74.3             40.5         card         206   0.0     0.0       45.7
-    30            negotiated             -74.6             40.6         card         250   0.0     0.0       50.0
-    31 Nassau or Westchester             -73.1             40.8         card         192   1.0     0.5       25.0
-    32            negotiated             -73.9             40.7         card         287   0.0     0.0        5.0
-    33            negotiated                NA               NA         card         673   0.0     0.0        0.0
-    34            negotiated             -73.6               NA         card         300   0.0     0.0        0.0
-    35            negotiated             -73.4               NA         cash         218   0.0     0.0         NA
-    36            negotiated             -73.5               NA         card         250   0.0     0.0       76.7
-    37            negotiated             -74.6             40.6         card         228   0.0     0.0       15.0
-    38            negotiated             -74.5             40.4         card         199   0.0     0.5       45.2
-    39            negotiated             -73.2             40.8         card         225   0.0     0.0       45.0
-    40            negotiated                NA               NA         cash         220   0.0     0.0         NA
-       tolls_amount improvement_surcharge total_amount pickup_hour pickup_dow dropoff_hour dropoff_dow trip_duration
-    1          0.00                   0.3          200    6PM-10PM        Sat     10PM-1AM         Sat          3847
-    2          0.00                   0.3          243    6PM-10PM        Wed     6PM-10PM         Wed          9447
-    3          0.00                   0.3          290    9AM-12PM        Mon     12PM-4PM         Mon          6206
-    4          0.00                   0.3          475    12PM-4PM        Sun     12PM-4PM         Sun            46
-    5          0.00                   0.3          260    12PM-4PM        Mon     12PM-4PM         Mon           100
-    6          6.33                   0.3          216    6PM-10PM        Sun     6PM-10PM         Sun            15
-    7          0.00                   0.0          588     5AM-9AM        Wed      5AM-9AM         Wed             0
-    8          0.00                   0.3          401    6PM-10PM        Sat     10PM-1AM         Sun          7174
-    9          0.00                   0.3          228    6PM-10PM        Sat     6PM-10PM         Sat             5
-    10         0.00                   0.3          288     5AM-9AM        Thu      5AM-9AM         Thu            30
-    11         0.00                   0.3          236     5AM-9AM        Sun      5AM-9AM         Sun           122
-    12         0.00                   0.0          401    6PM-10PM        Wed     6PM-10PM         Wed             0
-    13         0.00                   0.0          699    12PM-4PM        Wed     12PM-4PM         Wed             0
-    14         0.00                   0.3          200    10PM-1AM        Thu     10PM-1AM         Thu            61
-    15         0.00                   0.0          465    9AM-12PM        Wed     9AM-12PM         Wed             0
-    16         0.00                   0.3          222    9AM-12PM        Fri     9AM-12PM         Fri            77
-    17         0.00                   0.3          251    10PM-1AM        Tue      1AM-5AM         Tue          4019
-    18         5.33                   0.3          221    9AM-12PM        Sat     12PM-4PM         Sat          3400
-    19         0.00                   0.3          250    12PM-4PM        Thu     12PM-4PM         Thu           218
-    20         0.00                   0.0         1900     4PM-6PM        Thu      4PM-6PM         Thu             0
-    21         0.00                   0.3          265    6PM-10PM        Wed     6PM-10PM         Wed          5360
-    22         5.64                   0.3          236    12PM-4PM        Tue     12PM-4PM         Tue            78
-    23        22.41                   0.3          323     5AM-9AM        Mon     9AM-12PM         Mon          7417
-    24         0.00                   0.3          250     1AM-5AM        Thu      1AM-5AM         Thu          2115
-    25         0.00                   0.3          253    10PM-1AM        Sat      1AM-5AM         Sun         14009
-    26         0.00                   0.3          230     4PM-6PM        Mon      4PM-6PM         Mon          3009
-    27         0.00                   0.0          250    9AM-12PM        Mon     9AM-12PM         Mon             0
-    28         0.00                   0.3         1190    6PM-10PM        Fri     6PM-10PM         Fri            20
-    29        22.41                   0.3          274     1AM-5AM        Sat      1AM-5AM         Sat          3166
-    30         0.00                   0.3          300    9AM-12PM        Mon     9AM-12PM         Mon            76
-    31         0.00                   0.3          219     4PM-6PM        Mon     6PM-10PM         Mon          4827
-    32         0.00                   0.3          292    6PM-10PM        Sun     6PM-10PM         Sun          3298
-    33         0.00                   0.0          673     5AM-9AM        Tue      5AM-9AM         Tue             0
-    34         0.00                   0.3          300    6PM-10PM        Sun     10PM-1AM         Sun          2953
-    35         5.33                   0.3          224     5AM-9AM        Tue      5AM-9AM         Tue          6947
-    36         5.33                   0.3          332    10PM-1AM        Mon      1AM-5AM         Mon          4141
-    37        11.75                   0.3          255    10PM-1AM        Thu     10PM-1AM         Fri          5462
-    38        26.25                   0.3          271     5AM-9AM        Sat      5AM-9AM         Sat          3727
-    39         0.00                   0.3          270    6PM-10PM        Sun     6PM-10PM         Sun          2742
-    40         0.00                   0.3          220    9AM-12PM        Wed     9AM-12PM         Wed             0
-             pickup_nhood    dropoff_nhood tip_percent
-    1     Upper East Side             <NA>          NA
-    2             Clinton             <NA>          20
-    3                <NA>             <NA>          20
-    4                <NA>             <NA>          NA
-    5             Chelsea          Chelsea           0
-    6                <NA>             <NA>           0
-    7                <NA>             <NA>           0
-    8         Murray Hill             <NA>          NA
-    9                <NA>             <NA>           0
-    10               <NA>             <NA>           6
-    11               <NA>             <NA>          10
-    12               <NA>             <NA>           0
-    13               <NA>             <NA>           0
-    14               <NA>             <NA>           0
-    15               <NA>             <NA>           0
-    16               <NA>             <NA>           5
-    17 Financial District             <NA>          16
-    18               <NA>             <NA>           7
-    19       Central Park  Upper East Side           0
-    20               <NA>             <NA>           0
-    21               <NA>             <NA>           9
-    22               <NA>             <NA>          13
-    23               <NA>             <NA>          NA
-    24               <NA>             <NA>          20
-    25       East Village             <NA>          23
-    26               <NA>             <NA>           8
-    27               <NA>             <NA>           0
-    28               <NA>             <NA>          27
-    29               <NA>             <NA>          18
-    30               <NA>             <NA>          16
-    31               <NA>             <NA>          11
-    32               <NA>             <NA>           1
-    33               <NA>             <NA>           0
-    34               <NA>             <NA>           0
-    35               <NA>             <NA>          NA
-    36               <NA>             <NA>          23
-    37               <NA>             <NA>           6
-    38       Battery Park             <NA>          18
-    39               <NA>             <NA>          16
-    40               <NA>             <NA>          NA
-     [ reached getOption("max.print") -- omitted 38 rows ]
 
 
 
@@ -6990,7 +5060,7 @@ Piping is especially useful for longer pipelines. Here's an example of a query w
 ```R
 summarize( # (3)
   group_by( # (2)
-    filter(nyc_taxi, fare_amount > quantile(fare_amount, probs = .999)), # (1)
+    filter(nyc_taxi, fare_amount > 500), # (1)
     payment_type), 
   ave_duration = mean(trip_duration), ave_distance = mean(trip_distance))
 ```
@@ -7001,9 +5071,7 @@ summarize( # (3)
 <table>
 <thead><tr><th></th><th scope=col>payment_type</th><th scope=col>ave_duration</th><th scope=col>ave_distance</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>card</td><td>2475</td><td>16.5</td></tr>
-	<tr><th scope=row>2</th><td>cash</td><td>3461</td><td>24.4</td></tr>
-	<tr><th scope=row>3</th><td>NA</td><td>1188</td><td>11.2</td></tr>
+  <tr><th scope=row>1</th><td>card</td><td>4</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -7011,7 +5079,7 @@ summarize( # (3)
 
 
 To understand the query, we need to work from the inside out:
-  1. First filter the data to show only the top 1 out of 1000 fare amounts
+  1. First filter the data to show only fare amounts above \$500
   2. Group the resulting data by payment type
   3. For each group find average trip duration and trip distance
 
@@ -7020,7 +5088,7 @@ The same query, using piping, looks like this:
 
 ```R
 nyc_taxi %>%
-  filter(fare_amount > quantile(fare_amount, probs = .999)) %>% # (1)
+  filter(fare_amount > 500) %>% # (1)
   group_by(payment_type) %>% # (2)
   summarize(ave_duration = mean(trip_duration), ave_distance = mean(trip_distance)) # (3)
 ```
@@ -7031,9 +5099,7 @@ nyc_taxi %>%
 <table>
 <thead><tr><th></th><th scope=col>payment_type</th><th scope=col>ave_duration</th><th scope=col>ave_distance</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>card</td><td>2475</td><td>16.5</td></tr>
-	<tr><th scope=row>2</th><td>cash</td><td>3461</td><td>24.4</td></tr>
-	<tr><th scope=row>3</th><td>NA</td><td>1188</td><td>11.2</td></tr>
+  <tr><th scope=row>1</th><td>card</td><td>4</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -7057,7 +5123,7 @@ Without the pipeline function, we would have `arrange` as the outermost function
 arrange( # (4)
   summarize( # (3)
   group_by( # (2)
-    filter(nyc_taxi, fare_amount > quantile(fare_amount, probs = .999)), # (1)
+    filter(nyc_taxi, fare_amount > 500), # (1)
     payment_type), 
   ave_duration = mean(trip_duration), ave_distance = mean(trip_distance)),
 desc(ave_duration))
@@ -7069,9 +5135,7 @@ desc(ave_duration))
 <table>
 <thead><tr><th></th><th scope=col>payment_type</th><th scope=col>ave_duration</th><th scope=col>ave_distance</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>cash</td><td>3461</td><td>24.4</td></tr>
-	<tr><th scope=row>2</th><td>card</td><td>2475</td><td>16.5</td></tr>
-	<tr><th scope=row>3</th><td>NA</td><td>1188</td><td>11.2</td></tr>
+  <tr><th scope=row>1</th><td>card</td><td>4</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -7083,7 +5147,7 @@ With the pipeline function, we simpling add the pipe to the end of `summarize` a
 
 ```R
 nyc_taxi %>%
-  filter(fare_amount > quantile(fare_amount, probs = .999)) %>% # (1)
+  filter(fare_amount > 500) %>% # (1)
   group_by(payment_type) %>% # (2)
   summarize(ave_duration = mean(trip_duration), ave_distance = mean(trip_distance)) %>% # (3)
   arrange(desc(ave_duration)) # (4)
@@ -7095,9 +5159,7 @@ nyc_taxi %>%
 <table>
 <thead><tr><th></th><th scope=col>payment_type</th><th scope=col>ave_duration</th><th scope=col>ave_distance</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>cash</td><td>3461</td><td>24.4</td></tr>
-	<tr><th scope=row>2</th><td>card</td><td>2475</td><td>16.5</td></tr>
-	<tr><th scope=row>3</th><td>NA</td><td>1188</td><td>11.2</td></tr>
+  <tr><th scope=row>1</th><td>card</td><td>4</td><td>0</td></tr>
 </tbody>
 </table>
 
@@ -7113,12 +5175,15 @@ What are the times of the day and the days of the week with the highest fare per
 
 
 ```R
-nyc_taxi %>%
+q1 <- nyc_taxi %>%
   filter(trip_distance > 0) %>%
   group_by(pickup_dow, pickup_hour) %>%
   summarize(ave_fare_per_mile = mean(fare_amount / trip_distance, na.rm = TRUE), count = n()) %>%
   group_by() %>% # we 'reset', or remove, the group by, otherwise sorting won't work
   arrange(desc(ave_fare_per_mile))
+
+
+head(q1)
 ```
 
 
@@ -7127,56 +5192,12 @@ nyc_taxi %>%
 <table>
 <thead><tr><th></th><th scope=col>pickup_dow</th><th scope=col>pickup_hour</th><th scope=col>ave_fare_per_mile</th><th scope=col>count</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>Tue</td><td>9AM-12PM</td><td>8.19</td><td>14921</td></tr>
-	<tr><th scope=row>2</th><td>Tue</td><td>4PM-6PM</td><td>8.16</td><td>11931</td></tr>
-	<tr><th scope=row>3</th><td>Fri</td><td>12PM-4PM</td><td>7.92</td><td>20576</td></tr>
-	<tr><th scope=row>4</th><td>Wed</td><td>9AM-12PM</td><td>7.8</td><td>15089</td></tr>
-	<tr><th scope=row>5</th><td>Wed</td><td>12PM-4PM</td><td>7.57</td><td>19645</td></tr>
-	<tr><th scope=row>6</th><td>Thu</td><td>12PM-4PM</td><td>7.57</td><td>20620</td></tr>
-	<tr><th scope=row>7</th><td>Fri</td><td>4PM-6PM</td><td>7.56</td><td>12340</td></tr>
-	<tr><th scope=row>8</th><td>Wed</td><td>4PM-6PM</td><td>7.45</td><td>11682</td></tr>
-	<tr><th scope=row>9</th><td>Thu</td><td>9AM-12PM</td><td>7.22</td><td>15957</td></tr>
-	<tr><th scope=row>10</th><td>Tue</td><td>12PM-4PM</td><td>7.2</td><td>19964</td></tr>
-	<tr><th scope=row>11</th><td>Mon</td><td>4PM-6PM</td><td>7.11</td><td>11713</td></tr>
-	<tr><th scope=row>12</th><td>Mon</td><td>12PM-4PM</td><td>6.97</td><td>19488</td></tr>
-	<tr><th scope=row>13</th><td>Fri</td><td>9AM-12PM</td><td>6.97</td><td>16056</td></tr>
-	<tr><th scope=row>14</th><td>Wed</td><td>5AM-9AM</td><td>6.88</td><td>20161</td></tr>
-	<tr><th scope=row>15</th><td>Sat</td><td>12PM-4PM</td><td>6.87</td><td>23073</td></tr>
-	<tr><th scope=row>16</th><td>Sun</td><td>12PM-4PM</td><td>6.87</td><td>21813</td></tr>
-	<tr><th scope=row>17</th><td>Thu</td><td>4PM-6PM</td><td>6.84</td><td>11997</td></tr>
-	<tr><th scope=row>18</th><td>Wed</td><td>1AM-5AM</td><td>6.8</td><td>3444</td></tr>
-	<tr><th scope=row>19</th><td>Fri</td><td>1AM-5AM</td><td>6.8</td><td>5655</td></tr>
-	<tr><th scope=row>20</th><td>Tue</td><td>5AM-9AM</td><td>6.72</td><td>19531</td></tr>
-	<tr><th scope=row>21</th><td>Mon</td><td>1AM-5AM</td><td>6.7</td><td>3482</td></tr>
-	<tr><th scope=row>22</th><td>Thu</td><td>5AM-9AM</td><td>6.56</td><td>20436</td></tr>
-	<tr><th scope=row>23</th><td>Mon</td><td>9AM-12PM</td><td>6.44</td><td>14312</td></tr>
-	<tr><th scope=row>24</th><td>Fri</td><td>5AM-9AM</td><td>6.4</td><td>19750</td></tr>
-	<tr><th scope=row>25</th><td>Mon</td><td>5AM-9AM</td><td>6.38</td><td>17945</td></tr>
-	<tr><th scope=row>26</th><td>Sun</td><td>1AM-5AM</td><td>6.37</td><td>12111</td></tr>
-	<tr><th scope=row>27</th><td>Sat</td><td>10PM-1AM</td><td>6.37</td><td>19342</td></tr>
-	<tr><th scope=row>28</th><td>Sat</td><td>6PM-10PM</td><td>6.28</td><td>27364</td></tr>
-	<tr><th scope=row>29</th><td>Sat</td><td>4PM-6PM</td><td>6.24</td><td>12983</td></tr>
-	<tr><th scope=row>30</th><td>Sat</td><td>9AM-12PM</td><td>6.24</td><td>16793</td></tr>
-	<tr><th scope=row>31</th><td>Sun</td><td>4PM-6PM</td><td>6.18</td><td>10956</td></tr>
-	<tr><th scope=row>32</th><td>Fri</td><td>6PM-10PM</td><td>6.16</td><td>28809</td></tr>
-	<tr><th scope=row>33</th><td>Sat</td><td>1AM-5AM</td><td>6.09</td><td>11133</td></tr>
-	<tr><th scope=row>34</th><td>Sat</td><td>5AM-9AM</td><td>6.01</td><td>10488</td></tr>
-	<tr><th scope=row>35</th><td>Sun</td><td>10PM-1AM</td><td>6</td><td>16100</td></tr>
-	<tr><th scope=row>36</th><td>Sun</td><td>9AM-12PM</td><td>5.86</td><td>15632</td></tr>
-	<tr><th scope=row>37</th><td>Fri</td><td>10PM-1AM</td><td>5.84</td><td>14479</td></tr>
-	<tr><th scope=row>38</th><td>Sun</td><td>6PM-10PM</td><td>5.82</td><td>19063</td></tr>
-	<tr><th scope=row>39</th><td>Tue</td><td>6PM-10PM</td><td>5.74</td><td>26322</td></tr>
-	<tr><th scope=row>40</th><td>Mon</td><td>10PM-1AM</td><td>5.69</td><td>7827</td></tr>
-	<tr><th scope=row>41</th><td>Wed</td><td>6PM-10PM</td><td>5.65</td><td>27113</td></tr>
-	<tr><th scope=row>42</th><td>Wed</td><td>10PM-1AM</td><td>5.53</td><td>9784</td></tr>
-	<tr><th scope=row>43</th><td>Sun</td><td>5AM-9AM</td><td>5.5</td><td>8186</td></tr>
-	<tr><th scope=row>44</th><td>Thu</td><td>10PM-1AM</td><td>5.5</td><td>11910</td></tr>
-	<tr><th scope=row>45</th><td>Thu</td><td>6PM-10PM</td><td>5.42</td><td>28817</td></tr>
-	<tr><th scope=row>46</th><td>Mon</td><td>6PM-10PM</td><td>5.18</td><td>22786</td></tr>
-	<tr><th scope=row>47</th><td>Thu</td><td>1AM-5AM</td><td>5.04</td><td>4689</td></tr>
-	<tr><th scope=row>48</th><td>NA</td><td>10PM-1AM</td><td>5.01</td><td>4</td></tr>
-	<tr><th scope=row>49</th><td>Tue</td><td>10PM-1AM</td><td>4.98</td><td>8428</td></tr>
-	<tr><th scope=row>50</th><td>Tue</td><td>1AM-5AM</td><td>4.94</td><td>3124</td></tr>
+  <tr><th scope=row>1</th><td>Tue</td><td>9AM-12PM</td><td>8.19</td><td>14921</td></tr>
+  <tr><th scope=row>2</th><td>Tue</td><td>4PM-6PM</td><td>8.16</td><td>11931</td></tr>
+  <tr><th scope=row>3</th><td>Fri</td><td>12PM-4PM</td><td>7.92</td><td>20576</td></tr>
+  <tr><th scope=row>4</th><td>Wed</td><td>9AM-12PM</td><td>7.8</td><td>15089</td></tr>
+  <tr><th scope=row>5</th><td>Wed</td><td>12PM-4PM</td><td>7.57</td><td>19645</td></tr>
+  <tr><th scope=row>6</th><td>Thu</td><td>12PM-4PM</td><td>7.57</td><td>20620</td></tr>
 </tbody>
 </table>
 
@@ -7188,7 +5209,7 @@ For each pick-up neighborhood, find the number and percentage of trips that "fan
 
 
 ```R
-nyc_taxi %>%
+q2 <- nyc_taxi %>%
   filter(!is.na(pickup_nhood) & !is.na(dropoff_nhood)) %>%
   group_by(pickup_nhood, dropoff_nhood) %>%
   summarize(count = n()) %>%
@@ -7199,6 +5220,8 @@ nyc_taxi %>%
   arrange(pickup_nhood, desc(proportion)) %>%
   group_by(pickup_nhood) %>%
   filter(row_number() < 11 | cum.prop < .50)
+
+head(q2)
 ```
 
 
@@ -7207,67 +5230,12 @@ nyc_taxi %>%
 <table>
 <thead><tr><th></th><th scope=col>pickup_nhood</th><th scope=col>dropoff_nhood</th><th scope=col>count</th><th scope=col>proportion</th><th scope=col>cum.prop</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>West Village</td><td>Chelsea</td><td>2718</td><td>0.158225637443241</td><td>0.158225637443241</td></tr>
-	<tr><th scope=row>2</th><td>West Village</td><td>Midtown</td><td>2027</td><td>0.117999767144021</td><td>0.276225404587263</td></tr>
-	<tr><th scope=row>3</th><td>West Village</td><td>Greenwich Village</td><td>1589</td><td>0.0925020374898125</td><td>0.368727442077075</td></tr>
-	<tr><th scope=row>4</th><td>West Village</td><td>Gramercy</td><td>1359</td><td>0.0791128187216207</td><td>0.447840260798696</td></tr>
-	<tr><th scope=row>5</th><td>West Village</td><td>West Village</td><td>1002</td><td>0.0583304226336011</td><td>0.506170683432297</td></tr>
-	<tr><th scope=row>6</th><td>West Village</td><td>Soho</td><td>966</td><td>0.0562347188264059</td><td>0.562405402258703</td></tr>
-	<tr><th scope=row>7</th><td>West Village</td><td>Garment District</td><td>956</td><td>0.0556525788799627</td><td>0.618057981138666</td></tr>
-	<tr><th scope=row>8</th><td>West Village</td><td>East Village</td><td>880</td><td>0.051228315286995</td><td>0.669286296425661</td></tr>
-	<tr><th scope=row>9</th><td>West Village</td><td>Upper East Side</td><td>750</td><td>0.0436604959832344</td><td>0.712946792408895</td></tr>
-	<tr><th scope=row>10</th><td>West Village</td><td>Clinton</td><td>741</td><td>0.0431365700314356</td><td>0.756083362440331</td></tr>
-	<tr><th scope=row>11</th><td>East Village</td><td>Gramercy</td><td>3418</td><td>0.146268401232455</td><td>0.146268401232455</td></tr>
-	<tr><th scope=row>12</th><td>East Village</td><td>East Village</td><td>2319</td><td>0.0992382745635056</td><td>0.24550667579596</td></tr>
-	<tr><th scope=row>13</th><td>East Village</td><td>Greenwich Village</td><td>2219</td><td>0.0949589181787059</td><td>0.340465593974666</td></tr>
-	<tr><th scope=row>14</th><td>East Village</td><td>Midtown</td><td>2206</td><td>0.094402601848682</td><td>0.434868195823348</td></tr>
-	<tr><th scope=row>15</th><td>East Village</td><td>Lower East Side</td><td>1757</td><td>0.0751882916809312</td><td>0.510056487504279</td></tr>
-	<tr><th scope=row>16</th><td>East Village</td><td>Chelsea</td><td>1703</td><td>0.0728774392331393</td><td>0.582933926737419</td></tr>
-	<tr><th scope=row>17</th><td>East Village</td><td>Upper East Side</td><td>1549</td><td>0.0662872304005478</td><td>0.649221157137966</td></tr>
-	<tr><th scope=row>18</th><td>East Village</td><td>Garment District</td><td>1155</td><td>0.0494265662444368</td><td>0.698647723382403</td></tr>
-	<tr><th scope=row>19</th><td>East Village</td><td>Murray Hill</td><td>1032</td><td>0.0441629578911332</td><td>0.742810681273536</td></tr>
-	<tr><th scope=row>20</th><td>East Village</td><td>West Village</td><td>910</td><td>0.0389421431016775</td><td>0.781752824375214</td></tr>
-	<tr><th scope=row>21</th><td>Battery Park</td><td>Midtown</td><td>907</td><td>0.148348053647367</td><td>0.148348053647367</td></tr>
-	<tr><th scope=row>22</th><td>Battery Park</td><td>Financial District</td><td>631</td><td>0.103205757278377</td><td>0.251553810925744</td></tr>
-	<tr><th scope=row>23</th><td>Battery Park</td><td>Tribeca</td><td>621</td><td>0.101570166830226</td><td>0.35312397775597</td></tr>
-	<tr><th scope=row>24</th><td>Battery Park</td><td>Chelsea</td><td>604</td><td>0.0987896630683677</td><td>0.451913640824338</td></tr>
-	<tr><th scope=row>25</th><td>Battery Park</td><td>Soho</td><td>377</td><td>0.0616617598953222</td><td>0.51357540071966</td></tr>
-	<tr><th scope=row>26</th><td>Battery Park</td><td>Garment District</td><td>361</td><td>0.0590448151782794</td><td>0.572620215897939</td></tr>
-	<tr><th scope=row>27</th><td>Battery Park</td><td>Gramercy</td><td>342</td><td>0.055937193326791</td><td>0.62855740922473</td></tr>
-	<tr><th scope=row>28</th><td>Battery Park</td><td>Greenwich Village</td><td>303</td><td>0.049558390578999</td><td>0.678115799803729</td></tr>
-	<tr><th scope=row>29</th><td>Battery Park</td><td>West Village</td><td>300</td><td>0.0490677134445535</td><td>0.727183513248283</td></tr>
-	<tr><th scope=row>30</th><td>Battery Park</td><td>Upper East Side</td><td>236</td><td>0.0385999345763821</td><td>0.765783447824665</td></tr>
-	<tr><th scope=row>31</th><td>NA</td><td>NA</td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td></tr>
-	<tr><th scope=row>32</th><td>Yorkville</td><td>Upper East Side</td><td>1365</td><td>0.289194915254237</td><td>0.289194915254237</td></tr>
-	<tr><th scope=row>33</th><td>Yorkville</td><td>Upper West Side</td><td>693</td><td>0.146822033898305</td><td>0.436016949152542</td></tr>
-	<tr><th scope=row>34</th><td>Yorkville</td><td>Midtown</td><td>424</td><td>0.0898305084745763</td><td>0.525847457627119</td></tr>
-	<tr><th scope=row>35</th><td>Yorkville</td><td>Yorkville</td><td>366</td><td>0.0775423728813559</td><td>0.603389830508475</td></tr>
-	<tr><th scope=row>36</th><td>Yorkville</td><td>East Harlem</td><td>354</td><td>0.075</td><td>0.678389830508475</td></tr>
-	<tr><th scope=row>37</th><td>Yorkville</td><td>Harlem</td><td>273</td><td>0.0578389830508475</td><td>0.736228813559322</td></tr>
-	<tr><th scope=row>38</th><td>Yorkville</td><td>Carnegie Hill</td><td>170</td><td>0.0360169491525424</td><td>0.772245762711864</td></tr>
-	<tr><th scope=row>39</th><td>Yorkville</td><td>Central Park</td><td>139</td><td>0.0294491525423729</td><td>0.801694915254237</td></tr>
-	<tr><th scope=row>40</th><td>Yorkville</td><td>Gramercy</td><td>130</td><td>0.0275423728813559</td><td>0.829237288135593</td></tr>
-	<tr><th scope=row>41</th><td>Yorkville</td><td>Garment District</td><td>122</td><td>0.0258474576271186</td><td>0.855084745762712</td></tr>
-	<tr><th scope=row>42</th><td>Garment District</td><td>Midtown</td><td>10924</td><td>0.282609820458426</td><td>0.282609820458426</td></tr>
-	<tr><th scope=row>43</th><td>Garment District</td><td>Gramercy</td><td>4030</td><td>0.104258291509288</td><td>0.386868111967714</td></tr>
-	<tr><th scope=row>44</th><td>Garment District</td><td>Upper East Side</td><td>3381</td><td>0.0874683085838464</td><td>0.47433642055156</td></tr>
-	<tr><th scope=row>45</th><td>Garment District</td><td>Chelsea</td><td>3130</td><td>0.0809748020903399</td><td>0.5553112226419</td></tr>
-	<tr><th scope=row>46</th><td>Garment District</td><td>Clinton</td><td>2539</td><td>0.065685310705231</td><td>0.620996533347131</td></tr>
-	<tr><th scope=row>47</th><td>Garment District</td><td>Murray Hill</td><td>2284</td><td>0.0590883220365292</td><td>0.68008485538366</td></tr>
-	<tr><th scope=row>48</th><td>Garment District</td><td>Garment District</td><td>2137</td><td>0.0552853520981011</td><td>0.735370207481761</td></tr>
-	<tr><th scope=row>49</th><td>Garment District</td><td>Upper West Side</td><td>1947</td><td>0.0503699487763233</td><td>0.785740156258085</td></tr>
-	<tr><th scope=row>50</th><td>Garment District</td><td>Greenwich Village</td><td>1308</td><td>0.0338386712888705</td><td>0.819578827546955</td></tr>
-	<tr><th scope=row>51</th><td>Garment District</td><td>East Village</td><td>1032</td><td>0.0266984012003932</td><td>0.846277228747348</td></tr>
-	<tr><th scope=row>52</th><td>East Harlem</td><td>Yorkville</td><td>405</td><td>0.183340878225441</td><td>0.183340878225441</td></tr>
-	<tr><th scope=row>53</th><td>East Harlem</td><td>Harlem</td><td>393</td><td>0.177908555907651</td><td>0.361249434133092</td></tr>
-	<tr><th scope=row>54</th><td>East Harlem</td><td>Upper East Side</td><td>393</td><td>0.177908555907651</td><td>0.539157990040742</td></tr>
-	<tr><th scope=row>55</th><td>East Harlem</td><td>East Harlem</td><td>287</td><td>0.129923042100498</td><td>0.66908103214124</td></tr>
-	<tr><th scope=row>56</th><td>East Harlem</td><td>Upper West Side</td><td>152</td><td>0.0688094160253508</td><td>0.737890448166591</td></tr>
-	<tr><th scope=row>57</th><td>East Harlem</td><td>Midtown</td><td>120</td><td>0.0543232231779086</td><td>0.7922136713445</td></tr>
-	<tr><th scope=row>58</th><td>East Harlem</td><td>Morningside Heights</td><td>64</td><td>0.0289723856948846</td><td>0.821186057039384</td></tr>
-	<tr><th scope=row>59</th><td>East Harlem</td><td>Gramercy</td><td>55</td><td>0.0248981439565414</td><td>0.846084200995926</td></tr>
-	<tr><th scope=row>60</th><td>East Harlem</td><td>Washington Heights</td><td>49</td><td>0.022181982797646</td><td>0.868266183793572</td></tr>
-	<tr><th scope=row>61</th><td>East Harlem</td><td>Hamilton Heights</td><td>47</td><td>0.0212765957446809</td><td>0.889542779538253</td></tr>
+  <tr><th scope=row>1</th><td>West Village</td><td>Chelsea</td><td>2718</td><td>0.158</td><td>0.158</td></tr>
+  <tr><th scope=row>2</th><td>West Village</td><td>Midtown</td><td>2027</td><td>0.118</td><td>0.276</td></tr>
+  <tr><th scope=row>3</th><td>West Village</td><td>Greenwich Village</td><td>1589</td><td>0.0925</td><td>0.369</td></tr>
+  <tr><th scope=row>4</th><td>West Village</td><td>Gramercy</td><td>1359</td><td>0.0791</td><td>0.448</td></tr>
+  <tr><th scope=row>5</th><td>West Village</td><td>West Village</td><td>1002</td><td>0.0583</td><td>0.506</td></tr>
+  <tr><th scope=row>6</th><td>West Village</td><td>Soho</td><td>966</td><td>0.0562</td><td>0.562</td></tr>
 </tbody>
 </table>
 
@@ -7320,7 +5288,8 @@ We can now use `rolling_sum` to answer Query 3 (find the 3 consecutive days with
 
 ```R
 nlag <- 2
-nyc_taxi %>%
+
+q3 <- nyc_taxi %>%
   filter(!is.na(pickup_datetime)) %>%
   transmute(end_date = as.Date(pickup_datetime)) %>%
   group_by(end_date) %>%
@@ -7330,6 +5299,8 @@ nyc_taxi %>%
   arrange(desc(cn)) %>%
   select(start_date, end_date, n, cn) %>%
   top_n(10, cn)
+
+head(q3)
 ```
 
 
@@ -7338,16 +5309,12 @@ nyc_taxi %>%
 <table>
 <thead><tr><th></th><th scope=col>start_date</th><th scope=col>end_date</th><th scope=col>n</th><th scope=col>cn</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>2015-02-13</td><td>2015-02-15</td><td>4873</td><td>14831</td></tr>
-	<tr><th scope=row>2</th><td>2015-02-06</td><td>2015-02-08</td><td>4732</td><td>14600</td></tr>
-	<tr><th scope=row>3</th><td>2015-01-30</td><td>2015-02-01</td><td>4730</td><td>14564</td></tr>
-	<tr><th scope=row>4</th><td>2015-02-12</td><td>2015-02-14</td><td>5058</td><td>14519</td></tr>
-	<tr><th scope=row>5</th><td>2015-01-16</td><td>2015-01-18</td><td>4783</td><td>14498</td></tr>
-	<tr><th scope=row>6</th><td>2015-02-19</td><td>2015-02-21</td><td>4895</td><td>14445</td></tr>
-	<tr><th scope=row>7</th><td>2015-02-27</td><td>2015-03-01</td><td>4717</td><td>14434</td></tr>
-	<tr><th scope=row>8</th><td>2015-04-17</td><td>2015-04-19</td><td>4845</td><td>14383</td></tr>
-	<tr><th scope=row>9</th><td>2015-05-01</td><td>2015-05-03</td><td>4883</td><td>14381</td></tr>
-	<tr><th scope=row>10</th><td>2015-03-13</td><td>2015-03-15</td><td>4716</td><td>14380</td></tr>
+  <tr><th scope=row>1</th><td>2015-02-13</td><td>2015-02-15</td><td>4873</td><td>14831</td></tr>
+  <tr><th scope=row>2</th><td>2015-02-06</td><td>2015-02-08</td><td>4732</td><td>14600</td></tr>
+  <tr><th scope=row>3</th><td>2015-01-30</td><td>2015-02-01</td><td>4730</td><td>14564</td></tr>
+  <tr><th scope=row>4</th><td>2015-02-12</td><td>2015-02-14</td><td>5058</td><td>14519</td></tr>
+  <tr><th scope=row>5</th><td>2015-01-16</td><td>2015-01-18</td><td>4783</td><td>14498</td></tr>
+  <tr><th scope=row>6</th><td>2015-02-19</td><td>2015-02-21</td><td>4895</td><td>14445</td></tr>
 </tbody>
 </table>
 
@@ -7358,7 +5325,7 @@ We could have run the above query without `rolling_sum` by just using the `lag` 
 
 
 ```R
-nyc_taxi %>%
+q3 <- nyc_taxi %>%
   filter(!is.na(pickup_datetime)) %>%
   transmute(end_date = as.Date(pickup_datetime)) %>%
   group_by(end_date) %>%
@@ -7370,6 +5337,8 @@ nyc_taxi %>%
   arrange(desc(cn)) %>%
   select(start_date, end_date, n, cn) %>%
   top_n(10, cn)
+
+head(q3)
 ```
 
 
@@ -7378,16 +5347,12 @@ nyc_taxi %>%
 <table>
 <thead><tr><th></th><th scope=col>start_date</th><th scope=col>end_date</th><th scope=col>n</th><th scope=col>cn</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>2015-02-12</td><td>2015-02-15</td><td>4873</td><td>14831</td></tr>
-	<tr><th scope=row>2</th><td>2015-02-05</td><td>2015-02-08</td><td>4732</td><td>14600</td></tr>
-	<tr><th scope=row>3</th><td>2015-01-29</td><td>2015-02-01</td><td>4730</td><td>14564</td></tr>
-	<tr><th scope=row>4</th><td>2015-02-11</td><td>2015-02-14</td><td>5058</td><td>14519</td></tr>
-	<tr><th scope=row>5</th><td>2015-01-15</td><td>2015-01-18</td><td>4783</td><td>14498</td></tr>
-	<tr><th scope=row>6</th><td>2015-02-18</td><td>2015-02-21</td><td>4895</td><td>14445</td></tr>
-	<tr><th scope=row>7</th><td>2015-02-26</td><td>2015-03-01</td><td>4717</td><td>14434</td></tr>
-	<tr><th scope=row>8</th><td>2015-04-16</td><td>2015-04-19</td><td>4845</td><td>14383</td></tr>
-	<tr><th scope=row>9</th><td>2015-04-30</td><td>2015-05-03</td><td>4883</td><td>14381</td></tr>
-	<tr><th scope=row>10</th><td>2015-03-12</td><td>2015-03-15</td><td>4716</td><td>14380</td></tr>
+  <tr><th scope=row>1</th><td>2015-02-12</td><td>2015-02-15</td><td>4873</td><td>14831</td></tr>
+  <tr><th scope=row>2</th><td>2015-02-05</td><td>2015-02-08</td><td>4732</td><td>14600</td></tr>
+  <tr><th scope=row>3</th><td>2015-01-29</td><td>2015-02-01</td><td>4730</td><td>14564</td></tr>
+  <tr><th scope=row>4</th><td>2015-02-11</td><td>2015-02-14</td><td>5058</td><td>14519</td></tr>
+  <tr><th scope=row>5</th><td>2015-01-15</td><td>2015-01-18</td><td>4783</td><td>14498</td></tr>
+  <tr><th scope=row>6</th><td>2015-02-18</td><td>2015-02-21</td><td>4895</td><td>14445</td></tr>
 </tbody>
 </table>
 
@@ -7412,11 +5377,13 @@ We can now reproduce the two queries by just starting the pipeline with `counts_
 
 
 ```R
-counts_bydate %>% # start where we left off in the last line
+q3 <- counts_bydate %>% # start where we left off in the last line
   mutate(start_date = end_date - nlag, cn = rolling_sum(n, nlag)) %>%
   arrange(desc(cn)) %>%
   select(start_date, end_date, n, cn) %>%
   top_n(10, cn)
+
+head(q3)
 ```
 
 
@@ -7425,16 +5392,12 @@ counts_bydate %>% # start where we left off in the last line
 <table>
 <thead><tr><th></th><th scope=col>start_date</th><th scope=col>end_date</th><th scope=col>n</th><th scope=col>cn</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>2015-02-13</td><td>2015-02-15</td><td>4873</td><td>14831</td></tr>
-	<tr><th scope=row>2</th><td>2015-02-06</td><td>2015-02-08</td><td>4732</td><td>14600</td></tr>
-	<tr><th scope=row>3</th><td>2015-01-30</td><td>2015-02-01</td><td>4730</td><td>14564</td></tr>
-	<tr><th scope=row>4</th><td>2015-02-12</td><td>2015-02-14</td><td>5058</td><td>14519</td></tr>
-	<tr><th scope=row>5</th><td>2015-01-16</td><td>2015-01-18</td><td>4783</td><td>14498</td></tr>
-	<tr><th scope=row>6</th><td>2015-02-19</td><td>2015-02-21</td><td>4895</td><td>14445</td></tr>
-	<tr><th scope=row>7</th><td>2015-02-27</td><td>2015-03-01</td><td>4717</td><td>14434</td></tr>
-	<tr><th scope=row>8</th><td>2015-04-17</td><td>2015-04-19</td><td>4845</td><td>14383</td></tr>
-	<tr><th scope=row>9</th><td>2015-05-01</td><td>2015-05-03</td><td>4883</td><td>14381</td></tr>
-	<tr><th scope=row>10</th><td>2015-03-13</td><td>2015-03-15</td><td>4716</td><td>14380</td></tr>
+  <tr><th scope=row>1</th><td>2015-02-13</td><td>2015-02-15</td><td>4873</td><td>14831</td></tr>
+  <tr><th scope=row>2</th><td>2015-02-06</td><td>2015-02-08</td><td>4732</td><td>14600</td></tr>
+  <tr><th scope=row>3</th><td>2015-01-30</td><td>2015-02-01</td><td>4730</td><td>14564</td></tr>
+  <tr><th scope=row>4</th><td>2015-02-12</td><td>2015-02-14</td><td>5058</td><td>14519</td></tr>
+  <tr><th scope=row>5</th><td>2015-01-16</td><td>2015-01-18</td><td>4783</td><td>14498</td></tr>
+  <tr><th scope=row>6</th><td>2015-02-19</td><td>2015-02-21</td><td>4895</td><td>14445</td></tr>
 </tbody>
 </table>
 
@@ -7445,13 +5408,15 @@ And here's the second query reproduced:
 
 
 ```R
-counts_bydate %>% # start where we left off in the last line
+q3 <- counts_bydate %>% # start where we left off in the last line
   mutate(start_date = end_date - 3, 
          n_lag_1 = lag(n), n_lag_2 = lag(n, 2), 
          cn = n + n_lag_1 + n_lag_2) %>%
   arrange(desc(cn)) %>%
   select(start_date, end_date, n, cn) %>%
   top_n(10, cn)
+
+head(q3)
 ```
 
 
@@ -7460,16 +5425,12 @@ counts_bydate %>% # start where we left off in the last line
 <table>
 <thead><tr><th></th><th scope=col>start_date</th><th scope=col>end_date</th><th scope=col>n</th><th scope=col>cn</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>2015-02-12</td><td>2015-02-15</td><td>4873</td><td>14831</td></tr>
-	<tr><th scope=row>2</th><td>2015-02-05</td><td>2015-02-08</td><td>4732</td><td>14600</td></tr>
-	<tr><th scope=row>3</th><td>2015-01-29</td><td>2015-02-01</td><td>4730</td><td>14564</td></tr>
-	<tr><th scope=row>4</th><td>2015-02-11</td><td>2015-02-14</td><td>5058</td><td>14519</td></tr>
-	<tr><th scope=row>5</th><td>2015-01-15</td><td>2015-01-18</td><td>4783</td><td>14498</td></tr>
-	<tr><th scope=row>6</th><td>2015-02-18</td><td>2015-02-21</td><td>4895</td><td>14445</td></tr>
-	<tr><th scope=row>7</th><td>2015-02-26</td><td>2015-03-01</td><td>4717</td><td>14434</td></tr>
-	<tr><th scope=row>8</th><td>2015-04-16</td><td>2015-04-19</td><td>4845</td><td>14383</td></tr>
-	<tr><th scope=row>9</th><td>2015-04-30</td><td>2015-05-03</td><td>4883</td><td>14381</td></tr>
-	<tr><th scope=row>10</th><td>2015-03-12</td><td>2015-03-15</td><td>4716</td><td>14380</td></tr>
+  <tr><th scope=row>1</th><td>2015-02-12</td><td>2015-02-15</td><td>4873</td><td>14831</td></tr>
+  <tr><th scope=row>2</th><td>2015-02-05</td><td>2015-02-08</td><td>4732</td><td>14600</td></tr>
+  <tr><th scope=row>3</th><td>2015-01-29</td><td>2015-02-01</td><td>4730</td><td>14564</td></tr>
+  <tr><th scope=row>4</th><td>2015-02-11</td><td>2015-02-14</td><td>5058</td><td>14519</td></tr>
+  <tr><th scope=row>5</th><td>2015-01-15</td><td>2015-01-18</td><td>4783</td><td>14498</td></tr>
+  <tr><th scope=row>6</th><td>2015-02-18</td><td>2015-02-21</td><td>4895</td><td>14445</td></tr>
 </tbody>
 </table>
 
@@ -7534,7 +5495,7 @@ anti_join(data_dates, all_dates, by = 'date') # an anti-join is the reverse of a
 <table>
 <thead><tr><th></th><th scope=col>pickup_datetime</th><th scope=col>date</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>NA</td><td>NA</td></tr>
+  <tr><th scope=row>1</th><td>NA</td><td>NA</td></tr>
 </tbody>
 </table>
 
@@ -7558,84 +5519,31 @@ This query can easily be written with the tools we leared so far.
 
 
 ```R
-nyc_taxi %>%
+q5 <- nyc_taxi %>%
   filter(!is.na(pickup_nhood) & !is.na(dropoff_nhood)) %>%
   group_by(pickup_nhood, dropoff_nhood) %>%
   summarize(mean_trip_distance = mean(trip_distance, na.rm = TRUE),
             mean_trip_duration = mean(trip_duration, na.rm = TRUE),
+            sd_trip_distance = sd(trip_distance, na.rm = TRUE),
             sd_trip_duration = sd(trip_duration, na.rm = TRUE),
-            sd_trip_duration = sd(trip_duration, na.rm = TRUE),
-            mad_trip_duration = mad(trip_duration),
+            mad_trip_distance = mad(trip_distance),
             mad_trip_duration = mad(trip_duration))
+
+head(q5)
 ```
 
 
 
 
 <table>
-<thead><tr><th></th><th scope=col>pickup_nhood</th><th scope=col>dropoff_nhood</th><th scope=col>mean_trip_distance</th><th scope=col>mean_trip_duration</th><th scope=col>sd_trip_duration</th><th scope=col>mad_trip_duration</th></tr></thead>
+<thead><tr><th></th><th scope=col>pickup_nhood</th><th scope=col>dropoff_nhood</th><th scope=col>mean_trip_distance</th><th scope=col>mean_trip_duration</th><th scope=col>sd_trip_distance</th><th scope=col>sd_trip_duration</th><th scope=col>mad_trip_distance</th><th scope=col>mad_trip_duration</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>West Village</td><td>West Village</td><td>0.692075848303393</td><td>289.256487025948</td><td>279.608690964304</td><td>153.084830339321</td></tr>
-	<tr><th scope=row>2</th><td>West Village</td><td>East Village</td><td>1.61729545454545</td><td>757.484090909091</td><td>259.095599913445</td><td>191.411363636364</td></tr>
-	<tr><th scope=row>3</th><td>West Village</td><td>Battery Park</td><td>1.95375308641975</td><td>563.276543209877</td><td>223.266806531809</td><td>142.37037037037</td></tr>
-	<tr><th scope=row>4</th><td>West Village</td><td>Carnegie Hill</td><td>5.3192</td><td>1544.56</td><td>571.552420864367</td><td>348.84</td></tr>
-	<tr><th scope=row>5</th><td>West Village</td><td>Gramercy</td><td>1.70810154525386</td><td>734.440029433407</td><td>282.31553710471</td><td>215.67255334805</td></tr>
-	<tr><th scope=row>6</th><td>West Village</td><td>Soho</td><td>1.17189440993789</td><td>612.560041407868</td><td>2661.50854687637</td><td>261.938923395445</td></tr>
-	<tr><th scope=row>7</th><td>West Village</td><td>Murray Hill</td><td>2.44324752475248</td><td>985.522772277228</td><td>377.120586131761</td><td>279.437623762376</td></tr>
-	<tr><th scope=row>8</th><td>West Village</td><td>Little Italy</td><td>1.696925795053</td><td>759.802120141343</td><td>280.619760648482</td><td>196.837455830389</td></tr>
-	<tr><th scope=row>9</th><td>West Village</td><td>Central Park</td><td>3.63939024390244</td><td>1187.96341463415</td><td>524.97389576776</td><td>384.231707317073</td></tr>
-	<tr><th scope=row>10</th><td>West Village</td><td>Greenwich Village</td><td>0.913203272498427</td><td>467.453744493392</td><td>224.797249609795</td><td>162.409062303335</td></tr>
-	<tr><th scope=row>11</th><td>West Village</td><td>Midtown</td><td>2.72811050814011</td><td>1084.21756290084</td><td>2374.61728230901</td><td>406.805130735076</td></tr>
-	<tr><th scope=row>12</th><td>West Village</td><td>Morningside Heights</td><td>6.315</td><td>1292.42105263158</td><td>328.255720320585</td><td>234.894736842105</td></tr>
-	<tr><th scope=row>13</th><td>West Village</td><td>Harlem</td><td>7.27072164948454</td><td>1500.9175257732</td><td>334.701473645518</td><td>251.226804123711</td></tr>
-	<tr><th scope=row>14</th><td>West Village</td><td>Hamilton Heights</td><td>7.50978260869565</td><td>1354.76086956522</td><td>344.476619737674</td><td>240.195652173913</td></tr>
-	<tr><th scope=row>15</th><td>West Village</td><td>Tribeca</td><td>1.53445987654321</td><td>557.345679012346</td><td>247.531668053166</td><td>167.725308641975</td></tr>
-	<tr><th scope=row>16</th><td>West Village</td><td>North Sutton Area</td><td>3.70666666666667</td><td>2589.96825396825</td><td>10607.5569151739</td><td>1622.93650793651</td></tr>
-	<tr><th scope=row>17</th><td>West Village</td><td>Upper East Side</td><td>4.62428</td><td>1565.6</td><td>3120.45009034838</td><td>472.933333333333</td></tr>
-	<tr><th scope=row>18</th><td>West Village</td><td>Financial District</td><td>2.72878734622144</td><td>1005.77855887522</td><td>3595.66307869986</td><td>364.968365553603</td></tr>
-	<tr><th scope=row>19</th><td>West Village</td><td>Inwood</td><td>11.1552941176471</td><td>1776</td><td>645.68790835821</td><td>445.352941176471</td></tr>
-	<tr><th scope=row>20</th><td>West Village</td><td>Chelsea</td><td>1.05197203826343</td><td>424.24429727741</td><td>236.391237145372</td><td>159.805739514349</td></tr>
-	<tr><th scope=row>21</th><td>West Village</td><td>Lower East Side</td><td>2.16905204460967</td><td>960.641263940521</td><td>313.793298521945</td><td>244.013011152416</td></tr>
-	<tr><th scope=row>22</th><td>West Village</td><td>Chinatown</td><td>1.9673417721519</td><td>756.886075949367</td><td>238.461091130445</td><td>173.746835443038</td></tr>
-	<tr><th scope=row>23</th><td>West Village</td><td>Washington Heights</td><td>9.57813559322034</td><td>1570.89830508475</td><td>467.11560611891</td><td>324.627118644068</td></tr>
-	<tr><th scope=row>24</th><td>West Village</td><td>Upper West Side</td><td>4.06527950310559</td><td>1079.0652173913</td><td>424.95601686392</td><td>275.05900621118</td></tr>
-	<tr><th scope=row>25</th><td>West Village</td><td>Clinton</td><td>1.96836707152497</td><td>668.330634278003</td><td>303.179636329021</td><td>223.263157894737</td></tr>
-	<tr><th scope=row>26</th><td>West Village</td><td>Yorkville</td><td>5.98093023255814</td><td>1362.3023255814</td><td>380.970410979753</td><td>293.139534883721</td></tr>
-	<tr><th scope=row>27</th><td>West Village</td><td>Garment District</td><td>1.5722280334728</td><td>656.529288702929</td><td>355.85112214352</td><td>261.428870292887</td></tr>
-	<tr><th scope=row>28</th><td>West Village</td><td>East Harlem</td><td>6.95916666666667</td><td>1527.29166666667</td><td>333.166296010118</td><td>246.625</td></tr>
-	<tr><th scope=row>29</th><td>East Village</td><td>West Village</td><td>1.55108791208791</td><td>690.856043956044</td><td>210.58283659653</td><td>159.385714285714</td></tr>
-	<tr><th scope=row>30</th><td>East Village</td><td>East Village</td><td>0.792897800776197</td><td>388.410090556274</td><td>2775.80841018028</td><td>239.316084519189</td></tr>
-	<tr><th scope=row>31</th><td>NA</td><td>NA</td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td></tr>
-	<tr><th scope=row>32</th><td>Garment District</td><td>Garment District</td><td>0.731497426298549</td><td>480.688816097333</td><td>2648.68643527813</td><td>300.971455311184</td></tr>
-	<tr><th scope=row>33</th><td>Garment District</td><td>East Harlem</td><td>4.95477064220183</td><td>1187.19266055046</td><td>341.989697621094</td><td>263.807339449541</td></tr>
-	<tr><th scope=row>34</th><td>East Harlem</td><td>West Village</td><td>6.99333333333333</td><td>1798</td><td>514.821328229513</td><td>323</td></tr>
-	<tr><th scope=row>35</th><td>East Harlem</td><td>East Village</td><td>6.9285</td><td>1351.05</td><td>560.461508608378</td><td>385.75</td></tr>
-	<tr><th scope=row>36</th><td>East Harlem</td><td>Battery Park</td><td>10.33</td><td>1280.5</td><td>72.8319984622144</td><td>51.5</td></tr>
-	<tr><th scope=row>37</th><td>East Harlem</td><td>Carnegie Hill</td><td>1.626</td><td>500.766666666667</td><td>258.647101256723</td><td>175.166666666667</td></tr>
-	<tr><th scope=row>38</th><td>East Harlem</td><td>Gramercy</td><td>5.31127272727273</td><td>1157.89090909091</td><td>503.136741325239</td><td>361.036363636364</td></tr>
-	<tr><th scope=row>39</th><td>East Harlem</td><td>Soho</td><td>6.835</td><td>1308</td><td>148.582188255075</td><td>108.5</td></tr>
-	<tr><th scope=row>40</th><td>East Harlem</td><td>Murray Hill</td><td>4.298125</td><td>978.5</td><td>466.000858368308</td><td>327.125</td></tr>
-	<tr><th scope=row>41</th><td>East Harlem</td><td>Little Italy</td><td>7.25666666666667</td><td>872.666666666667</td><td>182.516665905701</td><td>117.666666666667</td></tr>
-	<tr><th scope=row>42</th><td>East Harlem</td><td>Central Park</td><td>2.25866666666667</td><td>679.6</td><td>248.487079284675</td><td>181</td></tr>
-	<tr><th scope=row>43</th><td>East Harlem</td><td>Greenwich Village</td><td>6.356</td><td>1417.6</td><td>376.656696033227</td><td>332.6</td></tr>
-	<tr><th scope=row>44</th><td>East Harlem</td><td>Midtown</td><td>4.00958333333333</td><td>1119.95</td><td>550.797646962258</td><td>366.583333333333</td></tr>
-	<tr><th scope=row>45</th><td>East Harlem</td><td>Morningside Heights</td><td>1.6896875</td><td>653.765625</td><td>207.355361116442</td><td>142.609375</td></tr>
-	<tr><th scope=row>46</th><td>East Harlem</td><td>Harlem</td><td>1.16241730279898</td><td>451.666666666667</td><td>970.849850374806</td><td>185.697201017812</td></tr>
-	<tr><th scope=row>47</th><td>East Harlem</td><td>Hamilton Heights</td><td>2.29574468085106</td><td>774.212765957447</td><td>204.486306139812</td><td>168.914893617021</td></tr>
-	<tr><th scope=row>48</th><td>East Harlem</td><td>Tribeca</td><td>8.07166666666667</td><td>1340</td><td>294.237319183002</td><td>217</td></tr>
-	<tr><th scope=row>49</th><td>East Harlem</td><td>North Sutton Area</td><td>3.22</td><td>899.538461538462</td><td>257.658564572257</td><td>187.538461538462</td></tr>
-	<tr><th scope=row>50</th><td>East Harlem</td><td>Upper East Side</td><td>1.99104325699746</td><td>566.600508905852</td><td>330.316044856341</td><td>226.330788804071</td></tr>
-	<tr><th scope=row>51</th><td>East Harlem</td><td>Financial District</td><td>8.72545454545454</td><td>1314.72727272727</td><td>525.017921772027</td><td>364.090909090909</td></tr>
-	<tr><th scope=row>52</th><td>East Harlem</td><td>Inwood</td><td>5.52428571428571</td><td>946.714285714286</td><td>363.191278477202</td><td>249.285714285714</td></tr>
-	<tr><th scope=row>53</th><td>East Harlem</td><td>Chelsea</td><td>6.44851851851852</td><td>1674</td><td>435.878511655572</td><td>341.851851851852</td></tr>
-	<tr><th scope=row>54</th><td>East Harlem</td><td>Lower East Side</td><td>7.14578947368421</td><td>1077.63157894737</td><td>444.306977278637</td><td>278.736842105263</td></tr>
-	<tr><th scope=row>55</th><td>East Harlem</td><td>Chinatown</td><td>9</td><td>1128</td><td>NaN</td><td>0</td></tr>
-	<tr><th scope=row>56</th><td>East Harlem</td><td>Washington Heights</td><td>4.04857142857143</td><td>938.081632653061</td><td>346.563476432931</td><td>239.959183673469</td></tr>
-	<tr><th scope=row>57</th><td>East Harlem</td><td>Upper West Side</td><td>2.60210526315789</td><td>866.644736842105</td><td>370.019355282091</td><td>292.697368421053</td></tr>
-	<tr><th scope=row>58</th><td>East Harlem</td><td>Clinton</td><td>5.04409090909091</td><td>1382</td><td>442.465817888795</td><td>342.272727272727</td></tr>
-	<tr><th scope=row>59</th><td>East Harlem</td><td>Yorkville</td><td>0.969679012345679</td><td>511.318518518519</td><td>4262.07698458771</td><td>341.237037037037</td></tr>
-	<tr><th scope=row>60</th><td>East Harlem</td><td>Garment District</td><td>4.92857142857143</td><td>1402</td><td>583.65758495079</td><td>467.057142857143</td></tr>
-	<tr><th scope=row>61</th><td>East Harlem</td><td>East Harlem</td><td>0.82979094076655</td><td>255.689895470383</td><td>269.73669757084</td><td>133.547038327526</td></tr>
+  <tr><th scope=row>1</th><td>West Village</td><td>West Village</td><td>0.692</td><td>289</td><td>0.805</td><td>280</td><td>0.373</td><td>153</td></tr>
+  <tr><th scope=row>2</th><td>West Village</td><td>East Village</td><td>1.62</td><td>757</td><td>0.488</td><td>259</td><td>0.32</td><td>191</td></tr>
+  <tr><th scope=row>3</th><td>West Village</td><td>Battery Park</td><td>1.95</td><td>563</td><td>0.456</td><td>223</td><td>0.36</td><td>142</td></tr>
+  <tr><th scope=row>4</th><td>West Village</td><td>Carnegie Hill</td><td>5.32</td><td>1545</td><td>0.599</td><td>572</td><td>0.482</td><td>349</td></tr>
+  <tr><th scope=row>5</th><td>West Village</td><td>Gramercy</td><td>1.71</td><td>734</td><td>0.475</td><td>282</td><td>0.365</td><td>216</td></tr>
+  <tr><th scope=row>6</th><td>West Village</td><td>Soho</td><td>1.17</td><td>613</td><td>0.372</td><td>2662</td><td>0.294</td><td>262</td></tr>
 </tbody>
 </table>
 
@@ -7651,13 +5559,15 @@ You may have noticed that the query we wrote in the last exercise was a little t
 
 
 ```R
-nyc_taxi %>%
+q5 <- nyc_taxi %>%
   filter(!is.na(pickup_nhood) & !is.na(dropoff_nhood)) %>%
   group_by(pickup_nhood, dropoff_nhood) %>%
   summarize_each(
     funs(mean, sd, mad = mean((abs(. - median(.))))), # all the functions that we apply to the data are listed here
     starts_with('trip_'), # `trip_distance` and `trip_duration` are the only columns that start with `trip_`
     wait_per_mile = trip_duration / trip_distance) # `duration_over_dist` is created on the fly
+
+head(q5)
 ```
 
 
@@ -7666,67 +5576,12 @@ nyc_taxi %>%
 <table>
 <thead><tr><th></th><th scope=col>pickup_nhood</th><th scope=col>dropoff_nhood</th><th scope=col>trip_distance_mean</th><th scope=col>trip_duration_mean</th><th scope=col>wait_per_mile_mean</th><th scope=col>trip_distance_sd</th><th scope=col>trip_duration_sd</th><th scope=col>wait_per_mile_sd</th><th scope=col>trip_distance_mad</th><th scope=col>trip_duration_mad</th><th scope=col>wait_per_mile_mad</th></tr></thead>
 <tbody>
-	<tr><th scope=row>1</th><td>West Village</td><td>West Village</td><td>0.692075848303393</td><td>289.256487025948</td><td>-74.0061206474989</td><td>0.805442700811944</td><td>279.608690964304</td><td>0.00203963796244057</td><td>0.373393213572854</td><td>153.084830339321</td><td>0.00151390943698593</td></tr>
-	<tr><th scope=row>2</th><td>West Village</td><td>East Village</td><td>1.61729545454545</td><td>757.484090909091</td><td>-74.0054395328869</td><td>0.487800388106529</td><td>259.095599913445</td><td>0.00215087807631109</td><td>0.320159090909091</td><td>191.411363636364</td><td>0.00172396573153286</td></tr>
-	<tr><th scope=row>3</th><td>West Village</td><td>Battery Park</td><td>1.95375308641975</td><td>563.276543209877</td><td>-74.0066375167281</td><td>0.456020494449564</td><td>223.266806531809</td><td>0.00183698034393941</td><td>0.35962962962963</td><td>142.37037037037</td><td>0.00144739975164047</td></tr>
-	<tr><th scope=row>4</th><td>West Village</td><td>Carnegie Hill</td><td>5.3192</td><td>1544.56</td><td>-74.0062747192383</td><td>0.598555540191449</td><td>571.552420864367</td><td>0.0018911705772443</td><td>0.482</td><td>348.84</td><td>0.00134826660156278</td></tr>
-	<tr><th scope=row>5</th><td>West Village</td><td>Gramercy</td><td>1.70810154525386</td><td>734.440029433407</td><td>-74.0056194897694</td><td>0.474996397154583</td><td>282.31553710471</td><td>0.00206581455644757</td><td>0.365401030169242</td><td>215.67255334805</td><td>0.00160642263203453</td></tr>
-	<tr><th scope=row>6</th><td>West Village</td><td>Soho</td><td>1.17189440993789</td><td>612.560041407868</td><td>-74.0061357628485</td><td>0.372369020307519</td><td>2661.50854687637</td><td>0.00178101967616084</td><td>0.293612836438923</td><td>261.938923395445</td><td>0.00135473879227668</td></tr>
-	<tr><th scope=row>7</th><td>West Village</td><td>Murray Hill</td><td>2.44324752475248</td><td>985.522772277228</td><td>-74.0058859343576</td><td>0.490343000413361</td><td>377.120586131761</td><td>0.00200396434928728</td><td>0.289861386138614</td><td>279.437623762376</td><td>0.00154565490118244</td></tr>
-	<tr><th scope=row>8</th><td>West Village</td><td>Little Italy</td><td>1.696925795053</td><td>759.802120141343</td><td>-74.0058373764631</td><td>1.00146847045275</td><td>280.619760648482</td><td>0.00190420647582995</td><td>0.323074204946996</td><td>196.837455830389</td><td>0.00146732397719478</td></tr>
-	<tr><th scope=row>9</th><td>West Village</td><td>Central Park</td><td>3.63939024390244</td><td>1187.96341463415</td><td>-74.0059359480695</td><td>1.0053736453763</td><td>524.97389576776</td><td>0.00196318458444487</td><td>0.803292682926829</td><td>384.231707317073</td><td>0.00148894147174976</td></tr>
-	<tr><th scope=row>10</th><td>West Village</td><td>Greenwich Village</td><td>0.913203272498427</td><td>467.453744493392</td><td>-74.0057816598459</td><td>0.336766364070305</td><td>224.797249609795</td><td>0.00203802481122235</td><td>0.252271869100063</td><td>162.409062303335</td><td>0.00160664773872615</td></tr>
-	<tr><th scope=row>11</th><td>West Village</td><td>Midtown</td><td>2.72811050814011</td><td>1084.21756290084</td><td>-74.0060220237548</td><td>0.569576514046614</td><td>2374.61728230901</td><td>0.00180971473805104</td><td>0.414859398125308</td><td>406.805130735076</td><td>0.00136244726345689</td></tr>
-	<tr><th scope=row>12</th><td>West Village</td><td>Morningside Heights</td><td>6.315</td><td>1292.42105263158</td><td>-74.0059788352565</td><td>0.627322711037775</td><td>328.255720320585</td><td>0.0021180318702277</td><td>0.532894736842105</td><td>234.894736842105</td><td>0.00172605012592816</td></tr>
-	<tr><th scope=row>13</th><td>West Village</td><td>Harlem</td><td>7.27072164948454</td><td>1500.9175257732</td><td>-74.0055858966002</td><td>1.36707964854427</td><td>334.701473645518</td><td>0.00235086253726918</td><td>0.954432989690722</td><td>251.226804123711</td><td>0.00188107834648708</td></tr>
-	<tr><th scope=row>14</th><td>West Village</td><td>Hamilton Heights</td><td>7.50978260869565</td><td>1354.76086956522</td><td>-74.0050939477008</td><td>0.682669560965332</td><td>344.476619737674</td><td>0.00242881764149676</td><td>0.527608695652174</td><td>240.195652173913</td><td>0.00190187537151464</td></tr>
-	<tr><th scope=row>15</th><td>West Village</td><td>Tribeca</td><td>1.53445987654321</td><td>557.345679012346</td><td>-74.0064202532356</td><td>0.463726607215116</td><td>247.531668053166</td><td>0.00175037454528715</td><td>0.319799382716049</td><td>167.725308641975</td><td>0.00133999483084912</td></tr>
-	<tr><th scope=row>16</th><td>West Village</td><td>North Sutton Area</td><td>3.70666666666667</td><td>2589.96825396825</td><td>-74.0058144463433</td><td>0.384296592448778</td><td>10607.5569151739</td><td>0.00211022813201968</td><td>0.264761904761905</td><td>1622.93650793651</td><td>0.00162421332465661</td></tr>
-	<tr><th scope=row>17</th><td>West Village</td><td>Upper East Side</td><td>4.62428</td><td>1565.6</td><td>-74.0057672220866</td><td>0.858421379404948</td><td>3120.45009034838</td><td>0.00199890456217571</td><td>0.63884</td><td>472.933333333333</td><td>0.00151925659179756</td></tr>
-	<tr><th scope=row>18</th><td>West Village</td><td>Financial District</td><td>2.72878734622144</td><td>1005.77855887522</td><td>-74.0060202761149</td><td>0.815707442969387</td><td>3595.66307869986</td><td>0.00196761182759661</td><td>0.515536028119508</td><td>364.968365553603</td><td>0.00151692207752192</td></tr>
-	<tr><th scope=row>19</th><td>West Village</td><td>Inwood</td><td>11.1552941176471</td><td>1776</td><td>-74.0050277709961</td><td>0.700902254660545</td><td>645.68790835821</td><td>0.00257664940340149</td><td>0.497058823529412</td><td>445.352941176471</td><td>0.0019728716682002</td></tr>
-	<tr><th scope=row>20</th><td>West Village</td><td>Chelsea</td><td>1.05197203826343</td><td>424.24429727741</td><td>-74.0056841038359</td><td>0.442363840457675</td><td>236.391237145372</td><td>0.00197379584697107</td><td>0.311243561442237</td><td>159.805739514349</td><td>0.00153504933742484</td></tr>
-	<tr><th scope=row>21</th><td>West Village</td><td>Lower East Side</td><td>2.16905204460967</td><td>960.641263940521</td><td>-74.005883823097</td><td>0.657061650215483</td><td>313.793298521945</td><td>0.00202475700943822</td><td>0.418420074349442</td><td>244.013011152416</td><td>0.0015484834692277</td></tr>
-	<tr><th scope=row>22</th><td>West Village</td><td>Chinatown</td><td>1.9673417721519</td><td>756.886075949367</td><td>-74.006214190133</td><td>0.370532218955381</td><td>238.461091130445</td><td>0.00190268856860424</td><td>0.291392405063291</td><td>173.746835443038</td><td>0.00140516063835353</td></tr>
-	<tr><th scope=row>23</th><td>West Village</td><td>Washington Heights</td><td>9.57813559322034</td><td>1570.89830508475</td><td>-74.0048414327331</td><td>0.899071311229981</td><td>467.11560611891</td><td>0.00242550878256369</td><td>0.695084745762712</td><td>324.627118644068</td><td>0.00204687603449586</td></tr>
-	<tr><th scope=row>24</th><td>West Village</td><td>Upper West Side</td><td>4.06527950310559</td><td>1079.0652173913</td><td>-74.0059366996244</td><td>0.915760950091765</td><td>424.95601686392</td><td>0.00199761753698055</td><td>0.756428571428571</td><td>275.05900621118</td><td>0.00152055965447333</td></tr>
-	<tr><th scope=row>25</th><td>West Village</td><td>Clinton</td><td>1.96836707152497</td><td>668.330634278003</td><td>-74.0058820057816</td><td>0.42447252506596</td><td>303.179636329021</td><td>0.00200395643702304</td><td>0.334858299595142</td><td>223.263157894737</td><td>0.00155757023737868</td></tr>
-	<tr><th scope=row>26</th><td>West Village</td><td>Yorkville</td><td>5.98093023255814</td><td>1362.3023255814</td><td>-74.0050501268964</td><td>0.692469060520769</td><td>380.970410979753</td><td>0.00210521025634721</td><td>0.575813953488372</td><td>293.139534883721</td><td>0.00166374029115652</td></tr>
-	<tr><th scope=row>27</th><td>West Village</td><td>Garment District</td><td>1.5722280334728</td><td>656.529288702929</td><td>-74.0058431106631</td><td>0.433935544576392</td><td>355.85112214352</td><td>0.00184230512762762</td><td>0.331642259414226</td><td>261.428870292887</td><td>0.00138412858651738</td></tr>
-	<tr><th scope=row>28</th><td>West Village</td><td>East Harlem</td><td>6.95916666666667</td><td>1527.29166666667</td><td>-74.0048653284709</td><td>0.901746694726005</td><td>333.166296010118</td><td>0.00224093279545604</td><td>0.703333333333333</td><td>246.625</td><td>0.00188350677490116</td></tr>
-	<tr><th scope=row>29</th><td>East Village</td><td>West Village</td><td>1.55108791208791</td><td>690.856043956044</td><td>-73.9858558990143</td><td>0.365510663412496</td><td>210.58283659653</td><td>0.00405304360962759</td><td>0.274692307692308</td><td>159.385714285714</td><td>0.00332015320494872</td></tr>
-	<tr><th scope=row>30</th><td>East Village</td><td>East Village</td><td>0.792897800776197</td><td>388.410090556274</td><td>-73.9854155915109</td><td>1.24187657669446</td><td>2775.80841018028</td><td>0.00399597188941934</td><td>0.380672703751617</td><td>239.316084519189</td><td>0.00331989533431426</td></tr>
-	<tr><th scope=row>31</th><td>NA</td><td>NA</td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td><td><e2><8b><ae></td></tr>
-	<tr><th scope=row>32</th><td>Garment District</td><td>Garment District</td><td>0.731497426298549</td><td>480.688816097333</td><td>-73.9892104045777</td><td>0.875231164819158</td><td>2648.68643527813</td><td>0.00305744819886119</td><td>0.359181094992981</td><td>300.971455311184</td><td>0.00252816428299225</td></tr>
-	<tr><th scope=row>33</th><td>Garment District</td><td>East Harlem</td><td>4.95477064220183</td><td>1187.19266055046</td><td>-73.9896731595381</td><td>0.591237867043744</td><td>341.989697621094</td><td>0.00301214423552958</td><td>0.442660550458716</td><td>263.807339449541</td><td>0.00251315055637289</td></tr>
-	<tr><th scope=row>34</th><td>East Harlem</td><td>West Village</td><td>6.99333333333333</td><td>1798</td><td>-73.9389114379883</td><td>0.59281812837778</td><td>514.821328229513</td><td>0.00245677165869565</td><td>0.353333333333333</td><td>323</td><td>0.00146993001299715</td></tr>
-	<tr><th scope=row>35</th><td>East Harlem</td><td>East Village</td><td>6.9285</td><td>1351.05</td><td>-73.9385997772217</td><td>1.10298291727002</td><td>560.461508608378</td><td>0.00321680222011012</td><td>0.6895</td><td>385.75</td><td>0.00264930725098154</td></tr>
-	<tr><th scope=row>36</th><td>East Harlem</td><td>Battery Park</td><td>10.33</td><td>1280.5</td><td>-73.9417991638184</td><td>0.0424264068711919</td><td>72.8319984622144</td><td>0.000383030559256956</td><td>0.0299999999999994</td><td>51.5</td><td>0.00027084350585227</td></tr>
-	<tr><th scope=row>37</th><td>East Harlem</td><td>Carnegie Hill</td><td>1.626</td><td>500.766666666667</td><td>-73.9409866333008</td><td>0.317420639009132</td><td>258.647101256723</td><td>0.00335749738017843</td><td>0.249333333333333</td><td>175.166666666667</td><td>0.00265553792317614</td></tr>
-	<tr><th scope=row>38</th><td>East Harlem</td><td>Gramercy</td><td>5.31127272727273</td><td>1157.89090909091</td><td>-73.9399626298384</td><td>0.772327062136949</td><td>503.136741325239</td><td>0.00436618000546168</td><td>0.633636363636364</td><td>361.036363636364</td><td>0.00346887761896539</td></tr>
-	<tr><th scope=row>39</th><td>East Harlem</td><td>Soho</td><td>6.835</td><td>1308</td><td>-73.9359970092773</td><td>0.722057246114646</td><td>148.582188255075</td><td>0.00456907106723815</td><td>0.42</td><td>108.5</td><td>0.00365829467775214</td></tr>
-	<tr><th scope=row>40</th><td>East Harlem</td><td>Murray Hill</td><td>4.298125</td><td>978.5</td><td>-73.9397892951965</td><td>0.526791783661565</td><td>466.000858368308</td><td>0.00439805972537737</td><td>0.426875</td><td>327.125</td><td>0.00328111648560103</td></tr>
-	<tr><th scope=row>41</th><td>East Harlem</td><td>Little Italy</td><td>7.25666666666667</td><td>872.666666666667</td><td>-73.9359741210938</td><td>0.222785397486759</td><td>182.516665905701</td><td>0.00387117162571567</td><td>0.133333333333333</td><td>117.666666666667</td><td>0.00254058837889678</td></tr>
-	<tr><th scope=row>42</th><td>East Harlem</td><td>Central Park</td><td>2.25866666666667</td><td>679.6</td><td>-73.9403249104818</td><td>0.955419628575144</td><td>248.487079284675</td><td>0.00419167262240058</td><td>0.758</td><td>181</td><td>0.00338185628255966</td></tr>
-	<tr><th scope=row>43</th><td>East Harlem</td><td>Greenwich Village</td><td>6.356</td><td>1417.6</td><td>-73.9412719726563</td><td>0.880620993011939</td><td>376.656696033227</td><td>0.00462274466126355</td><td>0.732</td><td>332.6</td><td>0.00367736816406961</td></tr>
-	<tr><th scope=row>44</th><td>East Harlem</td><td>Midtown</td><td>4.00958333333333</td><td>1119.95</td><td>-73.9412501653035</td><td>0.799192234879267</td><td>550.797646962258</td><td>0.00427512854908342</td><td>0.588583333333333</td><td>366.583333333333</td><td>0.00354557037353563</td></tr>
-	<tr><th scope=row>45</th><td>East Harlem</td><td>Morningside Heights</td><td>1.6896875</td><td>653.765625</td><td>-73.9403454065323</td><td>0.460586130200784</td><td>207.355361116442</td><td>0.00357988723069185</td><td>0.304375</td><td>142.609375</td><td>0.00262629985809126</td></tr>
-	<tr><th scope=row>46</th><td>East Harlem</td><td>Harlem</td><td>1.16241730279898</td><td>451.666666666667</td><td>-73.9395809416249</td><td>0.528162978195731</td><td>970.849850374806</td><td>0.00399586808316052</td><td>0.376208651399491</td><td>185.697201017812</td><td>0.00320485044678432</td></tr>
-	<tr><th scope=row>47</th><td>East Harlem</td><td>Hamilton Heights</td><td>2.29574468085106</td><td>774.212765957447</td><td>-73.9392046015313</td><td>0.650567460261829</td><td>204.486306139812</td><td>0.00399359674088592</td><td>0.50936170212766</td><td>168.914893617021</td><td>0.00316149123171452</td></tr>
-	<tr><th scope=row>48</th><td>East Harlem</td><td>Tribeca</td><td>8.07166666666667</td><td>1340</td><td>-73.9422086079915</td><td>3.25305036337691</td><td>294.237319183002</td><td>0.00322729851647446</td><td>2.13833333333333</td><td>217</td><td>0.00242487589516808</td></tr>
-	<tr><th scope=row>49</th><td>East Harlem</td><td>North Sutton Area</td><td>3.22</td><td>899.538461538462</td><td>-73.940066410945</td><td>0.471433982652927</td><td>257.658564572257</td><td>0.00396723813059776</td><td>0.377692307692308</td><td>187.538461538462</td><td>0.0030728853665767</td></tr>
-	<tr><th scope=row>50</th><td>East Harlem</td><td>Upper East Side</td><td>1.99104325699746</td><td>566.600508905852</td><td>-73.9390663166386</td><td>0.681416726957242</td><td>330.316044856341</td><td>0.00357752441860958</td><td>0.520432569974555</td><td>226.330788804071</td><td>0.00265017599246588</td></tr>
-	<tr><th scope=row>51</th><td>East Harlem</td><td>Financial District</td><td>8.72545454545454</td><td>1314.72727272727</td><td>-73.9403110850941</td><td>0.885712861331071</td><td>525.017921772027</td><td>0.00437924503177841</td><td>0.703636363636364</td><td>364.090909090909</td><td>0.00311140580610925</td></tr>
-	<tr><th scope=row>52</th><td>East Harlem</td><td>Inwood</td><td>5.52428571428571</td><td>946.714285714286</td><td>-73.9408002580915</td><td>0.576305970321817</td><td>363.191278477202</td><td>0.00412978841063332</td><td>0.388571428571429</td><td>249.285714285714</td><td>0.00280870710099837</td></tr>
-	<tr><th scope=row>53</th><td>East Harlem</td><td>Chelsea</td><td>6.44851851851852</td><td>1674</td><td>-73.9403149640119</td><td>0.699415710562993</td><td>435.878511655572</td><td>0.00373838983499821</td><td>0.556666666666667</td><td>341.851851851852</td><td>0.00300626401548243</td></tr>
-	<tr><th scope=row>54</th><td>East Harlem</td><td>Lower East Side</td><td>7.14578947368421</td><td>1077.63157894737</td><td>-73.9391230532998</td><td>0.76620504790728</td><td>444.306977278637</td><td>0.00333613671959446</td><td>0.554210526315789</td><td>278.736842105263</td><td>0.00260724519428379</td></tr>
-	<tr><th scope=row>55</th><td>East Harlem</td><td>Chinatown</td><td>9</td><td>1128</td><td>-73.9347381591797</td><td>NaN</td><td>NaN</td><td>NaN</td><td>0</td><td>0</td><td>0</td></tr>
-	<tr><th scope=row>56</th><td>East Harlem</td><td>Washington Heights</td><td>4.04857142857143</td><td>938.081632653061</td><td>-73.93998095454</td><td>0.786076756218289</td><td>346.563476432931</td><td>0.00423624798520763</td><td>0.636734693877551</td><td>239.959183673469</td><td>0.0036410896145556</td></tr>
-	<tr><th scope=row>57</th><td>East Harlem</td><td>Upper West Side</td><td>2.60210526315789</td><td>866.644736842105</td><td>-73.9408657676295</td><td>1.08531292620455</td><td>370.019355282091</td><td>0.00433859665114077</td><td>0.843157894736842</td><td>292.697368421053</td><td>0.00345822384483076</td></tr>
-	<tr><th scope=row>58</th><td>East Harlem</td><td>Clinton</td><td>5.04409090909091</td><td>1382</td><td>-73.9395477988503</td><td>1.32693581533119</td><td>442.465817888795</td><td>0.00360201750085106</td><td>0.753181818181818</td><td>342.272727272727</td><td>0.00279547951438533</td></tr>
-	<tr><th scope=row>59</th><td>East Harlem</td><td>Yorkville</td><td>0.969679012345679</td><td>511.318518518519</td><td>-73.939156727732</td><td>0.322988283634807</td><td>4262.07698458771</td><td>0.00385549304490996</td><td>0.254765432098765</td><td>341.237037037037</td><td>0.00297391915027006</td></tr>
-	<tr><th scope=row>60</th><td>East Harlem</td><td>Garment District</td><td>4.92857142857143</td><td>1402</td><td>-73.9417905535017</td><td>0.599260047927456</td><td>583.65758495079</td><td>0.00430012214881408</td><td>0.42</td><td>467.057142857143</td><td>0.00350254603795699</td></tr>
-	<tr><th scope=row>61</th><td>East Harlem</td><td>East Harlem</td><td>0.82979094076655</td><td>255.689895470383</td><td>-73.9392910734702</td><td>1.49397974571844</td><td>269.73669757084</td><td>0.00419406409929172</td><td>0.422996515679443</td><td>133.547038327526</td><td>0.00341305084760166</td></tr>
+  <tr><th scope=row>1</th><td>West Village</td><td>West Village</td><td>0.692</td><td>289</td><td>-74</td><td>0.805</td><td>280</td><td>0.00204</td><td>0.373</td><td>153</td><td>0.00151</td></tr>
+  <tr><th scope=row>2</th><td>West Village</td><td>East Village</td><td>1.62</td><td>757</td><td>-74</td><td>0.488</td><td>259</td><td>0.00215</td><td>0.32</td><td>191</td><td>0.00172</td></tr>
+  <tr><th scope=row>3</th><td>West Village</td><td>Battery Park</td><td>1.95</td><td>563</td><td>-74</td><td>0.456</td><td>223</td><td>0.00184</td><td>0.36</td><td>142</td><td>0.00145</td></tr>
+  <tr><th scope=row>4</th><td>West Village</td><td>Carnegie Hill</td><td>5.32</td><td>1545</td><td>-74</td><td>0.599</td><td>572</td><td>0.00189</td><td>0.482</td><td>349</td><td>0.00135</td></tr>
+  <tr><th scope=row>5</th><td>West Village</td><td>Gramercy</td><td>1.71</td><td>734</td><td>-74</td><td>0.475</td><td>282</td><td>0.00207</td><td>0.365</td><td>216</td><td>0.00161</td></tr>
+  <tr><th scope=row>6</th><td>West Village</td><td>Soho</td><td>1.17</td><td>613</td><td>-74</td><td>0.372</td><td>2662</td><td>0.00178</td><td>0.294</td><td>262</td><td>0.00135</td></tr>
 </tbody>
 </table>
 
