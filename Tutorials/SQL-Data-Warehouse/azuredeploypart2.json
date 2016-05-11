@@ -14,6 +14,7 @@
             "allowedValues": [
                 "South Central US",
                 "West Europe",
+				"North Europe",
 				"West US"
             ],
             "metadata": {
@@ -78,7 +79,7 @@
             },
             "datafactorySettings": {
                 "dataFactoryName": "[concat(variables('currentSolAccSettings').title,'ADF',parameters('unique'))]",
-                "dataFactoryLocation": "westus",
+                "dataFactoryLocation": "[parameters('location')]",
                 "linkedServiceNames": {
                     "azureSqlDWLinkedServiceName": "AzureSqlDWLinkedService",
                     "azureMLLinkedServiceName": "AzureMLLinkedService"
@@ -90,7 +91,7 @@
             },
             "datafactorySettings2": {
                 "dataFactoryName": "[concat(variables('currentSolAccSettings').title,'2ADF',parameters('unique'))]",
-                "dataFactoryLocation": "westus",
+                "dataFactoryLocation": "[parameters('location')]",
                 "linkedServiceNames": {
                     "sqlServerLinkedServiceName": "SqlServerLinkedService",
                     "azureSqlServerLinkedServiceName": "AzureSqlServerLinkedService"
@@ -261,9 +262,9 @@
 								"linkedServiceName": "[variables('settings')['datafactorySettings']['linkedServiceNames'].azureMLLinkedServiceName]"
 							}
 						],
-						"start": "2016-05-05T00:00:00Z",
-						"end": "2016-05-05T23:59:59Z",
-						"isPaused": false,
+						"start": "2016-05-01T00:00:00Z",
+						"end": "9999-09-09T00:00:00Z",
+						"isPaused": true,
 						"pipelineMode": "Scheduled"
                     }
                 }
