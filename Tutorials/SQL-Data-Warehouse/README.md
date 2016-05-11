@@ -14,7 +14,7 @@
 	ms.tgt_pltfrm="na"
 	ms.devlang="na"
 	ms.topic="article"
-	ms.date="04/18/2016"
+	ms.date="05/10/2016"
 	ms.author="roalexan" />
 
 # Setting up predictive analytics pipelines using Azure SQL Data Warehouse
@@ -78,10 +78,10 @@ This will create a new "blade" in the Azure portal.
 ![arm1-image](./media/arm1.png)
 
 1. Parameters
-   1. Type: UNIQUE (string): **[*UNIQUE*]** (Note: select a globally unique string)
+   1. Type: UNIQUE (string): **[*UNIQUE*]** (You need to select a globally unique string)
    1. Select: LOCATION: **[*LOCATION*]** (The region where everything will be deployed)
    1. Click: **OK**
-1. Select: Subscription: **[*SUBSCRIPTION*]** (Azure subscription you want to use)
+1. Select: Subscription: **[*SUBSCRIPTION*]** (The Azure subscription you want to use)
 1. Resource group
    1. Select: **New**
    1. Type: New resource group name: **[*UNIQUE*]** (Same as above)
@@ -127,7 +127,7 @@ Next you need to create the matching tables in the SQL Data Warehouse. You can d
 1. Type: Password: **pass@word1**
 1. Select: Database Name: **personalDB**
 1. Click: **Connect**
-1. Right click: **personal-[*UNIQUE*].database.windows.net**
+1. Right click: **personalDB**
 1. Select: **New Query...**
 1. Copy and paste:
 
@@ -154,17 +154,17 @@ Next you need to create the matching tables in the SQL Data Warehouse. You can d
 
 ### Create the AML service
 
-1. Browse: http://gallery.azureml.net/Details/aec6df682abf4a149bd7f2299cf2902f # copy this experiment from the gallery
+1. Browse: http://gallery.azureml.net/Details/aec6df682abf4a149bd7f2299cf2902f # You will copy this experiment from the gallery
 1. Click: **Open in Studio**
 1. Select: REGION: **[*REGION*]** (Up to you)
 1. Select: WORKSPACE: **[*WORKSPACE*]** (Your workspace)
-1. Click: **OK** > **Reader**
+1. Click: **Import Data**
+1. Type: Database server name: **personal-[*UNIQUE*].database.windows.net**
+1. Type: Password: **pass@word1**
+1. Click: **Export Data**
 1. Type: Database server name: **personal-[*UNIQUE*].database.windows.net**
 1. Type: Server user account password: **pass@word1**
-1. Click: **Writer**
-1. Type: Database server name: **personal-[*UNIQUE*].database.windows.net**
-1. Type: Server user account password: **pass@word1**
-1. Click: **RUN** > **DEPLOY WEB SERVICE** (See the debugging section for steps on how to test the service)
+1. Click: **RUN** > **DEPLOY WEB SERVICE**
 
 ### Edit and start the ASA job
 
@@ -194,19 +194,19 @@ Next you need to create the matching tables in the SQL Data Warehouse. You can d
 1. Zip: **datagenerator.zip**
 1. Browse: https://manage.windowsazure.com
 1. Click: **NEW** > **COMPUTE** > **WEB APP** > **QUICK CREATE**
-1. Type: **ratings[*UNIQUE*]**
+1. Type: URL: **ratings[*UNIQUE*]**
 1. Select: APP SERVICE PLAN: From your subscription
 1. Click: **CREATE WEB APP** > **WEB APPS** > **ratings[*UNIQUE*]** > **WEBJOBS** > **ADD A JOB**
 1. Type: NAME: **ratings[*UNIQUE*]**
 1. Browse: **datagenerator.zip**
-1. Select: HOW TO RUN: **Run continuously** (The default. It generates new ratings every 5 seconds)
+1. Select: HOW TO RUN: **Run continuously**
 1. Click: **Finish**
 
 ## Create the Data Factories
 
 At this point you are ready to connect everything together. You will create two data factories. The first data factory will orchestrate data to be read from the SQL Data Warehouse by Azure Machine Learning, at which point the average rating is computed and written back to the SQL Data Warehouse. The second data factory will orchestrate copying data from the on prem SQL Server to the SQL Data Warehouse.
 
-Click this button
+When you are ready, click this button
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Froalexan%2FSolutionArchitects%2Fmaster%2Fazuredeploypart2.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
@@ -219,14 +219,29 @@ This will create a new "blade" in the Azure portal.
 1. Parameters
    1. Type: UNIQUE (string): **[*UNIQUE*]** (Use the one previously entered)
    1. Select: LOCATION: **[*LOCATION*]** (Use the one previously selected)
-   1. URL
-   1. API KEY
+   1. Type: AZUREMLENDPOINT: **[*AZUREMLENDPOINT*]**
+	    1. Browse: https://studio.azureml.net
+	    1. Click: **WEB SERVICES** > **Ratings** > **BATCH EXECUTION**
+	    1. Copy: POST: **REQUEST URI** (Everything from "https" up to and including "jobs")
+   1. Type: AZUREMLAPIKEY: **[*AZUREMLAPIKEY*]**
+	    1. Browse: https://studio.azureml.net
+	    1. Click: **WEB SERVICES** > **Ratings**
+	    1. Click: Copy: **API key**
    1. Click: **OK**
 1. Select: Subscription: **[*SUBSCRIPTION*]** (Use the one previously selected)
 1. Select: Resource group: **[*UNIQUE*]** (Use the one previously selected)
 1. Click: **Review legal terms** > **Create**
 1. Check: **Pin to dashboard** (If you want it on your dashboard)
 1. Click: **Create**
+
+## Start the predictive pipeline
+1. Browse: https://portal.azure.com
+1. Click: **Data factories** > **personalADF[*UNIQUE*]** > **Author and deploy**
+1. Expand: **Pipelines**
+1. Select: **SQL-to-AML-to-SQL**
+1. Edit: start: **2016-05-01T00:00:00Z**: to: Your current time in UTC 24 hour clock (for example http://www.timeanddate.com/worldclock/timezone/utc)
+1. Edit: **"isPaused": true** : to **"isPaused": false**
+1. Click: **Deploy**
 
 ## Create and Register the Data Management Gateway registration key
 
@@ -236,10 +251,12 @@ This will create a new "blade" in the Azure portal.
 		1. Type: Data gateway name: **datagateway-[*UNIQUE*]**
 		1. Click: **OK**
 		1. Copy: **NEW KEY**
+		1. Click: **OK**
 1. Update the Data Management Gateway with the ADF registration key
+    1. Login into your on-prem environment
     1. Start: Microsoft Data Management Gateway Configuration manager
 		1. Click: **Change Key**
-		1. Check: Show gateway key (To verify the key is correct)
+		1. Check: **Show gateway key** (To verify the key is correct)
 		1. Paste: **NEW KEY**
 		1. Click: **OK**
 
@@ -287,8 +304,7 @@ This will create a new "blade" in the Azure portal.
 1. Expand: **EventId**
 1. Select: **Is**
 1. Type: **1**
-1. Click: **Apply filter**
-1. Click: **Save**
+1. Click: **Apply filter** > **Save**
 1. Type: Name: **personalDB2**
 1. Click: **Save** > Reports: **personalDB2** > **Pin icon**
 1. Select: **Existing dashboard** > **personalDB**
@@ -340,11 +356,32 @@ The real time and especially the predictive visualizations will take a long whil
 Congratulations! If you made it to this point, you should have a running sample with real time and predictive pipelines showcasing the power of Azure SQL Data Warehouse and its integration with many of the other Azure services. The next section lists the steps to tear things down when you are done.
 
 ## Undeploy
-1. Browse: https://portal.azure.com
-1. Expand: Resource groups
-1. Select: your resource group
-1. Click: ...
-1. Select: Delete
+1. Delete Resources (Service Bus, Event Hub, SQL Data Warehouse, Data Factories)
+    1. Browse: https://portal.azure.com
+    1. Click: **Resource groups**
+    1. Right click: **[*UNIQUE*]** (your resource group)
+    1. Select: **Delete**
+1. Delete WebApp (data generator)
+    1. Browse: https://manage.windowsazure.com
+    1. Click: **WEB APPS**
+    1. Select: **ratings[*UNIQUE*]** (Your web app)
+    1. Click: **DELETE**
+1. Delete AML Service
+    1. Browse: **https://studio.azureml.net**
+		1. Click: **WEB SERVICES**
+		1. Select: **Ratings**
+		1. Click: **DELETE** > **EXPERIMENTS**
+		1. Select: **Ratings**
+		1. Click: **DELETE**
+1. Delete PBI dashboard
+    1. Browse: https://powerbi.microsoft.com
+		1. Select: **Dashboards**
+		1. Right click: **personalDB**
+		1. Select: **REMOVE** > **Reports**
+		1. Right click: **personalDB**
+		1. Select: **REMOVE** > **Datasets**
+		1. Right click: **personalDB**
+		1. Select: **REMOVE**
 
 ## Debugging
 
