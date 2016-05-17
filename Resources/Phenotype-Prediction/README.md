@@ -1,4 +1,4 @@
-# Predicting phenotypes and identifying causal variants with FaST-LMM
+# Predicting phenotypes from genomic data using FaST-LMM on Microsoft Azure's Linux Data Science Virtual Machine
 
 Genome-Wide Association Studies (GWAS) attempt to find genome variants associated with a phenotype (i.e., a trait or disorder of interest). The identity of these variants may shed light on the phenotype's causes, suggesting new targets for treatment or subjects of future research. Medical professionals may also use knowledge of variant associations to predict, from a genome sequence, whether a patient may develop a given phenotype later in life.
 
