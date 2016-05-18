@@ -1,4 +1,4 @@
-# Predicting phenotypes from genomic data using FaST-LMM on Microsoft Azure's Linux Data Science Virtual Machine
+# Predicting traits from genomic data using FaST-LMM on Microsoft Azure's Linux Data Science Virtual Machine
 
 Genome-Wide Association Studies (GWAS) attempt to find genome variants associated with a phenotype (i.e., a trait or disorder of interest). The identity of these variants may shed light on the phenotype's causes, suggesting new targets for treatment or subjects of future research. Medical professionals may also use knowledge of variant associations to predict, from a genome sequence, whether a patient may develop a given phenotype later in life.
 
@@ -268,7 +268,7 @@ Finally, we create and format the scatterplot. A guideline indicating the thresh
     plt.scatter(x_causal, y_causal, marker='o', color='r', edgecolor = 'none',
                 s=y_causal/max_y*20+0.5)
     
-    plt.ylim([0.0, None]) # Some variants will have - log p < 0, but must draw the line somewhere
+    plt.ylim([0.0, None])
     plt.xlabel('variant position on chromosome')
     plt.ylabel('-log10(P value)')
     
