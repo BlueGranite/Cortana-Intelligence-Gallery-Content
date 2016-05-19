@@ -1,4 +1,4 @@
-# Predicting traits from genomic data using FaST-LMM on Microsoft Azure's Linux Data Science Virtual Machine
+# Predicting phenotypes from genomic data using FaST-LMM on Microsoft Azure's Linux Data Science Virtual Machine
 
 Genome-Wide Association Studies (GWAS) attempt to find genome variants associated with a phenotype (i.e., a trait or disorder of interest). The identity of these variants may shed light on the phenotype's causes, suggesting new targets for treatment or subjects of future research. Medical professionals may also use knowledge of variant associations to predict, from a genome sequence, whether a patient may develop a given phenotype later in life.
 
@@ -362,9 +362,11 @@ Finally, we will perform predictions on the validation set and compare these to 
 
 Results may vary depending on the random partitioning of training and validation sets; we found R² = 0.544, an impressive performance for FaST-LMM given the high proportion of non-informative variants.
 
-## Wrap up
+## Next Steps
 
 After you have completed the tutorial, we recommend stopping or deleting your virtual machine so that you will not continue to be charged for its use. Please note that stopping your virtual machine can result in loss of files from the temporary storage drive used in this tutorial: we recommend copying any results you wish to save to another location, e.g. an Azure Storage Account or a persistent drive.
+
+Additional examples illustrating FaST-LMM’s full functionality are available in the [FaST-LMM Manual](http://nbviewer.jupyter.org/github/MicrosoftGenomics/FaST-LMM/blob/master/doc/ipynb/FaST-LMM.ipynb). For more sample genomic analyses in Azure Machine Learning Studio, including [prediction of ethnic admixture from direct-to-consumer commercial genotyping data](https://gallery.cortanaintelligence.com/Collection/Individual-Ancestry-Prediction-from-Genetic-Data-1), please see the [Cortana Intelligence Gallery](https://gallery.cortanaintelligence.com).
 
 # Further reading
 
@@ -374,5 +376,6 @@ Loh P-R et al. (2015). [Efficient Bayesian mixed-model analysis increases associ
 
 Widmer C et al. (2014). [Further Improvements to Linear Mixed Models for Genome-Wide Association Studies.](http://www.nature.com/articles/srep06874) *Scientific Reports* **4**(6874).
 
+Zou et al. (2014).	[Epigenome-wide association studies without the need for cell-type composition](http://www.nature.com/articles/nmeth.2815.epdf). *Nature Methods* **11** (3), 309-311. 
 
   [1]: https://azuredeploy.net/?repository=https://github.com/Azure/Azure-MachineLearning-DataScience/tree/master/Data-Science-Virtual-Machine/Linux
