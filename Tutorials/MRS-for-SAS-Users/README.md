@@ -2,11 +2,11 @@
     pageTitle="MRS for SAS Users | Microsoft Azure"
     description="Data Analysis Tutorial for MRS"
     keywords="R, MRS, datascience"
-    services="machine-learning,R"
+    services="machine-learning,R,Microsoft-R-Server"
     authors="smott"
     editor=""/>
 
-# R for SAS Users
+# MRS for SAS Users
 
 *MRS for SAS Users* is designed to help R users learn to process, query, transform and summarize big data using MRS's `RevoScaleR` package. This course takes a use-case-based approach to walk through the knowledge discovery and data mining process using MRS. To test your readiness for the course, work out the exercises in the *R for SAS Users* course.
 

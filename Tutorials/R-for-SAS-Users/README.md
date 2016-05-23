@@ -2,7 +2,7 @@
     pageTitle="R for SAS Users | Microsoft Azure"
     description="Data Analysis Tutorial for R"
     keywords="R, MRS, datascience"
-    services="sql-data-warehouse,data-factory,event-hubs,machine-learning,service-bus,stream-analytics"
+    services="machine-learning,R,Microsoft-R-Server"
     authors="smott"
     editor=""/>
 
