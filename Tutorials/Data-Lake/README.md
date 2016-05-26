@@ -512,7 +512,6 @@ In the SQL Server Database dialog
 
 
 ##Summary
-==========
 Congratulations! If you made it to this point, you should have a running sample with real time and predictive pipelines showcasing the power of Azure Data Lake Store and its integration with Azure Machine Learning and  many of the other Azure services. The next section lists the steps to tear things down when you are done.
 
 
