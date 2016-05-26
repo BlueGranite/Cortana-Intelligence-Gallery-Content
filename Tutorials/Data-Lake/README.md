@@ -115,8 +115,6 @@ is written as
 
 You will need a unique string to identify your deployment. We suggest you use only letters and numbers in this string and the length should not be greater than 9. Please open your memo file and write down "unique:[unique]" with "[unique]" replaced with your actual unique string. To get started, click the below button.
 
-https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/azuredeploy_part1.json
-
 <a target="_blank" id="deploy-to-azure" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FCortana-Intelligence-Gallery-Content%2Fmaster%2FTutorials%2FData-Lake%2Fazuredeploy_part1.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 This will create a new "blade" in the Azure portal(https://ms.portal.azure.com).
