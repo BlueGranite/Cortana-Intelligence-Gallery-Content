@@ -1,4 +1,9 @@
-#Summary
+
+
+
+#Building Predictive Pipelines Incorporating Azure Data Lake and Azure Machine Learning
+
+##Introduction
 
 
 An Azure Data Lake Store is a flexible, scalable repository for any type of data. It provides unlimited storage with high frequency, low latency throughput capabilities and provides immediate read and analysis capabilities over your data. Once data is captured in the Data Lake, advanced transformation and processing of the data can be performed using Microsoft's extendable and scalable U-SQL language, integrated with Azure Data Lake Analytics, Azure Machine Learning, or any HDFS compliant project, such as Hive running in HD Insight cluster.
@@ -21,7 +26,7 @@ The objective of this tutorial is to demonstrate techniques for the movement of 
 
 This tutorial will be developed in reference to a use case described in the following section.
 
-#Use Case
+##Use Case
 
 
 Switch based telephone companies, both land line and cellular, produce very large volumes of information, principally in the form of call detail records. Each telecom switch records information on the calling and called numbers, incoming and outgoing trunks, and information of the time of the call along with a number of other features.
@@ -46,7 +51,7 @@ The tutorial will include:
 
 The focus of this tutorial is on the architecture, data transformation, and the movement of data between the different storage architectures and the Azure Machine Learning (AML) environment. While this example demonstrates techniques for integrating AML into the solution architecture, the focus is not on machine learning. The machine learning model is used in this tutorial to predict switch overload with time series analysis by using random forest method.  Machine learning can be used in telecommunication industry for effective marketing campaign, reducing infrastructure cost and maintenance effort.      
 
-#Prerequisites
+##Prerequisites
 
 
 The steps described later in this tutorial  requires the
@@ -73,7 +78,7 @@ following prerequisites:
 
 
 
-#Architecture
+##Architecture
 ============
 
 Figure 1 illustrates the Azure architecture developed in this sample.
@@ -89,7 +94,7 @@ Predictive analytics is done by using the batch endpoint of an experiment publis
 
 
 
-#Deploy
+##Deploy
 =====================
 
 Below are the steps to deploy the use case into your Azure subscription. Note that to condense the steps somewhat, **>** is used between repeated actions. For example:
@@ -103,7 +108,7 @@ is written as
 
 
 
-## Deploy Multiple Resources, including:
+### Deploy Multiple Resources, including:
 -----------------------------------------
 1. Service Bus,
 2. Event Hub,
@@ -159,7 +164,7 @@ Table 1: Resources
 
 
 
-## Create Azure SQL Data Warehouse tables
+### Create Azure SQL Data Warehouse tables
 
 Next you need to create the matching tables in the SQL Data Warehouse. You can do this by following these steps:
 
@@ -197,7 +202,7 @@ Next you need to create the matching tables in the SQL Data Warehouse. You can d
 1. Click: **Execute**
 
 
-## Create the AML service
+### Create the AML service
 
 1. Browse: http://gallery.cortanaintelligence.com/Experiment/CDR-Call-Failure-Prediction-Azure-Data-Lake-1 # You will copy this experiment from the gallery
 1. Click: **Open in Studio**
@@ -212,11 +217,11 @@ Next you need to create the matching tables in the SQL Data Warehouse. You can d
 1. Click: **RUN** > **DEPLOY WEB SERVICE**
 
 
-## Edit and start the ASA job
+### Edit and start the ASA job
 
  Browse: https://manage.windowsazure.com
 
-### To edit the input of the  job that outputs to Power BI
+#### To edit the input of the  job that outputs to Power BI
 
 1. Click: **STREAM ANALYTICS** > **adlstreamanalytics[*unique*]powerbi**
 1. Click: **INPUTS**> **cdreventhubinput** >
@@ -224,7 +229,7 @@ Next you need to create the matching tables in the SQL Data Warehouse. You can d
 1. Click: **SAVE** > **Yes**
 
 
-### To edit the output of the  job that outputs to Power BI
+#### To edit the output of the  job that outputs to Power BI
 
 1. Click: **STREAM ANALYTICS** > **adlstreamanalytics[*unique*]powerbi**>**OUTPUTS**
 1. Click: **DELETE** > **Yes**
@@ -239,7 +244,7 @@ Next you need to create the matching tables in the SQL Data Warehouse. You can d
 
 Browse: https://manage.windowsazure.com
 
-### To edit the input of the  job that outputs to Data Lake
+#### To edit the input of the  job that outputs to Data Lake
 
 1. Click: **STREAM ANALYTICS** > **adlstreamanalytics[*unique*]datalake**
 1. Click: **INPUTS**> **cdreventhubinput** >
@@ -265,7 +270,7 @@ Browse: https://manage.windowsazure.com
 
 
 
-## Deploy the data generator as a Web Job
+### Deploy the data generator as a Web Job
 
 1. Download data generator: https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/datagenerator.zip, Click raw and the file will be downloaded
 1. Unzip: **datagenerator.zip**
@@ -290,7 +295,7 @@ Browse: https://manage.windowsazure.com
 1. Click: **Finish**
 
 
-## Upload U-SQL script to Azure Blob Storage
+### Upload U-SQL script to Azure Blob Storage
 
 Download the script from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/script/cdrSummary.txt, and save it to a folder with name "script"
 
@@ -303,7 +308,7 @@ Download Microsoft Azure Storage Explorer, login with your credentials, and
 1. Select **Open Blob Container Editor**
 1. On the top of the right panel, Click **Upload**, Select **Upload Folder** and upload the script folder
 
-## Create Data Factory
+### Create Data Factory
 
 
 
@@ -334,7 +339,15 @@ This will create a new "blade" in the Azure portal(https://ms.portal.azure.com).
 1. Check: **Pin to dashboard** (If you want it on your dashboard)
 1. Click: **Create**
 
-### Add Azure Data Lake Store Linked Service
+This will deploy a data factory with
+
+-  linked service: AzureStorageLinkedService, MLLinkedService
+-  dataset: AzureSqlDWAggregated,AzureSqlDWScored
+-  pipeline: MLPipeline
+
+We need the following manual steps to complete the data factory.
+
+#### Add Azure Data Lake Store Linked Service
 1. Browse: https://portal.azure.com
 1. Click: **Data factories** > **dataFactory[*UNIQUE*][*ADFUNIQUE*]** > **Author and deploy**
 1. Hover mouse over the icon, stop at **New Data Store**, Click *New Data Store**, Select "Azure Data Lake Store"
@@ -364,7 +377,7 @@ To the Editor, replace [unique] with your unique string
 
 
 
-### Add Azure Data Lake Analytic Linked Service
+#### Add Azure Data Lake Analytic Linked Service
 1. Hover mouse over the icon, stop at **New Compute**, Click *New Compute**, Select "Azure Data Lake Analytics"
 1. Copy
 
@@ -390,7 +403,7 @@ To the Editor, replace [**unique**] with your unique string
 
 Wait until the upper two linked service are deployed by using the portal to check provision state.
 
-### Add Azure Data Lake Data Sets
+#### Add Azure Data Lake Data Sets
 1. Hover mouse over the icon, stop at **New Data Set**, Click **New Data Set**, Select "Azure Data Lake Store"
 1. Copy the content from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/dataset/DataLakeTable.json into the Editor
 1. Click: **Deploy**
@@ -399,7 +412,7 @@ Wait until the upper two linked service are deployed by using the portal to chec
 1. Copy the content from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/dataset/DataLakeCDRAggregateTable.json into the Editor
 1. Click: **Deploy**
 
-### Add Data Pipelines
+#### Add Data Pipelines
 1. Hover mouse over the icon, stop at **New Pipeline**
 1. Copy the content from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/pipeline/DataLakeCDRSummary.json into the Editor
 1. Edit: start: **2016-05-12T00:00:00Z**: to: Your current time in UTC 24 hour clock (for example http://www.timeanddate.com/worldclock/timezone/utc)
@@ -414,7 +427,7 @@ Wait until the upper two linked service are deployed by using the portal to chec
 1. Edit: **"isPaused": true** : to **"isPaused": false**
 1. Click: **Deploy**
 
-### Start Machine Learning Pipeline
+#### Start Machine Learning Pipeline
 1. Expand: **Pipelines**
 1. Select: **MLPipeline**
 1. Edit: start: **2016-05-12T00:00:00Z**: to: Your current time in UTC 24 hour clock (for example http://www.timeanddate.com/worldclock/timezone/utc)
@@ -423,12 +436,12 @@ Wait until the upper two linked service are deployed by using the portal to chec
 1. Click: **Deploy**
 
 
-## Create the PBI dashboard
+### Create the PBI dashboard
 
 At the end of this section, you will have a dashboard which looks like the following:
 ![dashboard-usecase-image](./media/result_dashboard.png)
 
-### Realtime visualization
+#### Realtime visualization
 
 1. Browse: https://powerbi.microsoft.com
 1. Click: **Sign in** (Login with your credentials)
@@ -450,10 +463,9 @@ At the end of this section, you will have a dashboard which looks like the follo
 1. Click: **Pin**
 
 
+#### Predictive visualization
 
-### Predictive visualization
-
-#### Power BI Desktop Part
+##### Power BI Desktop Part
 
 1. Download the Power BI Desktop application (https://powerbi.microsoft.com/en-us/desktop)
 1. Download the Power BI template file https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/PowerBI/DataLakeCDRPredictive.pbix (Click Raw to start downloading) and open it with Power BI application
@@ -471,7 +483,7 @@ In the SQL Server Database dialog
 1. Once data is loaded, On the application ribbon menu, click "Publish"
 1. When prompt with dialog windows, click "Save"
 
-#### Power BI Website Part
+##### Power BI Website Part
 
 1. Browse: https://powerbi.microsoft.com
 1. Click: **Sign in** (Login with your credentials)
@@ -499,12 +511,12 @@ In the SQL Server Database dialog
 
 
 
-###Summary
+##Summary
 ==========
 Congratulations! If you made it to this point, you should have a running sample with real time and predictive pipelines showcasing the power of Azure Data Lake Store and its integration with Azure Machine Learning and  many of the other Azure services. The next section lists the steps to tear things down when you are done.
 
 
-###Undeploy
+##Undeploy
 1. Delete Resources (Service Bus, Event Hub, SQL Data Warehouse, Data Factories)
     1. Browse: https://portal.azure.com
     1. Click: **Resource groups**
