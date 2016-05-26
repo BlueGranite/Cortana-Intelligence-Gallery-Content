@@ -522,6 +522,13 @@ Congratulations! If you made it to this point, you should have a running sample 
     1. Click: **Resource groups**
     1. Right click: **[*UNIQUE*]** (your resource group)
     1. Select: **Delete**
+1. Delete Steam Analytics jobs:
+    1. Browse: https://manage.windowsazure.com
+    1. Click: **Stream Analytics**
+    1. Select: **adlstreamanalytics[*UNIQUE*]datalake**
+    1. Click: **DELETE**
+    1. Select: **adlstreamanalytics[*UNIQUE*]powerbi**
+    1. Click: **DELETE**
 1. Delete WebApp (data generator)
     1. Browse: https://manage.windowsazure.com
     1. Click: **WEB APPS**
