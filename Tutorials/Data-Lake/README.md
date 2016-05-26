@@ -115,7 +115,9 @@ is written as
 
 You will need a unique string to identify your deployment. We suggest you use only letters and numbers in this string and the length should not be greater than 9. Please open your memo file and write down "unique:[unique]" with "[unique]" replaced with your actual unique string. To get started, click the below button.
 
-<a target="_blank" id="deploy-to-azure" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fdaden-ms%2Farm%2Fmaster%2Fazuredeploy_part1.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/azuredeploy_part1.json
+
+<a target="_blank" id="deploy-to-azure" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FCortana-Intelligence-Gallery-Content%2Fmaster%2FTutorials%2FData-Lake%2Fazuredeploy_part1.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 This will create a new "blade" in the Azure portal(https://ms.portal.azure.com).
 
@@ -267,7 +269,7 @@ Browse: https://manage.windowsazure.com
 
 ## Deploy the data generator as a Web Job
 
-1. Download data generator: https://github.com/daden-ms/arm/blob/master/datagenerator.zip, Click raw and the file will be downloaded
+1. Download data generator: https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/datagenerator.zip, Click raw and the file will be downloaded
 1. Unzip: **datagenerator.zip**
 1. Edit: **cdr-gen.exe.config**
 1. Replace: EVENTHUBNAME: With: **adleventhub[*UNIQUE*]**
@@ -292,7 +294,7 @@ Browse: https://manage.windowsazure.com
 
 ## Upload U-SQL script to Azure Blob Storage
 
-Download the script from https://github.com/daden-ms/arm/blob/master/script/cdrSummary.txt, and save it to a folder with name "script"
+Download the script from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/script/cdrSummary.txt, and save it to a folder with name "script"
 
 Download Microsoft Azure Storage Explorer, login with your credentials, and
 
@@ -309,7 +311,7 @@ Download Microsoft Azure Storage Explorer, login with your credentials, and
 
 To get started, click the below button.
 
-<a target="_blank" id="deploy-to-azure" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fdaden-ms%2Farm%2Fmaster%2Fazuredeploy_part2.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
+<a target="_blank" id="deploy-to-azure" href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FAzure%2FCortana-Intelligence-Gallery-Content%2Fmaster%2FTutorials%2FData-Lake%2Fazuredeploy_part2.json"><img src="http://azuredeploy.net/deploybutton.png"/></a>
 
 This will create a new "blade" in the Azure portal(https://ms.portal.azure.com).
 
@@ -392,23 +394,23 @@ Wait until the upper two linked service are deployed by using the portal to chec
 
 ### Add Azure Data Lake Data Sets
 1. Hover mouse over the icon, stop at **New Data Set**, Click **New Data Set**, Select "Azure Data Lake Store"
-1. Copy the content from https://github.com/daden-ms/arm/blob/master/dataset/DataLakeTable.json in to the Editor
+1. Copy the content from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/dataset/DataLakeTable.json into the Editor
 1. Click: **Deploy**
 
 1. Hover mouse over the icon, stop at **New Data Set**, Click **New Data Set**, Select "Azure Data Lake Store"
-1. Copy the content from https://github.com/daden-ms/arm/blob/master/dataset/DataLakeCDRAggregateTable.json in to the Editor
+1. Copy the content from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/dataset/DataLakeCDRAggregateTable.json into the Editor
 1. Click: **Deploy**
 
 ### Add Data Pipelines
 1. Hover mouse over the icon, stop at **New Pipeline**
-1. Copy the content from https://github.com/daden-ms/arm/blob/master/pipeline/DataLakeCDRSummary.json in to the Editor
+1. Copy the content from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/pipeline/DataLakeCDRSummary.json into the Editor
 1. Edit: start: **2016-05-12T00:00:00Z**: to: Your current time in UTC 24 hour clock (for example http://www.timeanddate.com/worldclock/timezone/utc)
 1. Edit: end: **2016-05-12T00:00:00Z**: to: Your current time in UTC 24 hour clock plus three hours (for example http://www.timeanddate.com/worldclock/timezone/utc)
 1. Edit: **"isPaused": true** : to **"isPaused": false**
 1. Click: **Deploy**
 
 1. Hover mouse over the icon, stop at **New Pipeline**
-1. Copy the content from https://github.com/daden-ms/arm/blob/master/pipeline/DataLakeStoreToSqlDW.json in to the Editor
+1. Copy the content from https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/pipeline/DataLakeStoreToSqlDW.json into the Editor
 1. Edit: start: **2016-05-12T00:00:00Z**: to: Your current time in UTC 24 hour clock (for example http://www.timeanddate.com/worldclock/timezone/utc)
 1. Edit: end: **2016-05-12T00:00:00Z**: to: Your current time in UTC 24 hour clock plus three hours (for example http://www.timeanddate.com/worldclock/timezone/utc)
 1. Edit: **"isPaused": true** : to **"isPaused": false**
@@ -456,7 +458,7 @@ At the end of this section, you will have a dashboard which looks like the follo
 #### Power BI Desktop Part
 
 1. Download the Power BI Desktop application (https://powerbi.microsoft.com/en-us/desktop)
-1. Download the Power BI template file https://github.com/daden-ms/arm/blob/master/PowerBI/DataLakeCDRPredictive.pbix (Click Raw to start downloading) and open it with Power BI application
+1. Download the Power BI template file https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Tutorials/Data-Lake/PowerBI/DataLakeCDRPredictive.pbix (Click Raw to start downloading) and open it with Power BI application
 1. On the application ribbon menu, choose Edit Queries
 1. Go to *Query Settings* on the right pane, double click *Source*
 
