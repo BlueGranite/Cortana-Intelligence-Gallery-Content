@@ -22,7 +22,7 @@ Some of the principal benefits of an Azure Data Lake Store include:
 
 -   Compatibility with  HDFS compliant project (e.g. Hive, HBase, Storm,  etc.)
 
-The objective of this tutorial is to demonstrate techniques for the movement of data between an external data source, an Azure Data Lake Store and Azure SQL Data Warehouse while demonstrating using U-SQL for processing information in a Data Lake Store and perform advanced analytics through Azure Machine Learning  (AML).
+The objective of this tutorial is to demonstrate techniques for the movement of data between an external data source, an Azure Data Lake Store and Azure SQL Data Warehouse while demonstrating the use of U-SQL for processing information in a Data Lake Store and performing advanced analytics using Azure Machine Learning  (AML).
 
 This tutorial will be developed in reference to a use case described in the following section.
 
@@ -44,12 +44,12 @@ The tutorial will include:
 
 - The generation and ingestion of CDR Data using an Azure Event Hub and Azure Streaming Analytics.
 - The creation of an Azure Data Lake Store (ADLS) to meet long term CDR management requirements.
-- Using Azure Data Lake Analytics (ADLA) and Microsoft’s U-SQL to interact with the Data Lake. The ADLA U-SQL job generate aggregate view over the ingested CDR data that stored in ADLS.
+- Using Azure Data Lake Analytics (ADLA) and Microsoft’s U-SQL to interact with the Data Lake. The ADLA U-SQL job generates an aggregate view over the ingested CDR data that stored in ADLS.
 - Creation and integration of staging store for storing analytics results from U-SQL and predictions from Azure Machine Learning (AML). This staging store is implemented using Azure SQL Data Warehouse (SQL DW) and provides a backend for Power BI dashboards.
 - AML model which predicts the switch overload
 
 
-The focus of this tutorial is on the architecture, data transformation, and the movement of data between the different storage architectures and the Azure Machine Learning (AML) environment. While this example demonstrates techniques for integrating AML into the solution architecture, the focus is not on machine learning. The machine learning model is used in this tutorial to predict switch overload with time series analysis by using random forest method.  Machine learning can be used in telecommunication industry for effective marketing campaign, reducing infrastructure cost and maintenance effort.      
+The focus of this tutorial is on the architecture, data transformation, and the movement of data between the different storage architectures and the Azure Machine Learning (AML) environment. While this example demonstrates techniques for integrating AML into the solution architecture, the focus is not on machine learning. The machine learning model is used in this tutorial to predict switch overload with time series analysis by using random forest method.  Machine learning can be used in the telecommunication industry for creating effective marketing campaigns as well as reducing infrastructure cost and maintenance effort.      
 
 ##Prerequisites
 
