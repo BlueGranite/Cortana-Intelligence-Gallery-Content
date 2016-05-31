@@ -8,6 +8,7 @@
 The objective of this tutorial is to demonstrate techniques for the movement of data between an external data source, an Azure Data Lake Store and Azure SQL Data Warehouse while demonstrating the use of U-SQL for processing information in a Data Lake Store and performing advanced analytics using Azure Machine Learning  (AML). This tutorial will be developed in reference to a use case described in the following section.
 
 
+
 An Azure Data Lake Store is a flexible, scalable repository for any type of data. It provides unlimited storage with high frequency, low latency throughput capabilities and provides immediate read and analysis capabilities over your data. Once data is captured in the Data Lake, advanced transformation and processing of the data can be performed using Microsoft's extendable and scalable U-SQL language, integrated with Azure Data Lake Analytics, Azure Machine Learning, or any HDFS compliant project, such as Hive running in HD Insight cluster.
 
 Some of the principal benefits of an Azure Data Lake Store include:
@@ -23,13 +24,6 @@ Some of the principal benefits of an Azure Data Lake Store include:
 -   Compatibility with the Hadoop Distributed File System (HDFS).
 
 -   Compatibility with  HDFS compliant project (e.g. Hive, HBase, Storm,  etc.)
-
-<<<<<<< Updated upstream
-The objective of this tutorial is to demonstrate techniques for the movement of data between an external data source, an Azure Data Lake Store and Azure SQL Data Warehouse while demonstrating the use of U-SQL for processing information in a Data Lake Store and performing advanced analytics using Azure Machine Learning  (AML).
-=======
->>>>>>> Stashed changes
-
-
 
 
 ##Use Case
@@ -85,7 +79,7 @@ following prerequisites:
 
 
 ##Architecture
-============
+
 
 Figure 1 illustrates the Azure architecture developed in this sample.
 
@@ -101,7 +95,7 @@ Predictive analytics is done by using the batch endpoint of an experiment publis
 
 
 ##Deploy
-=====================
+
 
 Below are the steps to deploy the use case into your Azure subscription. Note that to condense the steps somewhat, **>** is used between repeated actions. For example:
 
@@ -115,7 +109,7 @@ is written as
 
 
 ### Deploy Multiple Resources, including:
------------------------------------------
+
 1. Service Bus,
 2. Event Hub,
 3. Stream Analytics Job
