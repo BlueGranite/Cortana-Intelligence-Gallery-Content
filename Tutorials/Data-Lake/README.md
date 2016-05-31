@@ -5,6 +5,8 @@
 
 ##Introduction
 
+The objective of this tutorial is to demonstrate techniques for the movement of data between an external data source, an Azure Data Lake Store and Azure SQL Data Warehouse while demonstrating the use of U-SQL for processing information in a Data Lake Store and performing advanced analytics using Azure Machine Learning  (AML). This tutorial will be developed in reference to a use case described in the following section.
+
 
 An Azure Data Lake Store is a flexible, scalable repository for any type of data. It provides unlimited storage with high frequency, low latency throughput capabilities and provides immediate read and analysis capabilities over your data. Once data is captured in the Data Lake, advanced transformation and processing of the data can be performed using Microsoft's extendable and scalable U-SQL language, integrated with Azure Data Lake Analytics, Azure Machine Learning, or any HDFS compliant project, such as Hive running in HD Insight cluster.
 
@@ -22,9 +24,13 @@ Some of the principal benefits of an Azure Data Lake Store include:
 
 -   Compatibility with  HDFS compliant project (e.g. Hive, HBase, Storm,  etc.)
 
+<<<<<<< Updated upstream
 The objective of this tutorial is to demonstrate techniques for the movement of data between an external data source, an Azure Data Lake Store and Azure SQL Data Warehouse while demonstrating the use of U-SQL for processing information in a Data Lake Store and performing advanced analytics using Azure Machine Learning  (AML).
+=======
+>>>>>>> Stashed changes
 
-This tutorial will be developed in reference to a use case described in the following section.
+
+
 
 ##Use Case
 
@@ -44,12 +50,12 @@ The tutorial will include:
 
 - The generation and ingestion of CDR Data using an Azure Event Hub and Azure Streaming Analytics.
 - The creation of an Azure Data Lake Store (ADLS) to meet long term CDR management requirements.
-- Using Azure Data Lake Analytics (ADLA) and Microsoft’s U-SQL to interact with the Data Lake. The ADLA U-SQL job generates an aggregate view over the ingested CDR data that stored in ADLS.
+- Using Azure Data Lake Analytics (ADLA) and Microsoft’s U-SQL to interact with the Data Lake. The ADLA U-SQL job generates an aggregate view over the ingested CDR data that is stored in ADLS.
 - Creation and integration of staging store for storing analytics results from U-SQL and predictions from Azure Machine Learning (AML). This staging store is implemented using Azure SQL Data Warehouse (SQL DW) and provides a backend for Power BI dashboards.
 - AML model which predicts the switch overload
 
 
-The focus of this tutorial is on the architecture, data transformation, and the movement of data between the different storage architectures and the Azure Machine Learning (AML) environment. While this example demonstrates techniques for integrating AML into the solution architecture, the focus is not on machine learning. The machine learning model is used in this tutorial to predict switch overload with time series analysis by using random forest method.  Machine learning can be used in the telecommunication industry for creating effective marketing campaigns as well as reducing infrastructure cost and maintenance effort.      
+**The focus of this tutorial is on the architecture, data transformation, and the movement of data between the different storage architectures and the Azure Machine Learning (AML) environment.** While this example demonstrates techniques for integrating AML into the solution architecture, the focus is not on machine learning. Machine learning can be used in telecommunication industry for many purposes such as predictive maintenance, load and capacity forecast, failure prediction, effective marketing campaign, reducing infrastructure cost, etc.
 
 ##Prerequisites
 
@@ -60,7 +66,7 @@ following prerequisites:
 1)  Azure subscription with login credentials
     (https://azure.microsoft.com/en-us/)
 
-2)  Azure Machine learning Studio subscription
+2)  Azure Machine Learning Studio subscription
     (https://azure.microsoft.com/en-us/services/machine-learning/)
 
 3)  A Microsoft Power BI account
@@ -86,9 +92,9 @@ Figure 1 illustrates the Azure architecture developed in this sample.
 ![](media/architecture.png)
 Figure 1: Architecture
 
-Call detail record (CDR) data is generated via a data generator which simulates a phone switch and is deployed as an Azure Web Job. The CDR data is sent to an Event Hub. Azure Stream Analytics (ASA) takes in the CDR data flowed through Event hub, processes the data by using ASA SQL and sends the processed data to a) Power BI for real time visualization and b) Azure Data Lake Store for storage. Azure Data Lake Analytics runs a U-SQL job to pre-process the data before sending it to SQL Data Warehouse for Azure Machine Learning to run predictive analytics.
+Call detail record (CDR) data is generated via a data generator which simulates a phone switch and is deployed as an Azure Web Job. The CDR data is sent to an Event Hub. Azure Stream Analytics (ASA) takes in the CDR data flowed through Event hub, processes the data by using ASA SQL and sends the processed data to a) Power BI for real time visualization and b) Azure Data Lake Store for storage. Azure Data Lake Analytics runs a U-SQL job to pre-process the data before sending it to SQL Data Warehouse (staging and publishing store)  for Azure Machine Learning to run predictive analytics.
 
-Predictive analytics is done by using the batch endpoint of an experiment published as a web service in the Azure Machine Learning Studio. The AML web service imports call failure number per minute from SQL Data Warehouse and exports the prediction, e.g. the scoring results back to SQL Data Warehouse. We use Azure Data Factory to orchestrate 1) U-SQL job in Azure Data Lake 2) Copy the results of the U-SQL job to SQL Data Warehouse 3) Predictive analytics in AML. The machine learning model here is used as an example experiment. You can use field knowledge and combine the available datasets to build more advanced model to meet your business requirements.
+Predictive analytics is done by using the batch endpoint of an experiment published as a web service in the Azure Machine Learning Studio. The AML web service imports data (dropped call aggregates)  from SQL Data Warehouse and exports the prediction, e.g. the scoring results back to SQL Data Warehouse. We use Azure Data Factory to orchestrate 1) U-SQL job in Azure Data Lake 2) Copy the results of the U-SQL job to SQL Data Warehouse 3) Apply predictive analytics in AML. The machine learning model here is used as an example experiment. You can use field knowledge and combine the available datasets to build more advanced model to meet your business requirements.
 
 
 
@@ -265,7 +271,7 @@ Browse: https://manage.windowsazure.com
 1. Select DATE FORMAT: **YYYY/MM/DD**
 1. Select TIME FORMAT: **HH**
 1. Click: **Next**
-1. Select OUTPUT Format: CSV
+1. Select OUTPUT Format: **CSV**
 1. Click: **Finish** > **Start** > **Finish** (You do not need to specify a custom time)
 
 
