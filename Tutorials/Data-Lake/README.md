@@ -261,7 +261,7 @@ Browse: https://manage.windowsazure.com
 1. Click: **Next**
 1. Type: OUTPUT ALIAS: **datalakestoreoutput**
 1. Select DATA LAKE STORE ACCOUNT: **adls[unique]**
-1. Type: PATH PREFIX PATTERN: **/cdrdata/input/{date}/{time}**
+1. Type: PATH PREFIX PATTERN: ** cdrdata/input/{date}/{time}**
 1. Select DATE FORMAT: **YYYY/MM/DD**
 1. Select TIME FORMAT: **HH**
 1. Click: **Next**
