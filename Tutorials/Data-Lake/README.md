@@ -175,7 +175,7 @@ Next you need to create the matching tables in the SQL Data Warehouse. You can d
 1. Type: Server Name: **adl-[*UNIQUE*].database.windows.net**
 1. Select: Authentication: **Sql Server Authentication**
 1. Type: User name: **adluser**
-1. Type: Password: **pass@word1**
+1. Type: Password: **pass@word1** #This password is used in this tutorial as an example. You should avoid using it and other common passwords in production environment. Follow  <a href="Microsoft SQL Server Strong Password Requirements">Microsoft SQL Server Strong Password Requirements</a> to create strong passwords.
 1. Select: Database Name: **adlDB**
 1. Click: **Connect**
 1. Right click: **adllDB**
