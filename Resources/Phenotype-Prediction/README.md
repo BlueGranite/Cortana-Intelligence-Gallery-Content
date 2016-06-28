@@ -158,7 +158,7 @@ Alternatively, you can follow the phenotype simulation walkthrough below to simu
 
 ## (Optional) Phenotype simulation walkthrough
 
-An example experiment illustrating phenotype simulation has been published on the [Cortana Intelligence Gallery](https://gallery.cortanaintelligence.com/). The heart of this walkthrough will be a description of the steps executed within that experiment, which accesses genotype information from Azure Blob Storage and writes its simulated phenotypes to the same location. Instructions are also included for transferring the necessary files to and from your Data Science Virtual Machine; you can skip those steps if you are primarily interested in the simulation process.
+An [example experiment illustrating phenotype simulation](https://gallery.cortanaintelligence.com/Experiment/Simulating-phenotypes-from-genomic-data-2) has been published on the [Cortana Intelligence Gallery](https://gallery.cortanaintelligence.com/). The heart of this walkthrough will be a description of the steps executed within that experiment, which accesses genotype information from Azure Blob Storage and writes its simulated phenotypes to the same location. Instructions are also included for transferring the necessary files to and from your Data Science Virtual Machine; you can skip those steps if you are primarily interested in the simulation process.
 
 ### (Optional) Transfer genotype information from Linux DSVM to Azure Blob Storage
 
@@ -182,7 +182,7 @@ When you are done, exit the Python interpreter using the `exit()` command.
 
 ### (Optional) Walkthrough of the phenotype simulation experiment in Azure Machine Learning Studio
 
-Click the "Open in Studio" button on the [phenotype simulation experiment's gallery page](https://gallery.cortanaintelligence.com/Experiment/Simulating-phenotypes-from-genomic-data-1) to copy the experiment to your Azure Machine Learning Studio workspace. If you completed the optional section above, you may modify the **Enter Data Manually** module at upper-left (1) to access the genotype data from your own storage account. The experiment will then be able to write the simulated phenotypes to your container as well.
+Click the "Open in Studio" button on the [phenotype simulation experiment's gallery page](https://gallery.cortanaintelligence.com/Experiment/Simulating-phenotypes-from-genomic-data-2) to copy the experiment to your Azure Machine Learning Studio workspace. If you completed the optional section above, you may modify the **Enter Data Manually** module at upper-left (1) to access the genotype data from your own storage account. The experiment will then be able to write the simulated phenotypes to your container as well.
 
 ![First half of the phenotype simulation experiment](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/Images/first_part_of_experiment_annotated.png?raw=true)
 
