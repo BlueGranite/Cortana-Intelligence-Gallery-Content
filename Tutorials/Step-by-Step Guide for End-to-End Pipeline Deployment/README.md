@@ -29,7 +29,7 @@ Azure Machine Learning is a web based analytics tool that users can easily build
 
 ## Prerequisites ##
 This section contains the required accounts and software to replicate this sample.
-1.	The full contents of the files included in GitHub.
+1.	The full contents of the files included in [GitHub](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/tree/master/Tutorials/Step-by-Step%20Guide%20for%20End-to-End%20Pipeline%20Deployment).
 2.	A Microsoft Azure subscription.
 3.	A [ML Studio account](http://studio.azureml.net)
 4.	A Microsoft Office 365 subscription for Power BI access.
