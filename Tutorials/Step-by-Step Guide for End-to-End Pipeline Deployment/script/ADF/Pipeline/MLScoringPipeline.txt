@@ -1,0 +1,146 @@
+{
+    "name": "MLScoringPipeline",
+    "properties": {
+        "description": "This is pipeline call ML scoring to make prediction",
+        "activities": [
+            {
+                "type": "HDInsightHive",
+                "typeProperties": {
+                    "scriptPath": "script/ETLQuery.hql",
+                    "scriptLinkedService": "StorageLinkedService",
+                    "defines": {
+                        "Input": "wasb://data@<Your_Storage_Account_Name>.blob.core.windows.net/rawdata/",
+                        "Output": "wasb://data@<Your_Storage_Account_Name>.blob.core.windows.net/mladfdata/",
+                        "CurrDate": "$$Text.Format('{0:yyyy-MM-dd}', SliceStart)",
+                        "CurrHour": "$$Text.Format('{0:HH}',SliceStart)"
+                    }
+                },
+                "inputs": [
+                    {
+                        "name": "RawTable"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "ConsolidatedADFTable"
+                    }
+                ],
+                "policy": {
+                    "timeout": "01:00:00",
+                    "concurrency": 1,
+                    "retry": 3
+                },
+                "scheduler": {
+                    "frequency": "Hour",
+                    "interval": 1,
+                    "style": "EndOfInterval"
+                },
+                "name": "BlobConsolidationHiveActivity",
+                "linkedServiceName": "HDInsightLinkedService"
+            },
+            {
+                "type": "Copy",
+                "typeProperties": {
+                    "source": {
+                        "type": "BlobSource"
+                    },
+                    "sink": {
+                        "type": "BlobSink",
+                        "writeBatchSize": 10000,
+                        "writeBatchTimeout": "01:00:00"
+                    }
+                },
+                "inputs": [
+                    {
+                        "name": "ConsolidatedADFTable"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "ConsolidatedCSVTable"
+                    }
+                ],
+                "policy": {
+                    "timeout": "02:00:00",
+                    "concurrency": 1,
+                    "retry": 3
+                },
+                "scheduler": {
+                    "frequency": "Hour",
+                    "interval": 1,
+                    "style": "EndOfInterval"
+                },
+                "name": "FileExtensionPrepforMLActivity"
+            },
+            {
+                "type": "AzureMLBatchScoring",
+                "typeProperties": {},
+                "inputs": [
+                    {
+                        "name": "ConsolidatedCSVTable"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "ScoredResultADFTable"
+                    }
+                ],
+                "policy": {
+                    "timeout": "02:00:00",
+                    "concurrency": 1,
+                    "retry": 3
+                },
+                "scheduler": {
+                    "frequency": "Hour",
+                    "interval": 1,
+                    "style": "EndOfInterval"
+                },
+                "name": "AMLBatchScoring",
+                "linkedServiceName": "AzureMLLinkedService"
+            },
+            {
+                "type": "Copy",
+                "typeProperties": {
+                    "source": {
+                        "type": "BlobSource",
+                        "treatEmptyAsNull": true,
+                        "skipHeaderLineCount": 1
+                    },
+                    "sink": {
+                        "type": "SqlSink",
+                        "sqlWriterStoredProcedureName": "loadScoreResult",
+                        "sqlWriterTableType": "MLResultType",
+                        "writeBatchSize": 0,
+                        "writeBatchTimeout": "01:00:00"
+                    }
+                },
+                "inputs": [
+                    {
+                        "name": "ScoredResultADFTable"
+                    }
+                ],
+                "outputs": [
+                    {
+                        "name": "SQLScoredResultTable"
+                    }
+                ],
+                "policy": {
+                    "timeout": "02:00:00",
+                    "concurrency": 1,
+                    "retry": 3
+                },
+                "scheduler": {
+                    "frequency": "Hour",
+                    "interval": 1,
+                    "style": "EndOfInterval"
+                },
+                "name": "CopyMLResulttoSqlAzure",
+                "description": "Copy ML result table to Sql Azure"
+            }
+        ],
+        "start": "<Your_Start_Time>",
+        "end": "2026-01-30T00:00:00Z",
+        "isPaused": false,
+        "pipelineMode": "Scheduled"
+    }
+}

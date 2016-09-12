@@ -1,0 +1,9 @@
+{
+    "name": "AzureSqlLinkedService",
+    "properties": {
+        "type": "AzureSqlDatabase",
+        "typeProperties": {
+            "connectionString": "Data Source=tcp:<Your_Server_Name>.database.windows.net,1433;Initial Catalog=<Your_Database_Name>;Integrated Security=False;User ID=<Your_User_Name>;Password=<Your_Password>;Connect Timeout=30;Encrypt=True"
+        }
+    }
+}

@@ -1,0 +1,88 @@
+{
+    "name": "RawTable",
+    "properties": {
+        "structure": [
+            {
+                "name": "id",
+                "type": "Int32"
+            },
+            {
+                "name": "var1",
+                "type": "Int32"
+            },
+            {
+                "name": "var2",
+                "type": "Int32"
+            },
+            {
+                "name": "EventProcessedUtcTime",
+                "type": "Datetime"
+            },
+            {
+                "name": "PartitionId",
+                "type": "Int32"
+            },
+            {
+                "name": "EventEnqueuedUtcTime",
+                "type": "Datetime"
+            }
+        ],
+        "published": false,
+        "type": "AzureBlob",
+        "linkedServiceName": "StorageLinkedService",
+		"typeProperties": {
+            "folderPath":"data/rawdata/{Year}-{Month}-{Day}/{Hour}/",
+            "format": {
+                "type": "TextFormat",
+                "columnDelimiter": ","
+            },
+            "partitionedBy": [
+                {
+                    "name": "Year",
+                    "value": {
+                        "type": "DateTime",
+                        "date": "SliceStart",
+                        "format": "yyyy"
+                    }
+                },
+                {
+                    "name": "Month",
+                    "value": {
+                        "type": "DateTime",
+                        "date": "SliceStart",
+                        "format": "MM"
+                    }
+                },
+                {
+                    "name": "Day",
+                    "value": {
+                        "type": "DateTime",
+                        "date": "SliceStart",
+                        "format": "dd"
+                    }
+                },
+				{
+					"name": "Hour",
+					"value": {
+						"type": "DateTime",
+						"date": "SliceStart",
+						"format": "HH"
+					}
+				}
+            ]
+        },
+        "availability": {
+            "frequency": "Hour",
+            "interval": 1,
+            "style": "EndOfInterval"
+        },
+        "external": true,
+        "policy": {
+            "externalData": {
+                "retryInterval": "00:01:00",
+                "retryTimeout": "00:20:00",
+                "maximumRetry": 3
+            }
+        }
+    }
+}

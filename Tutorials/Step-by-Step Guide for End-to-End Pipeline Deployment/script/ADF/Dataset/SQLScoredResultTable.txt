@@ -1,0 +1,26 @@
+{
+    "name": "SQLScoredResultTable",
+    "properties": {
+        "structure": [
+            {
+                "name": "id",
+                "type": "Int32"
+            },
+            {
+                "name": "prediction",
+                "type": "Int32"
+            }
+        ],
+        "published": false,
+        "type": "AzureSqlTable",
+        "linkedServiceName": "AzureSqlLinkedService",
+        "typeProperties": {
+            "tableName": "MLResult"
+        },
+        "availability": {
+            "frequency": "Hour",
+            "interval": 1,
+            "style": "EndOfInterval"
+        }
+    }
+}
