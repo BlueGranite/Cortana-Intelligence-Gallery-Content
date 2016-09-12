@@ -23,19 +23,19 @@ ID | var1 | var2
 6 | 11 | 49
 Table 1: Sample data
 
-HD Insight is an Apache Hadoop distribution powered by the cloud. In this tutorial, HD Insight is used to do feature engineering on the original streaming data by providing two additional simple features *var3 = var1 + var2* and *var4 = var1 – var2*. Users can develop complicated feature engineering work based on their own needs.
+HD Insight is an Apache Hadoop distribution powered by the cloud. In this tutorial, HD Insight is used for feature engineering on the original streaming data by providing two additional simple features *var3 = var1 + var2* and *var4 = var1 – var2*. Users can develop complicated feature engineering work based on their own needs.
 
 Azure Machine Learning is a web based analytics tool that users can easily build a predictive model and deploy a web service. In this tutorial, a two class classification model is built and deployed. The predictions are made based on the four features (*var1, var2, var3, var4*) from both the original dataset and feature engineering work on HD Insight. The prediction results written into SQL Database are all the <*id, prediction*> pairs.
 
 ## Prerequisites ##
 This section contains the required accounts and software to replicate this sample.
-1.	The full contents of the files included in [GitHub](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/tree/master/Tutorials/Step-by-Step%20Guide%20for%20End-to-End%20Pipeline%20Deployment).
-2.	A Microsoft Azure subscription.
-3.	A [ML Studio account](http://studio.azureml.net)
-4.	A Microsoft Office 365 subscription for Power BI access.
-5.	A network connection
-6.	[SQL Server Management Studio](https://msdn.microsoft.com/en-us/library/mt238290.aspx) or another similar tool to access a SQL server database.
-7.	[Microsoft Azure Storage Explorer](http://storageexplorer.com/)
+- The full contents of the files included in [GitHub](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/tree/master/Tutorials/Step-by-Step%20Guide%20for%20End-to-End%20Pipeline%20Deployment).
+-	A Microsoft Azure subscription.
+-	A [ML Studio account](http://studio.azureml.net)
+-	A Microsoft Office 365 subscription for Power BI access.
+-	A network connection
+-	[SQL Server Management Studio](https://msdn.microsoft.com/en-us/library/mt238290.aspx) or another similar tool to access a SQL server database.
+-	[Microsoft Azure Storage Explorer](http://storageexplorer.com/)
 
 ## Setup Steps ##
 The remainder of this guide provides step by step instructions on how to create a sample E2E pipeline in user’s own subscription. Each of the steps in this document builds on top of the previous steps and should be followed in the order laid out in this document to minimize confusion and set up errors. Tables are provided for recording important information about each service which will be referenced further down the guide.
