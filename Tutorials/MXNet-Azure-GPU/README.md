@@ -56,7 +56,7 @@ default Ubuntu 16.04 distribution, the following libraries were used:
     Microsoft R only contains shared libraries and not the header files
     which are needed to build external packages like MXNet.
 
--   [**CIFAR-10 training algorithm**]() – test script used to validate MXNet
+-   [**CIFAR-10 training algorithm**](https://mxnetstorage.blob.core.windows.net/blog1/MXNet_AzureVM_install_test.tar.gz) – test script used to validate MXNet
     installation by training a simple [ResNet](https://arxiv.org/abs/1512.03385) deep neural network on
     [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset.
 
@@ -127,8 +127,8 @@ At this point, running the nvidia-smi command, a GPU management and monitoring t
  screenshot. We recommend enabling the persistence mode for this utility before
  you run the actual command
  ```bash
- sudo nvidia-smi -pm 1
- nvidia-smi
+sudo nvidia-smi -pm 1
+nvidia-smi
  ```
 
  ![](assets/nvidia-smi-output.png)
@@ -152,7 +152,6 @@ f.  Install and build MXNet:
 First, get MXNet code from its GitHub repository (we tested the version with SHA f6fa98d645d2b9871e7ac5f0ad977c1e5af80738). For convenience, we will refer to MXNet directory path on your disk as *MXNET_HOME*.
 
 ```bash
-
 git clone --recursive https://github.com/dmlc/mxnet
 cd mxnet
 git checkout f6fa98d645d2b9871e7ac5f0ad977c1e5af80738
@@ -162,12 +161,11 @@ cp make/config.mk .
 Also, please note that MXNet repo has the following submodules – we list the SHAs for each submodule below:
 
 ```bash
--   dmlc-core:  c33865feec034f1bc6ef9ec246a1ee95ac7ff148
--   mshadow:    db4c01523e8d95277eae3bb52eb12260b46d6e03
--   ps-lite:    36b015ffd51c0f7062bba845f01164c0433dc6b3
+dmlc-core:  c33865feec034f1bc6ef9ec246a1ee95ac7ff148
+mshadow:    db4c01523e8d95277eae3bb52eb12260b46d6e03
+ps-lite:    36b015ffd51c0f7062bba845f01164c0433dc6b3
 ```
-You can revert each submodule by going to its folder and running the same
-*"git checkout &lt;SHA&gt;"* command.
+You can revert each submodule by going to its folder and running the same *"git checkout &lt;SHA&gt;"* command.
 
 Please note that we’re using the checkout mechanism, which means that you can either go back to current MXNet state after the build, or branch from the state and do your own work going forward.
 
@@ -178,13 +176,13 @@ USE_CUDA = 1
 USE_CUDA_PATH = /usr/local/cuda
 USE_CUDNN = 1
 
-If MKL is to be used, USE_BLAS and USE_INTEL_PATH should be set as follows
-(you can remove default “atlas” setting and replace it with MKL):
+# If MKL is to be used, USE_BLAS and USE_INTEL_PATH should be set as follows
+# (you can remove default “atlas” setting and replace it with MKL):
 
 USE_BLAS = mkl
 USE_INTELPATH = /opt/intel/
 
-To enable distributed computing, set:
+# To enable distributed computing, set:
 
 USE_DIST_KVSTORE = 1
 ```
@@ -205,7 +203,7 @@ current terminal.
 Next, if you want to build in parallel, use the –j option as follows from MXNET_HOME:
 
 ```bash
-  make –j\${nproc}
+  make –j${nproc}
 ```
  g.  To install MRS, follow these steps:
 
@@ -236,11 +234,11 @@ cd R-package
 sudo Rscript -e "install.packages(c('Rcpp', 'DiagrammeR', 'data.table','jsonlite', 'magrittr', 'stringr', 'roxygen2'), repos ='https://cran.rstudio.com')"
 cd ..
 make rpkg
-sudo R CMD INSTALL mxnet\_0.7.tar.gz
+sudo R CMD INSTALL mxnet_0.7.tar.gz
 ```
 
 We now have a functional VM installed with MXNet, MRS and GPU. As we
-suggested earlier, you can “copy” this VM for use in the future so the
+suggested earlier, you can [“copy”]((https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-copy-vm/) this VM for use in the future so the
 installation process does not need to be repeated.
 
 Troubleshooting
@@ -267,47 +265,48 @@ Here is some information in case you see some error messages:
 Now it’s time to build some deep neural networks! Here, we use the
 [CIFAR-10 problem and dataset](https://www.cs.toronto.edu/~kriz/cifar.html) as an example. This is a 10-class
 classification problem, and the dataset has 60,000 color images (6,000
-images per class). We published a simple [CIFAR-10 training algorithm]()
+images per class). We published a simple [CIFAR-10 training algorithm](https://mxnetstorage.blob.core.windows.net/blog1/MXNet_AzureVM_install_test.tar.gz)
 which can be executed from either MRS or MRO. You should first install a
 few dependencies which don’t come standard with MRS:
 
-sudo Rscript -e "install.packages('argparse', repo =
-'https://cran.rstudio.com')"
+```bash
+sudo Rscript -e "install.packages('argparse', repo = 'https://cran.rstudio.com')"
+```
 
 Now you can run the following command from the extracted folder:
 
-Rscript train\_resnet\_dynamic\_reload.R
-
+```bash
+Rscript train_resnet_dynamic_reload.R
+```
 You should see output which is similar to the screenshot below:
 
-![](assets/R-script-output.png){width="6.5in" height="1.3083333333333333in"}
+![](assets/R-script-output.png)
 
 You can monitor GPU utilization using “watch -n 0.5 nvidia-smi” command,
 which should result in something like the following (and refreshed twice
 a second):
 
-![](assets/nvidia-smi-output-second.png){width="6.5in" height="4.567361111111111in"}
+![](assets/nvidia-smi-output-second.png)
 
-In the screenshot above, we can see that the training is taking place on
-GPU \#3.
+In the screenshot above, we can see that the training is taking place on GPU  #3.
 
 If you are curious how to train the same model without GPU, simply
 change the default training context by adding “--cpu T”, which should
 produce a similar output (we also highly recommend Linux “htop” utility
 for monitoring CPU usage):
 
-![](assets/htop-cpu-usage.png){width="6.5in" height="1.1444444444444444in"}
+![](assets/htop-cpu-usage.png)
 
 In this case, training for 2 Epochs using CPU completes in 119.5
 minutes:
 
-![](assets/training-cpu.png){width="6.5in" height="3.1618055555555555in"}
+![](assets/training-cpu.png)
 
 As a comparison, training for the same 2 Epochs with GPU completes in
 2.4 minutes as shown below. By using GPU, we have achieved 50x speedup
 in this example.
 
-![](assets/training-gpu.png){width="6.5in" height="3.270138888888889in"}
+![](assets/training-gpu.png)
 
 4.  Some More Details about Training on CPU vs GPU
     ==============================================
@@ -323,9 +322,9 @@ When training using CPU, Intel Math Kernel library provides great
 speedup in basic linear algebra operations required for Deep Learning;
 other libraries which can be used in its place are ATLAS and OpenBLAS.
 
-Another important library which MXNet utilizes under the hood is OpenMP,
+Another important library which MXNet utilizes under the hood is [OpenMP](http://openmp.org/wp/),
 which allows multithreading of C/C++ programs without too much effort
-from the developer. By adding \#pragma directives to make loops
+from the developer. By adding #pragma directives to make loops
 parallel, developers can avoid managing threads explicitly.
 
 Finally, since deep learning is commonly used in the vision domain,
@@ -357,6 +356,6 @@ showed how to run MXNet training workload from Microsoft R Server using
 GPU, achieving significant speedups compared to the CPU-only solution.
 In the next tutorial, we will discuss a more comprehensive deep learning
 workflow that includes accelerated training on Azure GPU VMs, scalable
-scoring on HDInsight that integrates with Microsoft R Server and Apache
-Spark, accessing data on Azure Data Lake Store. We presented the
+scoring on [HDInsight](https://azure.microsoft.com/en-us/services/hdinsight/) that integrates with Microsoft R Server and Apache
+Spark, accessing data on [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/). We presented the
 above work at the Microsoft Data Science Summit in Atlanta, GA, you can check it out [here](https://channel9.msdn.com/Events/Machine-Learning-and-Data-Sciences-Conference/Data-Science-Summit-2016/MSDSS21)
