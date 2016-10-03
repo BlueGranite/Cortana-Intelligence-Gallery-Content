@@ -304,8 +304,9 @@ in this example.
 
 ![](assets/training-gpu.png)
 
+
 4.  Some More Details about Training on CPU vs GPU
-    ==============================================
+====================================================
 
 Now that we have trained an MXNet model using both GPU and CPU, here is some more behind-the-scene information about how computation is done at each setup.
 
