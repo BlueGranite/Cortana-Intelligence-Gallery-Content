@@ -145,7 +145,7 @@ e.  Install MKL:
 tar xvzf l_mkl_11.3.3.210.tgz
 sudo ./l_mkl_11.3.3.210/install.sh
 ```
-Follow the prompt and enter the MKL serial number that you received in the email from intel. <br>The default installation location is /opt/intel - you’ll need this for the next step.
+Follow the prompt and enter the MKL serial number that you received in the email from intel. The default installation location is /opt/intel - you’ll need this for the next step.
 
 f.  Install and build MXNet:
 
@@ -172,6 +172,7 @@ You can revert each submodule by going to its folder and running the same
 Please note that we’re using the checkout mechanism, which means that you can either go back to current MXNet state after the build, or branch from the state and do your own work going forward.
 
 Next, modify the $MXNET_HOME/config.mk make file to use CUDA, cuDNN and MKL. You need to enable the flags and provide locations of the installed libraries:
+
 ```bash
 USE_CUDA = 1
 USE_CUDA_PATH = /usr/local/cuda
@@ -187,23 +188,22 @@ To enable distributed computing, set:
 
 USE_DIST_KVSTORE = 1
 ```
-    Finally, you need to add links to CUDA and cuDNN libraries. You can
-    persist those on the system by modifying /etc/environment, but since
-    this is a local build, we recommend adding the following lines to
-    your ~/.bashrc file instead:
+
+Finally, you need to add links to CUDA and cuDNN libraries. You can persist those on the system
+by modifying /etc/environment, but since this is a local build, we recommend adding the following
+lines to your ~/.bashrc file instead:
 
 ```bash
 export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/local/cudnn/lib64/:/opt/intel/compilers_and_libraries_2016.3.210/linux/compiler/lib/intel64_lin/:$LD_LIBRARY_PATH
 export LIBRARY\_PATH=/usr/local/cudnn/lib64/
 ```
 
-    Now it is time to build – you can type “bash” in the current prompt
-    to apply the aforementioned changes to .bashrc or open a new
-    terminal or simply re-type the above export commands into the
-    current terminal.
+Now it is time to build – you can type “bash” in the current prompt to apply the aforementioned
+changes to .bashrc or open a new terminal or simply re-type the above export commands into the
+current terminal.
 
-    Next, if you want to build in parallel, use the –j option as follows
-    from MXNET\_HOME:
+Next, if you want to build in parallel, use the –j option as follows from MXNET_HOME:
+
 ```bash
   make –j\${nproc}
 ```
