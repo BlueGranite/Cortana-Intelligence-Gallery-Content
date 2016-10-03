@@ -234,7 +234,7 @@ Next, make sure you’re again in the *MXNET_HOME* folder and run following comm
   ```
 
 We now have a functional VM installed with MXNet, MRS and GPU. As we
-suggested earlier, you can [“copy”]((https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-copy-vm/) this VM for use in the future so the
+suggested earlier, you can [“copy”](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-copy-vm/) this VM for use in the future so the
 installation process does not need to be repeated.
 
 Troubleshooting
