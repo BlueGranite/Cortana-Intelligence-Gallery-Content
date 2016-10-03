@@ -1,46 +1,64 @@
-Step by Step guide to getting started with Deep Neural Networks in the Cloud with Azure GPU VMs, MXNet and Microsoft R Server
+Building Deep Neural Networks in the Cloud with Azure GPU VMs, MXNet and Microsoft R Server
 ===========================================================================================
 
-By Max Kaznady, Data Scientist; Richin Jain, Solution Architect; Tao Wu,
-Principal Data Scientist Manager; Miguel Fierro, Data Scientist and
-Andreas Argyriou, Data Scientist
+Deep learning is a key enabler in the recent breakthroughs in several machine learning applications.  
+In computer vision, novel approaches such as [deep residual learning](https://arxiv.org/pdf/1512.03385v1.pdf)
+developed at Microsoft Research helped reduce the top-5 classification error at ImageNet competition by
+47% in just one year. In speech and machine translation, deep neural networks (DNNs) have already enabled
+millions of Skype users to [communicate without language barriers](https://www.microsoft.com/en-us/research/enabling-cross-lingual-conversations-real-time/).
+
+Deep learning is made possible by the availability of large training datasets and compute
+acceleration that general purpose graphics processing unit (GPU) offers. Microsoft’s
+Azure cloud ecosystem, a scalable and elastic big data platform, recently introduced
+advanced GPU support in its N-Series Virtual Machines. These VMs combine powerful
+hardware (NVIDIA Tesla K80 or M60 GPUs) with cutting-edge, highly efficient integration
+ technologies such as Discrete Device Assignment, bringing a new level of deep learning capability to public clouds.
+
+This tutorial is the first of a series of tutorials that showcases deep learning workflows on Azure.
+In this article, we will go over setting up N-Series VMs on Azure with NVIDIA CUDA and cuDNN support.
+We use MXNet as an example of deep learning frameworks that can run on Azure.
+[MXNet](https://github.com/dmlc/mxnet) is an open-source framework for deep neural networks with support for multiple
+languages and platforms that aims to provide both execution efficiency and design flexibility.
+In addition, we will also show how [Microsoft R Server](https://www.microsoft.com/en-us/cloud-platform/r-server) can harness the deep learning
+capabilities provided by MXNet and GPUs on Azure using simple R scripts.  
+
 
 1. Preparation
 ===============
 
-For this blog, we will use an NC24 VM running on Ubuntu 16.04. N-Series
+For this tutorial, we will use an [NC24](https://azure.microsoft.com/en-us/blog/azure-n-series-preview-availability/) VM running on Ubuntu 16.04. N-Series
 VM sizes are currently under preview and available for select users; you
 can register interest at http://gpu.azure.com/. In addition to the
 default Ubuntu 16.04 distribution, the following libraries were used:
 
--   **CUDA** - CUDA8.0 RC1 (registration with NVIDIA required). In
+-   [**CUDA**](https://developer.nvidia.com/cuda-toolkit) - CUDA8.0 RC1 (registration with NVIDIA required). In
     addition to the base package, you also need to download CUDA Patch 1
     from CUDA website. The patch adds support for gcc 5.4 as one of the
     host compilers.
 
--   **cuDNN** – cuDNN 5.1 (registration with NVIDIA required).
+-   [**cuDNN**](https://developer.nvidia.com/cudnn) – cuDNN 5.1 (registration with NVIDIA required).
 
--   **Math Kernel Library** (MKL) - MKL 11.3 update 3 (registration with
+-   [**Math Kernel Library**](https://software.intel.com/en-us/intel-mkl) (MKL) - MKL 11.3 update 3 (registration with
     Intel required). The serial number and download link will be in
     the email.
 
--   **MXNet** - We used MXNet commit SHA
+-   [**MXNet**](https://github.com/dmlc/mxnet) - We used MXNet commit SHA
     f6fa98d645d2b9871e7ac5f0ad977c1e5af80738 from GitHub (which was the
     latest version of MXNet at the time)
 
--   **Microsoft R Server** (MRS) - Microsoft R Server 8.0.5
+-   [**Microsoft R Server**](https://www.microsoft.com/en/server-cloud/products/r-server/default.aspx) (MRS) - Microsoft R Server 8.0.5
     (registration with Microsoft required). Alternatively, one can
-    download Microsoft R Open (MRO) for Ubuntu here. Please note that
+    download Microsoft R Open (MRO) for Ubuntu [here](https://www.microsoft.com/en/server-cloud/products/r-server/default.aspx). Please note that
     while MRS comes with Intel MKL already bundled into the package, MRO
-    requires an additional MKL installation from this link. Also, while
+    requires an additional MKL installation from this [link](https://mran.revolutionanalytics.com/download/). Also, while
     MRS and MRO both rely on MKL, a separate MKL installation is
     required to build MXNet. This is because the MKL package for
     Microsoft R only contains shared libraries and not the header files
     which are needed to build external packages like MXNet.
 
--   **CIFAR-10 training algorithm** – test script used to validate MXNet
-    installation by training a simple ResNet deep neural network on
-    CIFAR-10 dataset.
+-   [**CIFAR-10 training algorithm**]() – test script used to validate MXNet
+    installation by training a simple [ResNet](https://arxiv.org/abs/1512.03385) deep neural network on
+    [CIFAR-10](https://www.cs.toronto.edu/~kriz/cifar.html) dataset.
 
 
 2. Installation
@@ -49,10 +67,10 @@ default Ubuntu 16.04 distribution, the following libraries were used:
 In this section, we provide step-by-step instructions to install all
 components discussed earlier with their dependencies. The installation
 can be completed in an hour or less. It is also important to note that
-you can “copy” a configured VM for future usage, making the installation
+you can ["copy" a configured VM](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-copy-vm/) for future usage, making the installation
 a one-time process. Furthermore, you can create a generalized image of
 the configured VM and use it in an ARM template to create similar VMs,
-you can learn more about it here.
+you can learn more about it [here](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-capture-image/).
 
 We recommend using Ubuntu version 16.04 or later, because it comes ready
 with a recent Linux kernel that contains the pass-through driver needed
@@ -60,6 +78,7 @@ to recognize the GPU instances (made available to these VMs).
 
 For installation, we assume all the packages (CUDA, cuDNN, MKL and
 MXNet) are in the user’s home directory.
+
 
   a. The first step is to install the following dependencies (you can
     replace the Python installation with a local Anaconda one later if
@@ -75,12 +94,13 @@ MXNet) are in the user’s home directory.
 
   b. Install downloaded CUDA driver:
   ```bash
-    sudo ./cuda\_8.0.27\_linux.run --override
+    chmod 755 cuda_8.0.27_linux.run
+    sudo ./cuda_8.0.27_linux.run --override
   ```
   During installation, select the following options when prompted:
 
   ```bash
--   Install NVIDIA Accelerated Graphics Driver \for\ Linux-x86\_64 361.77? - Yes
+-   Install NVIDIA Accelerated Graphics Driver for Linux-x86_64 361.77? - Yes
 
 -   Do you want to install the OpenGL libraries? - Yes
 
@@ -92,19 +112,24 @@ MXNet) are in the user’s home directory.
 
 -   Do you want to install a symbolic link at /usr/local/cuda? – Yes
 
--   Install the CUDA 8.0 Samples? *–* they are not needed for this article.
-```    
+-   Install the CUDA 8.0 Samples? - they are not needed for this article.
+```
 c.  Next, run the cuda patch 1 that you downloaded above, to support gcc 5.4 as host compiler
   ``` bash
-      sudo ./cuda\_8.0.27.1\_linux.run
+      sudo ./cuda_8.0.27.1_linux.run
   ```
    Select the same options as in the previous step – default location for toolkit installation should be the same. Next, update alternatives for nvcc:
  ```bash
     sudo update-alternatives --install /usr/bin/nvcc nvcc /usr/bin/gcc 50
   ```
-At this point, running the nvidia-smi command, a GPU management and
-monitoring tool that is part of the CUDA package, should result in
-something like the following screenshot.
+At this point, running the nvidia-smi command, a GPU management and monitoring tool
+ that is part of the CUDA package, should result in something like the following
+ screenshot. We recommend enabling the persistence mode for this utility before
+ you run the actual command
+ ```bash
+ sudo nvidia-smi -pm 1
+ nvidia-smi
+ ```
 
  ![](assets/nvidia-smi-output.png)
 
@@ -117,8 +142,8 @@ sudo ln -s /usr/local/cudnn/include/cudnn.h /usr/local/cuda/include/cudnn.h
 ```
 e.  Install MKL:
 ```bash
-tar xvzf l\_mkl\_11.3.3.210.tgz
-sudo ./l\_mkl\_11.3.3.210/install.sh
+tar xvzf l_mkl_11.3.3.210.tgz
+sudo ./l_mkl_11.3.3.210/install.sh
 ```
 Follow the prompt and enter the MKL serial number that you received in the email from intel. <br>The default installation location is /opt/intel - you’ll need this for the next step.
 
@@ -146,7 +171,7 @@ You can revert each submodule by going to its folder and running the same
 
 Please note that we’re using the checkout mechanism, which means that you can either go back to current MXNet state after the build, or branch from the state and do your own work going forward.
 
-Next, modify the config.mk make file to use CUDA, cuDNN and MKL. You need to enable the flags and provide locations of the installed libraries:
+Next, modify the $MXNET_HOME/config.mk make file to use CUDA, cuDNN and MKL. You need to enable the flags and provide locations of the installed libraries:
 ```bash
 USE_CUDA = 1
 USE_CUDA_PATH = /usr/local/cuda
@@ -167,10 +192,10 @@ USE_DIST_KVSTORE = 1
     this is a local build, we recommend adding the following lines to
     your ~/.bashrc file instead:
 
-  ```bash
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/local/cudnn/lib64/:$LD_LIBRARY_PATH
+```bash
+export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/local/cudnn/lib64/:/opt/intel/compilers_and_libraries_2016.3.210/linux/compiler/lib/intel64_lin/:$LD_LIBRARY_PATH
 export LIBRARY\_PATH=/usr/local/cudnn/lib64/
-    ```
+```
 
     Now it is time to build – you can type “bash” in the current prompt
     to apply the aforementioned changes to .bashrc or open a new
@@ -190,14 +215,17 @@ cd MRS80LINUX
 sudo ./install.sh
 sudo mv /usr/lib64/microsoft-r/8.0/lib64/R/deps/libstdc++.so.6 /tmp
 sudo mv /usr/lib64/microsoft-r/8.0/lib64/R/deps/libgomp.so.1 /tmp
+```
 
 To add MXNet library into MRS, first add the following two lines to /etc/ld.so.conf:
-
+```bash
 /usr/local/cuda/lib64/
 /usr/local/cudnn/lib64/
+```
 
 followed by reconfiguring dynamic linker run-time bindings:
 
+```bash
 sudo ldconfig
 ```
 Next, make sure you’re again in the *MXNET_HOME* folder and run following commands
@@ -205,12 +233,12 @@ Next, make sure you’re again in the *MXNET_HOME* folder and run following comm
 ```bash
 sudo Rscript -e "install.packages('devtools', repo ='https://cran.rstudio.com')"
 cd R-package
-sudo Rscript -e "install.packages(c('Rcpp', 'DiagrammeR', 'data.table',
-'jsonlite', 'magrittr', 'stringr', 'roxygen2'), repos ='https://cran.rstudio.com')"
+sudo Rscript -e "install.packages(c('Rcpp', 'DiagrammeR', 'data.table','jsonlite', 'magrittr', 'stringr', 'roxygen2'), repos ='https://cran.rstudio.com')"
 cd ..
 make rpkg
 sudo R CMD INSTALL mxnet\_0.7.tar.gz
 ```
+
 We now have a functional VM installed with MXNet, MRS and GPU. As we
 suggested earlier, you can “copy” this VM for use in the future so the
 installation process does not need to be repeated.
@@ -237,9 +265,9 @@ Here is some information in case you see some error messages:
 =============
 
 Now it’s time to build some deep neural networks! Here, we use the
-CIFAR-10 problem and dataset as an example. This is a 10-class
+[CIFAR-10 problem and dataset](https://www.cs.toronto.edu/~kriz/cifar.html) as an example. This is a 10-class
 classification problem, and the dataset has 60,000 color images (6,000
-images per class). We published a simple CIFAR-10 training algorithm
+images per class). We published a simple [CIFAR-10 training algorithm]()
 which can be executed from either MRS or MRO. You should first install a
 few dependencies which don’t come standard with MRS:
 
@@ -268,18 +296,18 @@ change the default training context by adding “--cpu T”, which should
 produce a similar output (we also highly recommend Linux “htop” utility
 for monitoring CPU usage):
 
-![](assets/training-cpu.png){width="6.5in" height="1.1444444444444444in"}
+![](assets/htop-cpu-usage.png){width="6.5in" height="1.1444444444444444in"}
 
 In this case, training for 2 Epochs using CPU completes in 119.5
 minutes:
 
-![](assets/training-gpu.png){width="6.5in" height="3.1618055555555555in"}
+![](assets/training-cpu.png){width="6.5in" height="3.1618055555555555in"}
 
 As a comparison, training for the same 2 Epochs with GPU completes in
 2.4 minutes as shown below. By using GPU, we have achieved 50x speedup
 in this example.
 
-![](media/image6.png){width="6.5in" height="3.270138888888889in"}
+![](assets/training-gpu.png){width="6.5in" height="3.270138888888889in"}
 
 4.  Some More Details about Training on CPU vs GPU
     ==============================================
@@ -323,20 +351,12 @@ Azure GPU-enabled VMs have minimal GPU virtualization overhead.
 Summary
 =======
 
-In this article, we demonstrated how to quickly install and configure
+In this tutorial, we demonstrated how to quickly install and configure
 MXNet on an Azure N-Series VM equipped with NVIDIA Tesla K80 GPUs. We
 showed how to run MXNet training workload from Microsoft R Server using
 GPU, achieving significant speedups compared to the CPU-only solution.
-In the next blog, we will discuss a more comprehensive deep learning
+In the next tutorial, we will discuss a more comprehensive deep learning
 workflow that includes accelerated training on Azure GPU VMs, scalable
 scoring on HDInsight that integrates with Microsoft R Server and Apache
-Spark, accessing data on Azure Data Lake Store. We will also present the
-above work at the upcoming Microsoft Data Science Summit in Atlanta, GA.
-Stay tuned!
-
-### Acknowledgements
-
-We would like to thank Qiang Kou, Tianqi Chen and other MXNet developers
-and Karan Batta and Huseyin Yildiz from Microsoft Azure team for their
-time and assistance in this work. We also would like to acknowledge the
-use of CIFAR dataset from Alex Krizhevsky’s work in our test script.
+Spark, accessing data on Azure Data Lake Store. We presented the
+above work at the Microsoft Data Science Summit in Atlanta, GA, you can check it out [here](https://channel9.msdn.com/Events/Machine-Learning-and-Data-Sciences-Conference/Data-Science-Summit-2016/MSDSS21)
