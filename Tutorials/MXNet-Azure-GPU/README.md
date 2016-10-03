@@ -85,7 +85,7 @@ MXNet) are in the user’s home directory.
     you want to use a different version of Python):
 
   ``` bash
-    sudo apt-get install -y libatlas-base-dev libopencv-dev libprotoc-dev python-numpy python-scipy make unzip git gcc g++ libcurl4-openssl-dev libssl-dev
+  sudo apt-get install -y libatlas-base-dev libopencv-dev libprotoc-dev python-numpy python-scipy make unzip git gcc g++ libcurl4-openssl-dev libssl-dev
   ```
   followed by update to alternatives for cc:
   ```bash
@@ -93,108 +93,104 @@ MXNet) are in the user’s home directory.
   ```
 
   b. Install downloaded CUDA driver:
+
   ```bash
-    chmod 755 cuda_8.0.27_linux.run
-    sudo ./cuda_8.0.27_linux.run --override
+  chmod 755 cuda_8.0.27_linux.run
+  sudo ./cuda_8.0.27_linux.run --override
   ```
   During installation, select the following options when prompted:
 
   ```bash
--   Install NVIDIA Accelerated Graphics Driver for Linux-x86_64 361.77? - Yes
-
--   Do you want to install the OpenGL libraries? - Yes
-
--   Do you want to run nvidia-xconfig? – this is not necessary for this article.
-
--   Install the CUDA 8.0 Toolkit? – Yes
-
--   Enter Toolkit Location [default is /usr/local/cuda-8.0] - Select Default
-
--   Do you want to install a symbolic link at /usr/local/cuda? – Yes
-
--   Install the CUDA 8.0 Samples? - they are not needed for this article.
+  Install NVIDIA Accelerated Graphics Driver for Linux-x86_64 361.77? - Yes
+  Do you want to install the OpenGL libraries? - Yes
+  Do you want to run nvidia-xconfig? – this is not necessary for this article.
+  Install the CUDA 8.0 Toolkit? – Yes
+  Enter Toolkit Location [default is /usr/local/cuda-8.0] - Select Default
+  Do you want to install a symbolic link at /usr/local/cuda? – Yes
+  Install the CUDA 8.0 Samples? - they are not needed for this article.
 ```
-c.  Next, run the cuda patch 1 that you downloaded above, to support gcc 5.4 as host compiler
+
+  c.  Next, run the cuda patch 1 that you downloaded above, to support gcc 5.4 as host compiler
   ``` bash
-      sudo ./cuda_8.0.27.1_linux.run
+  sudo ./cuda_8.0.27.1_linux.run
   ```
    Select the same options as in the previous step – default location for toolkit installation should be the same. Next, update alternatives for nvcc:
- ```bash
-    sudo update-alternatives --install /usr/bin/nvcc nvcc /usr/bin/gcc 50
+  ```bash
+  sudo update-alternatives --install /usr/bin/nvcc nvcc /usr/bin/gcc 50
   ```
 At this point, running the nvidia-smi command, a GPU management and monitoring tool
  that is part of the CUDA package, should result in something like the following
  screenshot. We recommend enabling the persistence mode for this utility before
  you run the actual command
- ```bash
-sudo nvidia-smi -pm 1
-nvidia-smi
- ```
+  ```bash
+  sudo nvidia-smi -pm 1
+  nvidia-smi
+  ```
 
  ![](assets/nvidia-smi-output.png)
 
 d.  Install downloaded cuDNN and create a symbolic link for cudnn.h
     header file:
-```bash
-tar xvzf cudnn-8.0-linux-x64-v5.1.tgz
-sudo mv cuda /usr/local/cudnn
-sudo ln -s /usr/local/cudnn/include/cudnn.h /usr/local/cuda/include/cudnn.h
-```
+  ```bash
+  tar xvzf cudnn-8.0-linux-x64-v5.1.tgz
+  sudo mv cuda /usr/local/cudnn
+  sudo ln -s /usr/local/cudnn/include/cudnn.h /usr/local/cuda/include/cudnn.h
+  ```
 e.  Install MKL:
-```bash
-tar xvzf l_mkl_11.3.3.210.tgz
-sudo ./l_mkl_11.3.3.210/install.sh
-```
+  ```bash
+  tar xvzf l_mkl_11.3.3.210.tgz
+  sudo ./l_mkl_11.3.3.210/install.sh
+  ```
 Follow the prompt and enter the MKL serial number that you received in the email from intel. The default installation location is /opt/intel - you’ll need this for the next step.
 
 f.  Install and build MXNet:
 
 First, get MXNet code from its GitHub repository (we tested the version with SHA f6fa98d645d2b9871e7ac5f0ad977c1e5af80738). For convenience, we will refer to MXNet directory path on your disk as *MXNET_HOME*.
 
-```bash
-git clone --recursive https://github.com/dmlc/mxnet
-cd mxnet
-git checkout f6fa98d645d2b9871e7ac5f0ad977c1e5af80738
-cp make/config.mk .
-```
+  ```bash
+  git clone --recursive https://github.com/dmlc/mxnet
+  cd mxnet
+  git checkout f6fa98d645d2b9871e7ac5f0ad977c1e5af80738
+  cp make/config.mk .
+  ```
 
 Also, please note that MXNet repo has the following submodules – we list the SHAs for each submodule below:
 
-```bash
-dmlc-core:  c33865feec034f1bc6ef9ec246a1ee95ac7ff148
-mshadow:    db4c01523e8d95277eae3bb52eb12260b46d6e03
-ps-lite:    36b015ffd51c0f7062bba845f01164c0433dc6b3
-```
+  ```bash
+  dmlc-core:  c33865feec034f1bc6ef9ec246a1ee95ac7ff148
+  mshadow:    db4c01523e8d95277eae3bb52eb12260b46d6e03
+  ps-lite:    36b015ffd51c0f7062bba845f01164c0433dc6b3
+  ```
 You can revert each submodule by going to its folder and running the same *"git checkout &lt;SHA&gt;"* command.
 
 Please note that we’re using the checkout mechanism, which means that you can either go back to current MXNet state after the build, or branch from the state and do your own work going forward.
 
 Next, modify the $MXNET_HOME/config.mk make file to use CUDA, cuDNN and MKL. You need to enable the flags and provide locations of the installed libraries:
 
-```bash
-USE_CUDA = 1
-USE_CUDA_PATH = /usr/local/cuda
-USE_CUDNN = 1
+  ```bash
+  USE_CUDA = 1
+  USE_CUDA_PATH = /usr/local/cuda
+  USE_CUDNN = 1
 
-# If MKL is to be used, USE_BLAS and USE_INTEL_PATH should be set as follows
-# (you can remove default “atlas” setting and replace it with MKL):
+  # If MKL is to be used, USE_BLAS and USE_INTEL_PATH should be set as follows
+  # (you can remove default “atlas” setting and replace it with MKL):
 
-USE_BLAS = mkl
-USE_INTELPATH = /opt/intel/
+  USE_BLAS = mkl
+  USE_INTELPATH = /opt/intel/
 
-# To enable distributed computing, set:
+  # To enable distributed computing, set:
 
-USE_DIST_KVSTORE = 1
-```
+  USE_DIST_KVSTORE = 1
+  ```
 
 Finally, you need to add links to CUDA and cuDNN libraries. You can persist those on the system
 by modifying /etc/environment, but since this is a local build, we recommend adding the following
 lines to your ~/.bashrc file instead:
 
-```bash
-export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/local/cudnn/lib64/:/opt/intel/compilers_and_libraries_2016.3.210/linux/compiler/lib/intel64_lin/:$LD_LIBRARY_PATH
-export LIBRARY\_PATH=/usr/local/cudnn/lib64/
-```
+  ```bash
+  export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/local/cudnn/lib64/:/opt/intel/compilers_and_libraries_2016.3.210/linux/compiler/lib/intel64_lin/:$LD_LIBRARY_PATH
+  export LIBRARY\_PATH=/usr/local/cudnn/lib64/
+  ```
 
 Now it is time to build – you can type “bash” in the current prompt to apply the aforementioned
 changes to .bashrc or open a new terminal or simply re-type the above export commands into the
@@ -202,40 +198,40 @@ current terminal.
 
 Next, if you want to build in parallel, use the –j option as follows from MXNET_HOME:
 
-```bash
+  ```bash
   make –j${nproc}
-```
+  ```
  g.  To install MRS, follow these steps:
 
  ```bash
-tar xvzf en_microsoft_r_server_for_linux_x64_8944657.tar.gz
-cd MRS80LINUX
-sudo ./install.sh
-sudo mv /usr/lib64/microsoft-r/8.0/lib64/R/deps/libstdc++.so.6 /tmp
-sudo mv /usr/lib64/microsoft-r/8.0/lib64/R/deps/libgomp.so.1 /tmp
-```
+ tar xvzf en_microsoft_r_server_for_linux_x64_8944657.tar.gz
+ cd MRS80LINUX
+ sudo ./install.sh
+ sudo mv /usr/lib64/microsoft-r/8.0/lib64/R/deps/libstdc++.so.6 /tmp
+ sudo mv /usr/lib64/microsoft-r/8.0/lib64/R/deps/libgomp.so.1 /tmp
+ ```
 
 To add MXNet library into MRS, first add the following two lines to /etc/ld.so.conf:
-```bash
-/usr/local/cuda/lib64/
-/usr/local/cudnn/lib64/
-```
+  ```bash
+  /usr/local/cuda/lib64/
+  /usr/local/cudnn/lib64/
+  ```
 
 followed by reconfiguring dynamic linker run-time bindings:
 
-```bash
-sudo ldconfig
-```
+  ```bash
+  sudo ldconfig
+  ```
 Next, make sure you’re again in the *MXNET_HOME* folder and run following commands
 
-```bash
-sudo Rscript -e "install.packages('devtools', repo ='https://cran.rstudio.com')"
-cd R-package
-sudo Rscript -e "install.packages(c('Rcpp', 'DiagrammeR', 'data.table','jsonlite', 'magrittr', 'stringr', 'roxygen2'), repos ='https://cran.rstudio.com')"
-cd ..
-make rpkg
-sudo R CMD INSTALL mxnet_0.7.tar.gz
-```
+  ```bash
+  sudo Rscript -e "install.packages('devtools', repo ='https://cran.rstudio.com')"
+  cd R-package
+  sudo Rscript -e "install.packages(c('Rcpp', 'DiagrammeR', 'data.table','jsonlite', 'magrittr', 'stringr', 'roxygen2'), repos ='https://cran.rstudio.com')"
+  cd ..
+  make rpkg
+  sudo R CMD INSTALL mxnet_0.7.tar.gz
+  ```
 
 We now have a functional VM installed with MXNet, MRS and GPU. As we
 suggested earlier, you can [“copy”]((https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-copy-vm/) this VM for use in the future so the
@@ -269,15 +265,15 @@ images per class). We published a simple [CIFAR-10 training algorithm](https://m
 which can be executed from either MRS or MRO. You should first install a
 few dependencies which don’t come standard with MRS:
 
-```bash
-sudo Rscript -e "install.packages('argparse', repo = 'https://cran.rstudio.com')"
-```
+  ```bash
+  sudo Rscript -e "install.packages('argparse', repo = 'https://cran.rstudio.com')"
+  ```
 
 Now you can run the following command from the extracted folder:
 
-```bash
-Rscript train_resnet_dynamic_reload.R
-```
+  ```bash
+  Rscript train_resnet_dynamic_reload.R
+  ```
 You should see output which is similar to the screenshot below:
 
 ![](assets/R-script-output.png)
@@ -311,9 +307,7 @@ in this example.
 4.  Some More Details about Training on CPU vs GPU
     ==============================================
 
-    Now that we have trained an MXNet model using both GPU and CPU, here
-    is some more behind-the-scene information about how computation is
-    done at each setup.
+Now that we have trained an MXNet model using both GPU and CPU, here is some more behind-the-scene information about how computation is done at each setup.
 
 CPU
 ---
