@@ -187,7 +187,7 @@ lines to your `~/.bashrc` file instead:
 
   ```bash
   export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/local/cudnn/lib64/:/opt/intel/compilers_and_libraries_2016.3.210/linux/compiler/lib/intel64_lin/:$LD_LIBRARY_PATH
-  export LIBRARY\_PATH=/usr/local/cudnn/lib64/
+  export LIBRARY_PATH=/usr/local/cudnn/lib64/
   ```
 
 Now it is time to build – you can type `bash` in the current prompt to apply the aforementioned
