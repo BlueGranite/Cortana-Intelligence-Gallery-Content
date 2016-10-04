@@ -351,4 +351,4 @@ In the next tutorial, we will discuss a more comprehensive deep learning
 workflow that includes accelerated training on Azure GPU VMs, scalable
 scoring on [HDInsight](https://azure.microsoft.com/en-us/services/hdinsight/) that integrates with Microsoft R Server and Apache
 Spark, accessing data on [Azure Data Lake Store](https://azure.microsoft.com/en-us/services/data-lake-store/). We presented the
-above work at the Microsoft Data Science Summit in Atlanta, GA, you can check it out [here](https://channel9.msdn.com/Events/Machine-Learning-and-Data-Sciences-Conference/Data-Science-Summit-2016/MSDSS21)
+above work at the Microsoft Data Science Summit in Atlanta, GA, you can check it out [here](https://channel9.msdn.com/Events/Machine-Learning-and-Data-Sciences-Conference/Data-Science-Summit-2016/MSDSS21).
