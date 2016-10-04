@@ -43,7 +43,7 @@ default Ubuntu 16.04 distribution, the following libraries were used:
     the email.
 
 -   [**MXNet**](https://github.com/dmlc/mxnet) - We used MXNet commit SHA
-    f6fa98d645d2b9871e7ac5f0ad977c1e5af80738 from GitHub (which was the
+    `f6fa98d645d2b9871e7ac5f0ad977c1e5af80738` from GitHub (which was the
     latest version of MXNet at the time)
 
 -   [**Microsoft R Server**](https://www.microsoft.com/en/server-cloud/products/r-server/default.aspx) (MRS) - Microsoft R Server 8.0.5
@@ -116,7 +116,7 @@ MXNet) are in the user’s home directory.
   ```bash
   sudo update-alternatives --install /usr/bin/nvcc nvcc /usr/bin/gcc 50
   ```
-At this point, running the nvidia-smi command, a GPU management and monitoring tool
+At this point, running the `nvidia-smi` command, a GPU management and monitoring tool
  that is part of the CUDA package, should result in something like the following
  screenshot. We recommend enabling the persistence mode for this utility before
  you run the actual command
@@ -127,7 +127,7 @@ At this point, running the nvidia-smi command, a GPU management and monitoring t
 
  ![](assets/nvidia-smi-output.png)
 
-d.  Install downloaded cuDNN and create a symbolic link for cudnn.h
+d.  Install downloaded cuDNN and create a symbolic link for `cudnn.h`
     header file:
   ```bash
   tar xvzf cudnn-8.0-linux-x64-v5.1.tgz
@@ -139,11 +139,11 @@ e.  Install MKL:
   tar xvzf l_mkl_11.3.3.210.tgz
   sudo ./l_mkl_11.3.3.210/install.sh
   ```
-Follow the prompt and enter the MKL serial number that you received in the email from intel. The default installation location is /opt/intel - you’ll need this for the next step.
+Follow the prompt and enter the MKL serial number that you received in the email from intel. The default installation location is `/opt/intel` - you’ll need this for the next step.
 
 f.  Install and build MXNet:
 
-First, get MXNet code from its GitHub repository (we tested the version with SHA f6fa98d645d2b9871e7ac5f0ad977c1e5af80738). For convenience, we will refer to MXNet directory path on your disk as *MXNET_HOME*.
+First, get MXNet code from its GitHub repository (we tested the version with SHA `f6fa98d645d2b9871e7ac5f0ad977c1e5af80738`). For convenience, we will refer to MXNet directory path on your disk as `MXNET_HOME`.
 
   ```bash
   git clone --recursive https://github.com/dmlc/mxnet
@@ -159,11 +159,11 @@ Also, please note that MXNet repo has the following submodules – we list the S
   mshadow:    db4c01523e8d95277eae3bb52eb12260b46d6e03
   ps-lite:    36b015ffd51c0f7062bba845f01164c0433dc6b3
   ```
-You can revert each submodule by going to its folder and running the same *"git checkout &lt;SHA&gt;"* command.
+You can revert each submodule by going to its folder and running the same `git checkout &lt;SHA&gt;` command.
 
 Please note that we’re using the checkout mechanism, which means that you can either go back to current MXNet state after the build, or branch from the state and do your own work going forward.
 
-Next, modify the $MXNET_HOME/config.mk make file to use CUDA, cuDNN and MKL. You need to enable the flags and provide locations of the installed libraries:
+Next, modify the `$MXNET_HOME/config.mk` make file to use CUDA, cuDNN and MKL. You need to enable the flags and provide locations of the installed libraries:
 
   ```bash
   USE_CUDA = 1
@@ -182,19 +182,19 @@ Next, modify the $MXNET_HOME/config.mk make file to use CUDA, cuDNN and MKL. You
   ```
 
 Finally, you need to add links to CUDA and cuDNN libraries. You can persist those on the system
-by modifying /etc/environment, but since this is a local build, we recommend adding the following
-lines to your ~/.bashrc file instead:
+by modifying `/etc/environment`, but since this is a local build, we recommend adding the following
+lines to your `~/.bashrc` file instead:
 
   ```bash
   export LD_LIBRARY_PATH=/usr/local/cuda/lib64/:/usr/local/cudnn/lib64/:/opt/intel/compilers_and_libraries_2016.3.210/linux/compiler/lib/intel64_lin/:$LD_LIBRARY_PATH
   export LIBRARY\_PATH=/usr/local/cudnn/lib64/
   ```
 
-Now it is time to build – you can type “bash” in the current prompt to apply the aforementioned
+Now it is time to build – you can type `bash` in the current prompt to apply the aforementioned
 changes to .bashrc or open a new terminal or simply re-type the above export commands into the
 current terminal.
 
-Next, if you want to build in parallel, use the –j option as follows from MXNET_HOME:
+Next, if you want to build in parallel, use the `–j` option as follows from `MXNET_HOME`:
 
   ```bash
   make –j${nproc}
@@ -209,7 +209,7 @@ Next, if you want to build in parallel, use the –j option as follows from MXNE
  sudo mv /usr/lib64/microsoft-r/8.0/lib64/R/deps/libgomp.so.1 /tmp
  ```
 
-To add MXNet library into MRS, first add the following two lines to /etc/ld.so.conf:
+To add MXNet library into MRS, first add the following two lines to `/etc/ld.so.conf`:
   ```bash
   /usr/local/cuda/lib64/
   /usr/local/cudnn/lib64/
@@ -220,7 +220,7 @@ followed by reconfiguring dynamic linker run-time bindings:
   ```bash
   sudo ldconfig
   ```
-Next, make sure you’re again in the *MXNET_HOME* folder and run following commands
+Next, make sure you’re again in the `MXNET_HOME` folder and run following commands
 
   ```bash
   sudo Rscript -e "install.packages('devtools', repo ='https://cran.rstudio.com')"
@@ -241,17 +241,17 @@ Troubleshooting
 Here is some information in case you see some error messages:
 
 1.  **Build error with im2rec:** If that’s the case, the easiest
-    thing to do is to disable it in "$MXNET_HOME/Makefile" by commenting
-    out the line "BIN += bin/im2rec".
+    thing to do is to disable it in `$MXNET_HOME/Makefile` by commenting
+    out the line `BIN += bin/im2rec`.
 
 2.  **MKL not linking correctly**: The default root of the MKL
-    installation is “/opt/intel”. If you install MKL in a different
-    location, you should specify in "$MXNET_HOME/config.mk". Note the
+    installation is `/opt/intel`. If you install MKL in a different
+    location, you should specify in `$MXNET_HOME/config.mk`. Note the
     path should point to the parent directory and not the MKL folder.
 
 3.  **Library linking errors during MXNet compilation:** Make sure that
     LD_LIBRARY_PATH is set correctly as specified earlier (Azure GPU
-    VMs come with blank LD_LIBRARY_PATH by default).
+    VMs come with blank `LD_LIBRARY_PATH` by default).
 
 3. Test Drive
 =============
