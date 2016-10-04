@@ -72,9 +72,7 @@ a one-time process. Furthermore, you can create a generalized image of
 the configured VM and use it in an ARM template to create similar VMs,
 you can learn more about it [here](https://azure.microsoft.com/en-us/documentation/articles/virtual-machines-linux-capture-image/).
 
-We recommend using Ubuntu version 16.04 or later, because it comes ready
-with a recent Linux kernel that contains the pass-through driver needed
-to recognize the GPU instances (made available to these VMs).
+We recommend using Ubuntu version 16.04 or later, because it comes ready with a recent Linux kernel that contains the pass-through driver needed to recognize the GPU instances (made available to these VMs).
 
 For installation, we assume all the packages (CUDA, cuDNN, MKL and
 MXNet) are in the user’s home directory.
