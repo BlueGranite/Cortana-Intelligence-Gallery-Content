@@ -159,7 +159,7 @@ Also, please note that MXNet repo has the following submodules – we list the S
   mshadow:    db4c01523e8d95277eae3bb52eb12260b46d6e03
   ps-lite:    36b015ffd51c0f7062bba845f01164c0433dc6b3
   ```
-You can revert each submodule by going to its folder and running the same `git checkout &lt;SHA&gt;` command.
+You can revert each submodule by going to its folder and running the same `git checkout <SHA>` command.
 
 Please note that we’re using the checkout mechanism, which means that you can either go back to current MXNet state after the build, or branch from the state and do your own work going forward.
 
@@ -191,7 +191,7 @@ lines to your `~/.bashrc` file instead:
   ```
 
 Now it is time to build – you can type `bash` in the current prompt to apply the aforementioned
-changes to .bashrc or open a new terminal or simply re-type the above export commands into the
+changes to `.bashrc` or open a new terminal or simply re-type the above export commands into the
 current terminal.
 
 Next, if you want to build in parallel, use the `–j` option as follows from `MXNET_HOME`:
@@ -276,7 +276,7 @@ You should see output which is similar to the screenshot below:
 
 ![](assets/R-script-output.png)
 
-You can monitor GPU utilization using “watch -n 0.5 nvidia-smi” command,
+You can monitor GPU utilization using `watch -n 0.5 nvidia-smi` command,
 which should result in something like the following (and refreshed twice
 a second):
 
@@ -285,7 +285,7 @@ a second):
 In the screenshot above, we can see that the training is taking place on GPU  #3.
 
 If you are curious how to train the same model without GPU, simply
-change the default training context by adding “--cpu T”, which should
+change the default training context by adding `--cpu T`, which should
 produce a similar output (we also highly recommend Linux “htop” utility
 for monitoring CPU usage):
 
