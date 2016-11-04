@@ -103,12 +103,12 @@ Data stored on this temporary partition will be lost when the DSVM is restarted 
 
 ## Obtain the input genotyping data
 
-We will use genotype data obtained from the [International HapMap Project](https://hapmap.ncbi.nlm.nih.gov/) to simulate phenotypes and perform GWAS analysis using FaST-LMM. The HapMap3 dataset, [available in PLINK format from the HapMap Project website](https://hapmap.ncbi.nlm.nih.gov/downloads/genotypes/hapmap3/plink_format/draft_2/), contains genotypes at > 1.4 M variable sites from 1,184 persons. For demonstration purposes, we have used PLINK to select only the 6,484 variants on chromosome 22 with minor allele frequencies between 5% and 50%.
+We will use genotype data obtained from the [International HapMap Project](https://hapmap.ncbi.nlm.nih.gov/) to simulate phenotypes and perform GWAS analysis using FaST-LMM. The HapMap3 dataset, [available in PLINK format from the HapMap Project website](ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2), contains genotypes at > 1.4 M variable sites from 1,184 persons. For demonstration purposes, we have used PLINK to select only the 6,484 variants on chromosome 22 with minor allele frequencies between 5% and 50%.
 
-Detailed instructions for reproducing the input data directly from the HapMap3 dataset are included below for those interested. Alternatively, the input dataset can be [downloaded directly](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/hapmap.tar.gz). We recommend downloading and unpacking this file in your temporary storage directory as follows:
+Detailed instructions for reproducing the input data directly from the HapMap3 dataset are included below for those interested. Alternatively, the input dataset can be [downloaded directly](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/hapmap.tar.gz?raw=true). We recommend downloading and unpacking this file in your temporary storage directory as follows:
 
-    $ wget https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/hapmap.tar.gz -P /mnt/resource
-    $ tar -zxf /mnt/resource/hapmap.tar.gz
+    $ wget https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/hapmap.tar.gz?raw=true -P /mnt/resource
+    $ tar -zxvf 'hapmap.tar.gz@raw=true'
 
 You will find that the newly-created subdirectory `/mnt/resource/hapmap` contains two tab-delimited plaintext files, `chr22.map` and `chr22.ped`. The first is a four-column description of all genomic loci included in this dataset, including the chromosome where they are located, their [Reference SNP identifier](ftp://ftp.ncbi.nih.gov/pub/factsheets/Factsheet_SNP.pdf) (rsid), a placeholder for recombination distance information (absent in this file), and the position in basepairs of the variant on its chromosome:
 
