@@ -76,12 +76,12 @@ You will need to reactivate this environment if you begin a new `ssh` session or
 
 After creating the Python 2.7 virtual environment, install the necessary Python 2.7 packages and their dependencies using `pip`:
 
-    $ sudo /bin/anaconda/pip install pysnptools
-    $ sudo /bin/anaconda/pip install fastlmm
+    $ sudo /anaconda/bin/pip install pysnptools
+    $ sudo /anaconda/bin/pip install fastlmm
 
 If you will complete the optional phenotype simulation walkthrough, also install the `azure-storage` package:
 
-    $ sudo /bin/anaconda/pip install azure-storage --upgrade
+    $ sudo /anaconda/bin/pip install azure-storage --upgrade
 
 ### Prepare a working directory in temporary storage
 
@@ -107,8 +107,8 @@ We will use genotype data obtained from the [International HapMap Project](https
 
 Detailed instructions for reproducing the input data directly from the HapMap3 dataset are included below for those interested. Alternatively, the input dataset can be [downloaded directly](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/hapmap.tar.gz?raw=true). We recommend downloading and unpacking this file in your temporary storage directory as follows:
 
-    $ wget https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/hapmap.tar.gz?raw=true -P /mnt/resource
-    $ tar -zxvf 'hapmap.tar.gz@raw=true'
+    $ wget https://raw.githubusercontent.com/Azure/Cortana-Intelligence-Gallery-Content/master/Resources/Phenotype-Prediction/hapmap.tar.gz -P /mnt/resource
+    $ tar -zxvf /mnt/resource/hapmap.tar.gz
 
 You will find that the newly-created subdirectory `/mnt/resource/hapmap` contains two tab-delimited plaintext files, `chr22.map` and `chr22.ped`. The first is a four-column description of all genomic loci included in this dataset, including the chromosome where they are located, their [Reference SNP identifier](ftp://ftp.ncbi.nih.gov/pub/factsheets/Factsheet_SNP.pdf) (rsid), a placeholder for recombination distance information (absent in this file), and the position in basepairs of the variant on its chromosome:
 
