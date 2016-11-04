@@ -149,9 +149,9 @@ Next, we'll use PLINK to select relatively common variants (those whose minor al
 
 ## Obtain simulated phenotype data
 
-To download [example phenotype simulation results](https://raw.githubusercontent.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/simulated_phenotypes.tar.gz), which you can use to proceed directly to this tutorial's section on FaST-LMM, just issue the commands below:
+To download [example phenotype simulation results](https://raw.githubusercontent.com/Azure/Cortana-Intelligence-Gallery-Content/master/Resources/Phenotype-Prediction/simulated_phenotypes.tar.gz), which you can use to proceed directly to this tutorial's section on FaST-LMM, just issue the commands below:
 
-    $ wget  https://raw.githubusercontent.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/simulated_phenotypes.tar.gz -P /mnt/resource/
+    $ wget https://raw.githubusercontent.com/Azure/Cortana-Intelligence-Gallery-Content/master/Resources/Phenotype-Prediction/simulated_phenotypes.tar.gz -P /mnt/resource/
     $ tar -zxf /mnt/resource/simulated_phenotypes.tgz
 
 Alternatively, you can follow the phenotype simulation walkthrough below to simulate your own phenotypes for use in the analysis.
