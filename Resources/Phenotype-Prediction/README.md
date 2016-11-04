@@ -103,7 +103,7 @@ Data stored on this temporary partition will be lost when the DSVM is restarted 
 
 ## Obtain the input genotyping data
 
-We will use genotype data obtained from the [International HapMap Project](https://hapmap.ncbi.nlm.nih.gov/) to simulate phenotypes and perform GWAS analysis using FaST-LMM. The HapMap3 dataset, [available in PLINK format from the HapMap Project website](ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2), contains genotypes at > 1.4 M variable sites from 1,184 persons. For demonstration purposes, we have used PLINK to select only the 6,484 variants on chromosome 22 with minor allele frequencies between 5% and 50%.
+We will use genotype data obtained from the [International HapMap Project](https://hapmap.ncbi.nlm.nih.gov/) to simulate phenotypes and perform GWAS analysis using FaST-LMM. The HapMap3 dataset, <a href="ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2">available in PLINK format from the HapMap Project website</a>, contains genotypes at > 1.4 M variable sites from 1,184 persons. For demonstration purposes, we have used PLINK to select only the 6,484 variants on chromosome 22 with minor allele frequencies between 5% and 50%.
 
 Detailed instructions for reproducing the input data directly from the HapMap3 dataset are included below for those interested. Alternatively, the input dataset can be [downloaded directly](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/hapmap.tar.gz?raw=true). We recommend downloading and unpacking this file in your temporary storage directory as follows:
 
@@ -128,11 +128,11 @@ The directory also contains binary versions of these files generated using PLINK
 
 ### (Optional) Reproduce the input dataset from the original HapMap Project data
 
-To recreate the input data provided above, begin by downloading and decompressing the PLINK format [MAP](https://hapmap.ncbi.nlm.nih.gov/downloads/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.map.bz2) and [PED](https://hapmap.ncbi.nlm.nih.gov/downloads/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.ped.bz2) files from the International HapMap Project website. The `bunzip2` command may require several minutes to decompress the PED file.
+To recreate the input data provided above, begin by downloading and decompressing the PLINK format <a href="ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.map.bz2">MAP</a> and <a href="ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.ped.bz2">PED</a> files from the International HapMap Project website. The `bunzip2` command may require several minutes to decompress the PED file.
 
     $ mkdir /mnt/resource/hapmap
-    $ wget https://hapmap.ncbi.nlm.nih.gov/downloads/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.map.bz2 -P /mnt/resource/hapmap
-    $ wget https://hapmap.ncbi.nlm.nih.gov/downloads/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.ped.bz2 -P /mnt/resource/hapmap
+    $ wget ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.map.bz2 -P /mnt/resource/hapmap
+    $ wget ftp://ftp.ncbi.nlm.nih.gov/hapmap/genotypes/hapmap3/plink_format/draft_2/hapmap3_r2_b36_fwd.consensus.qc.poly.ped.bz2 -P /mnt/resource/hapmap
     $ bunzip2 /mnt/resource/hapmap/*
 
 We will use [PLINK](http://pngu.mgh.harvard.edu/~purcell/plink/) to filter variants based on minor allele frequency and chromosome location. Install PLINK by placing its binaries on a directory on the system path:
@@ -149,9 +149,9 @@ Next, we'll use PLINK to select relatively common variants (those whose minor al
 
 ## Obtain simulated phenotype data
 
-To download [example phenotype simulation results](https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/simulated_phenotypes.tar.gz), which you can use to proceed directly to this tutorial's section on FaST-LMM, just issue the commands below:
+To download [example phenotype simulation results](https://raw.githubusercontent.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/simulated_phenotypes.tar.gz), which you can use to proceed directly to this tutorial's section on FaST-LMM, just issue the commands below:
 
-    $ wget https://github.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/simulated_phenotypes.tar.gz -P /mnt/resource/
+    $ wget  https://raw.githubusercontent.com/Azure/Cortana-Intelligence-Gallery-Content/blob/master/Resources/Phenotype-Prediction/simulated_phenotypes.tar.gz -P /mnt/resource/
     $ tar -zxf /mnt/resource/simulated_phenotypes.tgz
 
 Alternatively, you can follow the phenotype simulation walkthrough below to simulate your own phenotypes for use in the analysis.
