@@ -14,7 +14,7 @@ The ImageNet data is further split into the following three datasets:
   
 The dataset can be downloaded from the [ImageNet website](http://image-net.org/download) in two ways: by downloading the original images in a compressed format or downloading each image through its original URL using the ImageNet API. For the second option we created the script [imagenet_downloader.py](data/imagenet_downloader.py).    
 
-If you are downloading the images from the URL you have to create a `lst` file with `im2rec.py` tool. The following code will recursively make a list of all images, assigning a label to each folder. The output will be `filename_train.lst` and `filename_test.lst`.
+If you are downloading the images from the URL you have to create a `lst` file with [im2rec.py](data/im2rec.py) tool. The following code will recursively make a list of all images, assigning a label to each folder. The output will be `filename_train.lst` and `filename_test.lst`.
 
 	cd data
 	python im2rec.py filename.lst path-to-folder-with-images --recursive True --list True --train-ratio 0.8 --test-ratio 0.2
