@@ -38,7 +38,11 @@ It is recommended as well to add an external disk to our GPU VM for storing the 
 
 ## Train Convolutional Neural Networks
 
-Once the rec file of the training and validation set is ready, we can train a network in the dataset. For this example we are going to use ResNet architecture with 18 layers. This model takes 3 days to train with 4 Tesla K-80 GPUs. The following code was tested with [MXNet library](https://github.com/dmlc/mxnet) in checkout `8e1e7f0c9f2a7743ab3e975a8803b6fd2b786fef`.
+Once the rec file of the training and validation set is ready, we can train a network in the dataset. For this example we are going to use ResNet architecture with 18 layers. This model takes 3 days to train with 4 Tesla K-80 GPUs. The following code was tested with [MXNet library](https://github.com/dmlc/mxnet) in checkout `8e1e7f0c9f2a7743ab3e975a8803b6fd2b786fef`. To install this version and updated the submodules:
+    
+    git clone --recursive https://github.com/dmlc/mxnet
+    git checkout 8e1e7f0c9f2a7743ab3e975a8803b6fd2b786fef
+    git submodule update --recursive
 
 The images are fed to the training process via the iterator `mx.io.ImageRecordIter`, which is a wrapper in R of the [ImageRecordIter](https://github.com/dmlc/mxnet/blob/master/src/io/iter_image_recordio.cc) class in C++. We have to crop the image to a shape of `224x224`, which is the input of the first convolution. You can also specify the batch size, which is the number of images that are computed in parallel in the GPUs. The fastest computation in the Azure machines we tested supports a batch size of 1200, which consumes around 10GB of GPU memory, just below the limit. However, we found that the fastest convergence comes with a batch size of 512. The memory consumed by the GPU depends on the number of images but also on the complexity of the network. For ResNet-152, the maximum batch size we were able to use was 144.  
 
