@@ -205,7 +205,7 @@ print(obj_size_mb)
 
 ```R
 file_size_mb <- file.size(data_path) / 2^20 # size of the original file
-print(file_testsize_mb)
+print(file_size_mb)
 ```
 
 
